@@ -21,10 +21,22 @@ void MainWindow::test()
     QEventLoop * loop = new QEventLoop;
     connect(freebox,SIGNAL(ready()),loop,SLOT(quit()));
     loop->exec();
+    disconnect(freebox,SIGNAL(ready()),loop,SLOT(quit()));
 
-   qDebug()<<"init success";
-   //freebox->authorize("fr.labsquare.test2","test2","0.2","mon PC");
+    qDebug()<<"init success";
+//    freebox->authorize("fr.labsquare.test2","test2","0.2","mon PC");
+//    connect(freebox,SIGNAL(authorizedReceived(QString,int)),
+//            freebox,SLOT(authorizeProgress()));
 
-   qDebug()<<freebox->appToken();
+
+//   connect(freebox,SIGNAL(authorizeProgressReceived(QString,QString)),loop,SLOT(quit()));
+
+   //loop->exec();
+
+   freebox->login("fr.labsquare.test2","0.2","xxxxxx");
+
+
+
+
 
 }
