@@ -20,21 +20,29 @@ public slots:
                    const QString& appVersion, const QString& deviceName);
     void authorizeProgress();
 
-    void login(const QString& appId, const QString& appVersion, const QString& password);
+    void login();
+    void session(const QString& appId);
+
+    static QString hmacSha1(QByteArray key, QByteArray baseString);
+
+    void test();
 
 signals:
     void ready();
     void authorizedReceived(const QString& appToken,int trackId);
     void authorizeProgressReceived(const QString& challenge, const QString& status);
+    void sessionReceived();
+    void loginReceived();
 
 protected slots:
     void initFinished();
     void authorizeFinished();
     void authorizeProgressFinished();
+    void loginFinished();
+    void sessionFinished();
 
 protected:
      QNetworkRequest createRequest(const QString& uri) const;
-     QString hmacSha1(QByteArray key, QByteArray baseString);
 
 private:
     QString mHost;
@@ -43,6 +51,7 @@ private:
     QString mApiVersion;
     QString mDeviceType;
     QString mDeviceName;
+    QString mSessionToken;
 
     QString mAppToken;
     double mTrackId;

@@ -20,6 +20,7 @@ public slots:
     
 private:
     Ui::MainWindow *ui;
+    MaFreeBox * freebox;
 };
 
 #endif // MAINWINDOW_H
