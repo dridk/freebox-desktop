@@ -18,6 +18,8 @@ MaFreeBox::MaFreeBox(QObject *parent) :
     mApiInfo.baseUrl = "/api/";
     mRequestLoginAttempt = 0;
 
+    mFileSystem = new FileSystem(this);
+
 
 
 

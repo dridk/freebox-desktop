@@ -23,7 +23,14 @@
      </widget>
     </item>
     <item>
-     <widget class="QListView" name="listView"/>
+     <widget class="QPushButton" name="listButton">
+      <property name="text">
+       <string>get list</string>
+      </property>
+     </widget>
+    </item>
+    <item>
+     <widget class="QListWidget" name="listWidget"/>
     </item>
    </layout>
   </widget>

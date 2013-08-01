@@ -3,7 +3,7 @@
 
 #include <QObject>
 #include <QtNetwork>
-
+#include "filesystem.h"
 
 struct ApiInfo
 {
@@ -13,7 +13,8 @@ struct ApiInfo
     QString deviceType;
 
 };
-
+class FileSystem;
+class MaFreeBox;
 class MaFreeBox : public QNetworkAccessManager
 {
     Q_OBJECT
@@ -42,6 +43,7 @@ public:
     };
 
 
+    friend class FileSystem;
 
     explicit MaFreeBox(QObject *parent = 0);
 
@@ -67,6 +69,7 @@ public:
     const Error& error() const;
     const QStringList& permissions() const;
 
+    QNetworkRequest createRequest(const QString& uri) const;
 
     //request
     void requestApiInfo();
@@ -75,6 +78,9 @@ public:
     void requestAuthorizeStatus(int trackId);
     void requestLogin();
     void requestSession();
+
+    //get Module
+    FileSystem * fileSystem() {return mFileSystem;}
 
 
 
@@ -97,7 +103,6 @@ private slots:
 
 protected:
     static QString hmacSha1(QByteArray key, QByteArray baseString);
-    QNetworkRequest createRequest(const QString& uri) const;
     bool parseResult(const QJsonDocument& doc);
 
 private:
@@ -113,7 +118,14 @@ private:
     int mPort;
     int mRequestLoginAttempt;
 
+    //Modules
+    FileSystem * mFileSystem;
     
 };
+
+
+
+
+
 
 #endif // MAFREEBOX_H

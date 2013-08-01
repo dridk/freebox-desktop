@@ -18,6 +18,8 @@ public:
 public slots:
     void login();
     void showError();
+    void getList();
+    void setList(const QList<File>& list);
     
 private:
     Ui::MainWindow *ui;

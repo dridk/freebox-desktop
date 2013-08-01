@@ -14,9 +14,11 @@ TEMPLATE = app
 
 SOURCES += main.cpp\
         mainwindow.cpp \
-    mafreebox.cpp
+    mafreebox.cpp \
+    filesystem.cpp
 
 HEADERS  += mainwindow.h \
-    mafreebox.h
+    mafreebox.h \
+    filesystem.h
 
 FORMS    += mainwindow.ui
