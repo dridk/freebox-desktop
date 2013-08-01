@@ -16,7 +16,8 @@ public:
     ~MainWindow();
 
 public slots:
-    void test();
+    void login();
+    void showError();
     
 private:
     Ui::MainWindow *ui;

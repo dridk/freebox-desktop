@@ -1,13 +1,23 @@
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
+#include <QMessageBox>
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
     ui(new Ui::MainWindow)
 {
     ui->setupUi(this);
-    connect(ui->pushButton,SIGNAL(clicked()),this,SLOT(test()));
 
     freebox = new MaFreeBox;
+
+//    freebox->setApplicationToken("Cw0MVrumznvfZxn3xnGbKeg6afjVp+XTqptWeSraESzfxp/SAdZ9ML+zAvwNoPro");
+    freebox->setApplicationId("fr.freebox.testapp2");
+
+    freebox->loadApplicationToken();
+
+    connect(ui->pushButton,SIGNAL(clicked()),this,SLOT(login()));
+    connect(freebox,SIGNAL(error(QString,Error)), this,SLOT(showError()));
+
+
 
 
 }
@@ -17,14 +27,11 @@ MainWindow::~MainWindow()
     delete ui;
 }
 
-void MainWindow::test()
+void MainWindow::login()
 {
-    freebox->init();
-    QEventLoop * loop = new QEventLoop;
-    connect(freebox,SIGNAL(ready()),loop,SLOT(quit()));
-    loop->exec();
 
-    qDebug()<<"init success";
+    qDebug()<<"login";
+    freebox->requestLogin();
 
 /*
   freebox->authorize("fr.freebox.testapp2","Test App2","0.1","mon PC");
@@ -33,19 +40,19 @@ void MainWindow::test()
 
 
 
-    freebox->login();
-    connect(freebox,SIGNAL(loginReceived()),loop,SLOT(quit()));
-    loop->exec();
+//    freebox->login();
+//    connect(freebox,SIGNAL(loginReceived()),loop,SLOT(quit()));
+//    loop->exec();
 
-    qDebug()<<"fini";
+//    qDebug()<<"fini";
 
 
 
- freebox->session("fr.freebox.testapp2");
- connect(freebox,SIGNAL(sessionReceived()),loop,SLOT(quit()));
- loop->exec();
+// freebox->session("fr.freebox.testapp2");
+// connect(freebox,SIGNAL(sessionReceived()),loop,SLOT(quit()));
+// loop->exec();
 
- freebox->test();
+// freebox->test();
 
 
     //   freebox->authorizeProgress();
@@ -56,6 +63,14 @@ void MainWindow::test()
 
 
 
+
+
+}
+
+void MainWindow::showError()
+{
+
+    QMessageBox::warning(this,"freebox error", freebox->errorString());
 
 
 }
