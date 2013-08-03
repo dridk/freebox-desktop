@@ -18,9 +18,8 @@ MaFreeBox::MaFreeBox(QObject *parent) :
     mApiInfo.baseUrl = "/api/";
     mRequestLoginAttempt = 0;
 
+// == alloc module
     mFileSystem = new FileSystem(this);
-
-
 
 
 }
@@ -235,7 +234,6 @@ void MaFreeBox::requestLoginFinished()
 
 void MaFreeBox::requestSessionFinished()
 {
-
     QNetworkReply * reply = qobject_cast<QNetworkReply*>(sender());
     QJsonDocument doc = QJsonDocument::fromJson(reply->readAll());
 
@@ -247,230 +245,7 @@ void MaFreeBox::requestSessionFinished()
 
         emit sessionReceived();
     }
-
-
-
 }
-//void MaFreeBox::init()
-//{
-
-//    QNetworkRequest request;
-//    request.setUrl(QUrl(QString("http://%1:%2/api_version").arg(mHost).arg(mPort)));
-//    connect(mNetManager->get(request),SIGNAL(finished()),this,SLOT(initFinished()));
-
-
-//}
-
-//void MaFreeBox::authorize(const QString &appId, const QString &appName, const QString &appVersion, const QString &deviceName)
-//{
-
-//    QJsonObject json;
-//    json.insert("app_id", appId);
-//    json.insert("app_name",appName);
-//    json.insert("app_version",appVersion);
-//    json.insert("device_name",deviceName);
-
-//    qDebug()<<json;
-//    QNetworkRequest request = createRequest("login/authorize");
-
-//    QNetworkReply * reply = mNetManager->post(request,QJsonDocument(json).toJson());
-//    connect(reply,SIGNAL(finished()),this,SLOT(authorizeFinished()));
-
-//}
-
-//void MaFreeBox::authorizeProgress()
-//{
-
-//    QNetworkRequest request = createRequest(QString("login/authorize/%1").arg(mTrackId));
-//    connect(mNetManager->get(request),SIGNAL(finished()),this,SLOT(authorizeProgressFinished()));
-
-//}
-
-//void MaFreeBox::login()
-//{
-
-//    qDebug()<<"login";
-//    QNetworkRequest request = createRequest("login");
-//    QNetworkReply * reply = mNetManager->get(request);
-
-//    connect(reply,SIGNAL(finished()),this,SLOT(loginFinished()));
-
-////    mChallenge = QJsonDocument::fromJson(reply->readAll()).object().value("result").toObject().value("challenge").toString();
-
-////    qDebug()<<mChallenge;
-////    QJsonObject json;
-////    json.insert("app_id", appId);
-////    json.insert("app_version",appVersion);
-////    json.insert("password",hmacSha1(mAppToken.toUtf8(),mChallenge.toUtf8()));
-
-////    QJsonDocument doc(json);
-
-////    QNetworkReply * replySession =
-////            mNetManager->post(createRequest("login/session"),doc.toJson());
-
-////    connect(replySession,SIGNAL(finished()),&loop,SLOT(quit()));
-////    loop.exec();
-
-
-////    qDebug()<<replySession->readAll();
-
-
-
-
-//}
-
-//void MaFreeBox::session(const QString &appId)
-//{
-
-
-//    qDebug()<<"challenge : "<<mChallenge;
-//    qDebug()<<"app token : " <<mAppToken;
-
-
-
-//    QJsonObject json;
-//    json.insert("app_version",QString("0.2"));
-//    json.insert("app_id", appId);
-//    json.insert("password",hmacSha1(mAppToken.toUtf8(),
-//                                    mChallenge.toUtf8()));
-//    QJsonDocument doc(json);
-
-
-
-//    qDebug()<<doc.toJson();
-
-
-//    QNetworkReply * reply = mNetManager->post(createRequest("login/session"),
-//                                              doc.toJson());
-
-//    connect(reply,SIGNAL(finished()),this,SLOT(sessionFinished()));
-
-
-
-
-
-//}
-
-//void MaFreeBox::setHostName(const QString &host)
-//{
-//    mHost = host;
-//}
-
-//void MaFreeBox::setPort(int port)
-//{
-//    mPort = port;
-//}
-
-//const QString &MaFreeBox::appToken() const
-//{
-//    return mAppToken;
-//}
-
-//void MaFreeBox::initFinished()
-//{
-//    QNetworkReply * reply = qobject_cast<QNetworkReply*>(sender());
-//    if (!reply->error()) {
-
-//        QJsonDocument doc =  QJsonDocument::fromJson(reply->readAll());
-
-//        mApiVersion =  doc.object().value("api_version").toString();
-//        mDeviceType =  doc.object().value("device_type").toString();
-//        mBaseUrl    =  doc.object().value("api_base_url").toString();
-//        mDeviceName =  doc.object().value("device_name").toString();
-//        emit ready();
-//    }
-//}
-
-//void MaFreeBox::authorizeFinished()
-//{
-//    QNetworkReply * reply = qobject_cast<QNetworkReply*>(sender());
-
-
-//        QJsonDocument doc =  QJsonDocument::fromJson(reply->readAll());
-//        mAppToken = doc.object().value("result").toObject().value("app_token").toString();
-//        mTrackId  =  doc.object().value("result").toObject().value("track_id").toDouble();
-//        QSettings settings; // save token as settings file ...
-//        settings.setValue("app_token", mAppToken);
-//        settings.setValue("track_id", mTrackId);
-
-//        qDebug()<<doc.toJson();
-//        qDebug()<<"app token "<<mAppToken;
-//        qDebug()<<"track id  "<<mTrackId;
-
-//        emit authorizedReceived(mAppToken,mTrackId);
-
-
-//}
-
-//void MaFreeBox::authorizeProgressFinished()
-//{
-//    QNetworkReply * reply = qobject_cast<QNetworkReply*>(sender());
-
-//        QJsonDocument doc =  QJsonDocument::fromJson(reply->readAll());
-//        mChallenge       = doc.object().value("result").toObject().value("challenge").toString();
-//        mAuthorizeStatus = doc.object().value("result").toObject().value("status").toString();
-
-//        QSettings settings; // save token as settings file ...
-//        settings.setValue("challenge", mChallenge);
-//        settings.setValue("status", mAuthorizeStatus);
-
-//        qDebug()<<"challenge "<<mChallenge;
-//        qDebug()<<" status "<<mAuthorizeStatus;
-
-//}
-
-//void MaFreeBox::loginFinished()
-//{
-//    QNetworkReply * reply = qobject_cast<QNetworkReply*>(sender());
-
-//   QJsonDocument doc = QJsonDocument::fromJson(reply->readAll());
-
-//   mChallenge = doc.object().value("result").toObject().value("challenge").toString();
-
-//   qDebug()<<"challenge "<<mChallenge;
-//   emit loginReceived();
-
-//}
-
-//void MaFreeBox::sessionFinished()
-//{
-//    QNetworkReply * reply = qobject_cast<QNetworkReply*>(sender());
-//    QJsonDocument doc = QJsonDocument::fromJson(reply->readAll());
-
-//    qDebug()<<"session finished";
-//    mSessionToken = doc.object().value("result").toObject().value("session_token").toString();
-
-//    qDebug()<<"session "<<mSessionToken;
-//    emit sessionReceived();
-
-//}
-
-
-//void MaFreeBox::test()
-//{
-
-//    qDebug()<<"RUN TEST";
-//    QNetworkRequest request = createRequest("fs/ls/L0Rpc3F1ZSBkdXI=");
-//    request.setRawHeader("X-Fbx-App-Auth", mSessionToken.toUtf8());
-
-//    QNetworkReply * reply = mNetManager->get(request);
-
-//    QEventLoop * loop = new QEventLoop;
-//    connect(reply,SIGNAL(finished()),loop,SLOT(quit()));
-
-//    loop->exec();
-
-//    qDebug()<<reply->readAll();
-
-
-
-
-
-
-
-//}
-
-
 QString MaFreeBox::hmacSha1(QByteArray key, QByteArray baseString)
 {
     int blockSize = 64; // HMAC-SHA-1 block size, defined in SHA-1 standard
@@ -519,12 +294,27 @@ QNetworkRequest MaFreeBox:: createRequest(const QString &uri) const
 bool MaFreeBox::parseResult(const QJsonDocument &doc)
 {
 
-    if (!doc.object().value("success").toBool())
+    if (!doc.object().value("success").toBool()){
+
+        if (doc.object().contains("error_code")) {
+        QString code = doc.object().value("error_code").toString();
+        QString msg  = doc.object().value("msg").toString();
+        sendError(msg, UnknownError);
+        }
         return false;
+    }
 
     mChallenge = doc.object().value("result").toObject().value("challenge").toString();
 
     return true;
+
+}
+
+void MaFreeBox::sendError(const QString &message, MaFreeBox::Error code)
+{
+    mError = code;
+    mErrorString = message;
+    emit error(mErrorString, mError);
 
 }
 
@@ -548,14 +338,14 @@ void MaFreeBox::errorReceived(QNetworkReply::NetworkError errCode)
                 requestLogin();
             else {
                 mRequestLoginAttempt = 0;
-                emit error(mErrorString, mError);
+                sendError(mErrorString, mError);
 
             }
 
         }
 
         else
-            emit error(mErrorString, mError);
+            sendError(mErrorString, mError);
 
 
 

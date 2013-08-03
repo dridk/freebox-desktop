@@ -4,7 +4,8 @@
 #include <QObject>
 #include <QtNetwork>
 #include "filesystem.h"
-
+class FileSystem;
+struct ApiInfo;
 struct ApiInfo
 {
     QString deviceName;
@@ -13,8 +14,7 @@ struct ApiInfo
     QString deviceType;
 
 };
-class FileSystem;
-class MaFreeBox;
+
 class MaFreeBox : public QNetworkAccessManager
 {
     Q_OBJECT
@@ -43,7 +43,6 @@ public:
     };
 
 
-    friend class FileSystem;
 
     explicit MaFreeBox(QObject *parent = 0);
 
@@ -70,6 +69,8 @@ public:
     const QStringList& permissions() const;
 
     QNetworkRequest createRequest(const QString& uri) const;
+    bool parseResult(const QJsonDocument& doc);
+    void sendError(const QString& message,Error code );
 
     //request
     void requestApiInfo();
@@ -103,7 +104,6 @@ private slots:
 
 protected:
     static QString hmacSha1(QByteArray key, QByteArray baseString);
-    bool parseResult(const QJsonDocument& doc);
 
 private:
     ApiInfo mApiInfo;
@@ -119,9 +119,10 @@ private:
     int mRequestLoginAttempt;
 
     //Modules
-    FileSystem * mFileSystem;
+   FileSystem * mFileSystem;
     
 };
+
 
 
 

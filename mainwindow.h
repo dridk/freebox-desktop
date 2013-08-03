@@ -3,6 +3,8 @@
 
 #include <QMainWindow>
 #include "mafreebox.h"
+#include "gui/filesystemmodel.h"
+
 namespace Ui {
 class MainWindow;
 }
@@ -19,11 +21,13 @@ public slots:
     void login();
     void showError();
     void getList();
-    void setList(const QList<File>& list);
+    void setList(const QList<FileInfo>& list);
     
 private:
     Ui::MainWindow *ui;
     MaFreeBox * freebox;
+     FileSystemModel * mModel;
+
 };
 
 #endif // MAINWINDOW_H
