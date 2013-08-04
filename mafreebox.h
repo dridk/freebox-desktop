@@ -45,6 +45,7 @@ public:
 
 
     explicit MaFreeBox(QObject *parent = 0);
+    ~MaFreeBox();
 
     //set
     void setHostName(const QString& host, int port = 80) ;

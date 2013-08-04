@@ -1,7 +1,7 @@
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
 #include <QMessageBox>
-
+#include <QFileDialog>
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
     ui(new Ui::MainWindow)
@@ -38,6 +38,7 @@ MainWindow::MainWindow(QWidget *parent) :
 MainWindow::~MainWindow()
 {
     delete ui;
+    delete freebox;
 }
 
 void MainWindow::login()
@@ -64,9 +65,16 @@ void MainWindow::getList()
     QStringList tt;
     tt.append("L0Rpc3F1ZSBkdXIvRG9jdG9yIFdobyAtIFMwNUUwMyAtIFZpY3Rvcnkgb2YgdGhlIERhbGVrcyAtIERWQlJJUCAxNzA0MjAxMCAtIE1QRUcyLnNydA==");
 
-              freebox->fileSystem()->requestMove(tt,"L0Rpc3F1ZSBkdXIvTXVzaXF1ZXM=");
+           //   freebox->fileSystem()->requestMove(tt,"L0Rpc3F1ZSBkdXIvTXVzaXF1ZXM=");
 
-//    mModel->setPath();
+
+    QString dir = QFileDialog::getExistingDirectory(this);
+
+    freebox->fileSystem()->requestDownload("L0Rpc3F1ZSBkdXIvRW5mZXJtw6lzIGRlaG9ycy5hdmk=",
+                                           dir);
+
+//   mModel->setPath();
+
 }
 
 void MainWindow::setList(const QList<FileInfo> &list)

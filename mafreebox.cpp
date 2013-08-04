@@ -18,10 +18,15 @@ MaFreeBox::MaFreeBox(QObject *parent) :
     mApiInfo.baseUrl = "/api/";
     mRequestLoginAttempt = 0;
 
-// == alloc module
+    // == alloc module
     mFileSystem = new FileSystem(this);
 
 
+}
+
+MaFreeBox::~MaFreeBox()
+{
+    delete mFileSystem;
 }
 
 void MaFreeBox::setHostName(const QString &host, int port)
@@ -297,15 +302,17 @@ bool MaFreeBox::parseResult(const QJsonDocument &doc)
     if (!doc.object().value("success").toBool()){
 
         if (doc.object().contains("error_code")) {
-        QString code = doc.object().value("error_code").toString();
-        QString msg  = doc.object().value("msg").toString();
-        sendError(msg, UnknownError);
+            QString code = doc.object().value("error_code").toString();
+            QString msg  = doc.object().value("msg").toString();
+            sendError(msg, UnknownError);
         }
         return false;
     }
 
-    mChallenge = doc.object().value("result").toObject().value("challenge").toString();
+    QJsonObject result = doc.object().value("result").toObject();
 
+    if (result.contains("challenge"))
+        mChallenge = result.value("challenge").toString();
     return true;
 
 }

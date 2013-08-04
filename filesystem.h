@@ -3,7 +3,7 @@
 
 #include <QObject>
 #include "mafreebox.h"
-
+#include <QFile>
 
 class MaFreeBox;
 struct FileInfo {
@@ -54,6 +54,7 @@ public:
     Q_ENUMS(ConflictMode)
     Q_ENUMS(UploadStatus)
     explicit FileSystem(MaFreeBox *parent = 0);
+    ~FileSystem();
 
 public slots:
     void requestList(const QString& path = QString());
@@ -70,12 +71,12 @@ public slots:
     void requestExtract(const QString& source,
                         const QString& dest,
                         const QString& password = QString(),
-                        bool deleteAfter = false,
+                        bool deleteArchive = false,
                         bool overwrite = false);
 
     void requestMkdir(const QString& path, const QString& dirName);
     void requestRename(const QString& source, const QString& newName);
-    void requestDownload(const QString& path);
+    void requestDownload(const QString& path, const QString& localPath);
     void requestUpload(const QString& file, const QString& destPath);
     void requestUploadList();
     void requestUploadInfo(int id);
@@ -94,7 +95,7 @@ signals:
     void extractFinished();
     void mkdirFinished();
     void renameFinished();
-    void downloadReceived(const QFile& file);
+    void downloadFinished(const QString& fileName);
     void uploadFinished();
     void uploadListReceived(const QList<FileUpload>& list);
     void uploadReceived(const FileUpload& file);
@@ -114,6 +115,8 @@ protected slots:
     void requestMkdirFinished();
     void requestRenameFinished();
     void requestDownloadFinished();
+    void requestDownloadReadyRead();
+    void requestDownloadError();
     void requestUploadFinished();
     void requestUploadListFinished();
     void requestUploadInfoFinished();
@@ -126,6 +129,8 @@ protected slots:
     }
     
 
+private:
+QMap <QNetworkReply*, QFile*> mDownloads;
 
     
 };
