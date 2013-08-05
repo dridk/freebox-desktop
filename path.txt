@@ -1,2 +1,0 @@
-"Disque dur"  = >  "L0Rpc3F1ZSBkdXI="
-"Photos"  = >  "L0Rpc3F1ZSBkdXIvUGhvdG9z"

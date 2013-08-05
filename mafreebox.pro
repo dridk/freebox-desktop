@@ -11,22 +11,20 @@ greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 TARGET = mafreebox
 TEMPLATE = app
 
-INCLUDEPATH += gui
+
+
+
+
+include(api/api.pri)
+include(gui/filesystem/filesystem.pri)
+
 
 SOURCES += main.cpp\
-        mainwindow.cpp \
-    mafreebox.cpp \
-    filesystem.cpp \
-    download.cpp \
-    gui/filesystemmodel.cpp
+    mainapplication.cpp
 
-HEADERS  += mainwindow.h \
-    mafreebox.h \
-    filesystem.h \
-    download.h \
-    gui/filesystemmodel.h
+HEADERS  += \
+    mainapplication.h
 
-FORMS    += mainwindow.ui
+RESOURCES += \
+    assets/assets.qrc
 
-OTHER_FILES += \
-    path.txt
