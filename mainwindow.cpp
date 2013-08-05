@@ -29,6 +29,8 @@ MainWindow::MainWindow(QWidget *parent) :
     connect(ui->tableView,SIGNAL(doubleClicked(QModelIndex)),
             mModel,SLOT(setPath(QModelIndex)));
 
+    connect(freebox,SIGNAL(sessionReceived()),mModel,SLOT(setPath()));
+
     //    connect(freebox->fileSystem(),SIGNAL(listReceived(QList<FileInfo>)),
     //            this,SLOT(setList(QList<FileInfo>)));
 
@@ -68,12 +70,14 @@ void MainWindow::getList()
            //   freebox->fileSystem()->requestMove(tt,"L0Rpc3F1ZSBkdXIvTXVzaXF1ZXM=");
 
 
-    QString dir = QFileDialog::getExistingDirectory(this);
+    QString filename = QFileDialog::getOpenFileName(this);
 
-    freebox->fileSystem()->requestDownload("L0Rpc3F1ZSBkdXIvRW5mZXJtw6lzIGRlaG9ycy5hdmk=",
-                                           dir);
+    freebox->fileSystem()->requestUpload(filename,"L0Rpc3F1ZSBkdXIvVmlkw6lvcw==");
 
-//   mModel->setPath();
+   // freebox->fileSystem()->requestDownload("L0Rpc3F1ZSBkdXIvRW5mZXJtw6lzIGRlaG9ycy5hdmk=",
+//                                           dir);
+
+   //mModel->setPath();
 
 }
 

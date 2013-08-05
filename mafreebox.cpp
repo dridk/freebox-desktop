@@ -293,6 +293,7 @@ QNetworkRequest MaFreeBox:: createRequest(const QString &uri) const
                       QVariant("application/json; charset=utf-8"));
 
     qDebug()<<request.url();
+
     return request;
 }
 

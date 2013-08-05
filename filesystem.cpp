@@ -166,7 +166,7 @@ void FileSystem::requestDownload(const QString &path, const QString &localPath)
 
     QFile * file = new QFile(QDir::fromNativeSeparators(localPath +
                                                         QDir::separator() +
-                                                         path));
+                                                        path));
     if (!file->open(QIODevice::WriteOnly))
     {
         qDebug()<<"cannot open file "<<file->fileName();
@@ -175,8 +175,9 @@ void FileSystem::requestDownload(const QString &path, const QString &localPath)
     }
 
     QNetworkReply * reply = fbx()->get(request);
-    mDownloads.insert(reply, file);
+    file->setParent(reply); // delete file when reply is deleted
 
+    mDownloads.insert(reply, file);
     connect(reply,SIGNAL(readyRead()),this,SLOT(requestDownloadReadyRead()));
     connect(reply,SIGNAL(finished()),this,SLOT(requestDownloadFinished()));
     connect(reply,SIGNAL(error(QNetworkReply::NetworkError)),fbx(),SLOT(errorReceived(QNetworkReply::NetworkError)));
@@ -186,25 +187,68 @@ void FileSystem::requestDownload(const QString &path, const QString &localPath)
 
 void FileSystem::requestUpload(const QString &file, const QString &destPath)
 {
+
+    //==== Upload has 2 step request
+    // 1: Get ID from uri : 'upload/'
+    // 2: send file from uri : 'upload/{id}/post multiPart
+
+    QNetworkRequest request = fbx()->createRequest(QString("upload/"));
+    // just write the filename to get it back from response!
+    request.setRawHeader(QByteArray("filename"), file.toUtf8());
+    QJsonObject json;
+    json.insert("dirname",QString(destPath));
+    json.insert("upload_name",QString(QFileInfo(file).fileName()));
+
+    QJsonDocument doc(json);
+    QNetworkReply * reply = fbx()->post(request, doc.toJson());
+
+    connect(reply,SIGNAL(finished()),this,SLOT(requestStartUpload()));
+    connect(reply,SIGNAL(error(QNetworkReply::NetworkError)),fbx(),SLOT(errorReceived(QNetworkReply::NetworkError)));
+
 }
 
 void FileSystem::requestUploadList()
 {
+    QNetworkRequest request = fbx()->createRequest(QString("upload/"));
+
+    QNetworkReply * reply = fbx()->get(request);
+    connect(reply,SIGNAL(finished()),this,SLOT(requestUploadListFinished()));
+    connect(reply,SIGNAL(error(QNetworkReply::NetworkError)),fbx(),SLOT(errorReceived(QNetworkReply::NetworkError)));
+
 }
 
 void FileSystem::requestUploadInfo(int id)
 {
+    QNetworkRequest request = fbx()->createRequest(QString("upload/%1").arg(id));
+
+    QNetworkReply * reply = fbx()->get(request);
+    connect(reply,SIGNAL(finished()),this,SLOT(requestUploadInfoFinished()));
+    connect(reply,SIGNAL(error(QNetworkReply::NetworkError)),fbx(),SLOT(errorReceived(QNetworkReply::NetworkError)));
+
 }
 
-void FileSystem::requestRemoveUpload(int id)
+void FileSystem::requestDeleteUpload(int id)
 {
+    QNetworkRequest request = fbx()->createRequest(QString("upload/%1").arg(id));
+
+    QNetworkReply * reply = fbx()->deleteResource(request);
+    connect(reply,SIGNAL(finished()),this,SLOT(requestDeleteUploadFinished()));
+    connect(reply,SIGNAL(error(QNetworkReply::NetworkError)),fbx(),SLOT(errorReceived(QNetworkReply::NetworkError)));
+
+
 }
+
 
 void FileSystem::requestCleanUploads()
 {
+    QNetworkRequest request = fbx()->createRequest(QString("upload/clean"));
+
+    QNetworkReply * reply = fbx()->deleteResource(request);
+    connect(reply,SIGNAL(finished()),this,SLOT(requestCleanUploadsFinished()));
+    connect(reply,SIGNAL(error(QNetworkReply::NetworkError)),fbx(),SLOT(errorReceived(QNetworkReply::NetworkError)));
+
+
 }
-
-
 void FileSystem::requestListFinished()
 {
     QNetworkReply * reply  = qobject_cast<QNetworkReply*>(sender());
@@ -367,7 +411,6 @@ void FileSystem::requestDownloadError()
     QNetworkReply * reply  = qobject_cast<QNetworkReply*>(sender());
     if (mDownloads.contains(reply)) {
         mDownloads[reply]->remove();
-        delete(mDownloads[reply]);
         mDownloads.remove(reply);
     }
 
@@ -376,21 +419,150 @@ void FileSystem::requestDownloadError()
 
 void FileSystem::requestUploadFinished()
 {
+    QNetworkReply * reply  = qobject_cast<QNetworkReply*>(sender());
+    QJsonDocument doc = QJsonDocument::fromJson(reply->readAll());
+
+    if (fbx()->parseResult(doc))
+        emit uploadFinished(reply->objectName());
+
+
+    reply->deleteLater();
+
 }
+
+void FileSystem::requestStartUpload()
+{
+    QNetworkReply * reply  = qobject_cast<QNetworkReply*>(sender());
+    QJsonDocument doc = QJsonDocument::fromJson(reply->readAll());
+
+    if(fbx()->parseResult(doc))
+    {
+        //Get Upload ID and send file
+        QString id = doc.object().value("result").toObject().value("id").toVariant().toString();
+        QString fileName = reply->request().rawHeader(QByteArray("filename"));
+
+        QFile * file = new QFile(fileName);
+        if (!file->open(QIODevice::ReadOnly))
+        {
+            qDebug()<<"Cannot open file "<<fileName;
+            reply->deleteLater();
+            return;
+        }
+
+
+        QHttpMultiPart *multiPart = new QHttpMultiPart(QHttpMultiPart::FormDataType);
+        QNetworkRequest request = fbx()->createRequest(QString("upload/%1/send/").arg(id));
+        QHttpPart filePart;
+        filePart.setHeader(QNetworkRequest::ContentTypeHeader,
+                           mMimeDatabase.mimeTypeForFile(fileName).name());
+        filePart.setHeader(QNetworkRequest::ContentDispositionHeader,
+                           QString("form-data; name=\"%1\";filename=\"%1\"")
+                           .arg(QFileInfo(fileName).fileName()));
+
+        filePart.setBodyDevice(file);
+        file->setParent(multiPart); // we cannot delete the file now, so delete it with the multiPart
+        multiPart->append(filePart);
+
+        request.setHeader(QNetworkRequest::ContentTypeHeader,"multipart/form-data; boundary=" + multiPart->boundary());
+
+        QNetworkReply *uploadReply = fbx()->post(request, multiPart);
+        multiPart->setParent(uploadReply);
+        uploadReply->setObjectName(fileName); // save fileName to get it back from response
+
+        connect(uploadReply,SIGNAL(finished()),this,SLOT(requestUploadFinished()));
+        connect(uploadReply,SIGNAL(error(QNetworkReply::NetworkError)),fbx(),SLOT(errorReceived(QNetworkReply::NetworkError)));
+
+
+    }
+    reply->deleteLater();
+}
+
 
 void FileSystem::requestUploadListFinished()
 {
+    QNetworkReply * reply  = qobject_cast<QNetworkReply*>(sender());
+    QJsonDocument doc = QJsonDocument::fromJson(reply->readAll());
+
+    if(fbx()->parseResult(doc))
+    {
+        QList<FileUpload> list;
+
+        foreach (QJsonValue item,  doc.object().value("result").toArray())
+        {
+            FileUpload file;
+            file.id = item.toObject().value("id").toString();
+            file.size =item.toObject().value("size").toDouble();
+            file.uploaded = item.toObject().value("uploaded").toDouble();
+            file.status = item.toObject().value("uploaded").toString();
+            file.lastUpdate = QDateTime::fromTime_t(item.toObject().value("last_update").toDouble());
+            file.startDate = QDateTime::fromTime_t(item.toObject().value("start_update").toDouble());
+            file.dirName = item.toObject().value("dirname").toString();
+            file.uploadName = item.toObject().value("upload_name").toString();
+            list.append(file);
+        }
+
+        emit uploadListReceived(list);
+
+    }
+
+
+    reply->deleteLater();
+
+
 }
 
 void FileSystem::requestUploadInfoFinished()
 {
+
+    QNetworkReply * reply  = qobject_cast<QNetworkReply*>(sender());
+    QJsonDocument doc = QJsonDocument::fromJson(reply->readAll());
+
+    if(fbx()->parseResult(doc))
+    {
+        QJsonValue item = doc.object().value("result");
+        FileUpload file;
+        file.id = item.toObject().value("id").toString();
+        file.size =item.toObject().value("size").toDouble();
+        file.uploaded = item.toObject().value("uploaded").toDouble();
+        file.status = item.toObject().value("uploaded").toString();
+        file.lastUpdate = QDateTime::fromTime_t(item.toObject().value("last_update").toDouble());
+        file.startDate = QDateTime::fromTime_t(item.toObject().value("start_update").toDouble());
+        file.dirName = item.toObject().value("dirname").toString();
+        file.uploadName = item.toObject().value("upload_name").toString();
+
+        emit uploadInfoReceived(file);
+
+    }
+
+
+    reply->deleteLater();
+
+
+
 }
 
-void FileSystem::requestRemoveUploadFinished()
+void FileSystem::requestDeleteUploadFinished()
 {
-}
 
+    QNetworkReply * reply  = qobject_cast<QNetworkReply*>(sender());
+    QJsonDocument doc = QJsonDocument::fromJson(reply->readAll());
+
+    if(fbx()->parseResult(doc))
+        emit deleteUploadFinished();
+
+    reply->deleteLater();
+
+
+}
 void FileSystem::requestCleanUploadsFinished()
 {
+
+    QNetworkReply * reply  = qobject_cast<QNetworkReply*>(sender());
+    QJsonDocument doc = QJsonDocument::fromJson(reply->readAll());
+
+    if(fbx()->parseResult(doc))
+        emit cleanUploadFinished();
+
+    reply->deleteLater();
 }
 

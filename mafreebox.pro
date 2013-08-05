@@ -27,3 +27,6 @@ HEADERS  += mainwindow.h \
     gui/filesystemmodel.h
 
 FORMS    += mainwindow.ui
+
+OTHER_FILES += \
+    path.txt

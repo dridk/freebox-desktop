@@ -4,8 +4,12 @@
 #include <QObject>
 #include "mafreebox.h"
 #include <QFile>
+#include <QMimeDatabase>
 
 class MaFreeBox;
+class FileSystem;
+struct FileUpload;
+
 struct FileInfo {
     QString path;
     QString name;
@@ -18,14 +22,6 @@ struct FileInfo {
     bool hidden;
     int folderCount;
     int fileCount;
-};
-
-struct FileUpload {
-
-    QString id;
-    int size;
-    int uploaded;
-
 };
 
 
@@ -41,18 +37,10 @@ public:
         SkipMode
     };
 
-    enum UploadStatus {
-        AuthorizedStatus,
-        InProgressStatus,
-        DoneStatus,
-        FailedStatus,
-        ConflictStatus,
-        TimeoutStatus,
-        CancelledStatus
-    };
+
 
     Q_ENUMS(ConflictMode)
-    Q_ENUMS(UploadStatus)
+
     explicit FileSystem(MaFreeBox *parent = 0);
     ~FileSystem();
 
@@ -77,11 +65,12 @@ public slots:
     void requestMkdir(const QString& path, const QString& dirName);
     void requestRename(const QString& source, const QString& newName);
     void requestDownload(const QString& path, const QString& localPath);
-    void requestUpload(const QString& file, const QString& destPath);
+    void requestUpload(const QString& dirPath, const QString& fileName);
     void requestUploadList();
     void requestUploadInfo(int id);
-    void requestRemoveUpload(int id);
+    void requestDeleteUpload(int id);
     void requestCleanUploads();
+
 
 
 
@@ -96,10 +85,10 @@ signals:
     void mkdirFinished();
     void renameFinished();
     void downloadFinished(const QString& fileName);
-    void uploadFinished();
+    void uploadFinished(const QString& fileName);
     void uploadListReceived(const QList<FileUpload>& list);
-    void uploadReceived(const FileUpload& file);
-    void removeUploadFinished();
+    void uploadInfoReceived(const FileUpload& file);
+    void deleteUploadFinished();
     void cleanUploadFinished();
 
 
@@ -118,9 +107,10 @@ protected slots:
     void requestDownloadReadyRead();
     void requestDownloadError();
     void requestUploadFinished();
+    void requestStartUpload();
     void requestUploadListFinished();
     void requestUploadInfoFinished();
-    void requestRemoveUploadFinished();
+    void requestDeleteUploadFinished();
     void requestCleanUploadsFinished();
 
 
@@ -130,9 +120,30 @@ protected slots:
     
 
 private:
-QMap <QNetworkReply*, QFile*> mDownloads;
+    QMap <QNetworkReply*, QFile*> mDownloads;
+    QMap <QNetworkReply*, QFile*> mUploads;
+    QMimeDatabase mMimeDatabase;
+
 
     
 };
+
+
+//===== must be at end cause by forward declaration error with FileSystem::UploadStatus
+struct FileUpload {
+
+    QString id;
+    unsigned int size;
+    unsigned int uploaded;
+//    FileSystem::UploadStatus status;
+    QString status;
+    QDateTime startDate;
+    QDateTime lastUpdate;
+    QString dirName;
+    QString uploadName;
+
+
+};
+
 
 #endif // FILESYSTEM_H
