@@ -286,8 +286,6 @@ void FileSystem::requestListFinished()
             list.append(file);
 
 
-            qDebug()<<file.name<<" "<<file.fileCount;
-
         }
 
         emit listReceived(list);

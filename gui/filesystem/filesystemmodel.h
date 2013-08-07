@@ -73,6 +73,18 @@ private:
 };
 
 
+// =============== On filtre les dossier uniquement pour le TreeView...
+
+
+class FolderFilterProxyModel : public QSortFilterProxyModel
+{
+public:
+
+bool filterAcceptsRow(int row, const QModelIndex &parent) const;
+
+
+};
+
 
 
 

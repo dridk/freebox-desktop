@@ -89,7 +89,7 @@ int FileSystemModel::rowCount(const QModelIndex &parent) const
 
 int FileSystemModel::columnCount(const QModelIndex &parent) const
 {
-    return 3;
+    return 1;
 
 }
 
@@ -132,15 +132,17 @@ QModelIndex FileSystemModel::parent(const QModelIndex &child) const
 
 bool FileSystemModel::canFetchMore(const QModelIndex &parent) const
 {
+
     if (!parent.isValid())
         return false;
 
 
     FileSystemItem * childItem = static_cast<FileSystemItem*>(parent.internalPointer());
 
-
-    if (hasChildren(parent) && childItem->childCount() == 0)
-        return true;
+    if (childItem) {
+        if (rowCount(parent) != (childItem->fileInfo().fileCount + childItem->fileInfo().folderCount ) )
+            return true;
+    }
 
     return false;
 
@@ -148,20 +150,19 @@ bool FileSystemModel::canFetchMore(const QModelIndex &parent) const
 
 void FileSystemModel::fetchMore(const QModelIndex &parent)
 {
-    qDebug()<<"Fetch more "<<parent;
 
-    mCurrentIndex = parent;
-    if (!mCurrentIndex.isValid())
+    if (!parent.isValid()){
         fbx()->fileSystem()->requestList(QString(),false,true,true);
-    else {
-
-        FileSystemItem * item = static_cast<FileSystemItem*>(mCurrentIndex.internalPointer());
-        fbx()->fileSystem()->requestList(item->fileInfo().path,false,true,true);
-
+        return;
     }
 
 
+    if (hasChildren(parent) && !mCurrentIndex.isValid()) { // hack... a cause du fetchmore repeté 2 fois...
+        FileSystemItem * item = toItem(parent);
+        mCurrentIndex = parent;
+        fbx()->fileSystem()->requestList(item->fileInfo().path,false,true,true);
 
+    }
 }
 
 bool FileSystemModel::hasChildren(const QModelIndex &parent) const
@@ -169,7 +170,7 @@ bool FileSystemModel::hasChildren(const QModelIndex &parent) const
     if (!parent.isValid())
         return true;
 
-    FileSystemItem * item = static_cast<FileSystemItem*>(parent.internalPointer());
+    FileSystemItem * item = toItem(parent);
 
     if (item->fileInfo().fileCount || item->fileInfo().folderCount)
         return true;
@@ -224,50 +225,6 @@ QVariant FileSystemModel::data(const QModelIndex &index, int role) const
 
     return QVariant();
 }
-//QVariant FileSystemModel::data(const QModelIndex &index, int role) const
-//{
-//    if (!index.isValid())
-//        return QVariant();
-
-//    if (role == Qt::DisplayRole && index.column() == 0 )
-//        return mData.at(index.row()).name;
-
-//    if (role == Qt::DecorationRole && index.column() == 0)
-//    {
-
-//        if (mData.at(index.row()).isDir)
-//            return QIcon(":folder.png");
-//        QString fileName = mData.at(index.row()).name;
-//        QString iconPath = mMimeDB.mimeTypeForUrl(QUrl(fileName)).iconName()+".png";
-//        iconPath.replace("-", "_");
-//        iconPath = QString("mime")+QDir::separator()+iconPath;
-//        if (QFile::exists(iconPath))
-//            return QIcon(iconPath);
-//        else
-//            return QIcon(QString("mime")+QDir::separator()+QString("application_octet_stream.png"));
-
-//    }
-
-//    if (role == Qt::DisplayRole && index.column() == 1 )
-//    {
-//        FileInfo file =  mData.at(index.row());
-
-//        if (file.isDir)
-//            return QString::number(file.fileCount) + " éléments";
-//        else
-//            return sizeHuman(file.size);
-
-//    }
-
-
-//    if (role == Qt::DisplayRole && index.column() == 2 )
-//    {
-//        return mData.at(index.row()).modified.toString("dd/MM/yyyy hh:mm:ss");
-
-//    }
-
-//    return QVariant();
-//}
 
 QVariant FileSystemModel::headerData(int section, Qt::Orientation orientation, int role) const
 {
@@ -325,14 +282,18 @@ void FileSystemModel::load(const QList<FileInfo> &data)
 
     foreach (FileInfo info, data)
     {
-
         FileSystemItem * child = new FileSystemItem(parentItem);
         child->setFileInfo(info);
         parentItem->appendChild(child);
     }
 
 
-    emit layoutChanged();
+    if (!parentItem->childCount())
+        return;
+    beginInsertRows(mCurrentIndex,0,rowCount(mCurrentIndex)-1);
+    endInsertRows();
+
+    mCurrentIndex = QModelIndex(); // hack... a cause du fetchmore repeté 2 fois...
 
 }
 
@@ -364,4 +325,21 @@ QString FileSystemModel::sizeHuman(int size) const
 
 }
 
+//=================== FILTER =============================
+bool FolderFilterProxyModel::filterAcceptsRow(int row, const QModelIndex &parent) const
+{
+    if (!parent.isValid())
+        return true;
+
+
+    FileSystemItem * item = static_cast<FileSystemItem*>(parent.internalPointer());
+
+    if (!item->fileInfo().isDir)
+        return false;
+
+
+    return true;
+
+
+}
 

@@ -27,10 +27,14 @@ private:
     QToolBar * mToolBar;
     MaFreeBox * mFbx;
     FileSystemModel * mModel;
+    QSortFilterProxyModel * mFolderModel;
+
 
 
 
 
 };
+
+
 
 #endif // FSMAINWINDOW_H

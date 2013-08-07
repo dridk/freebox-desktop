@@ -10,25 +10,28 @@ FSMainWindow::FSMainWindow(QWidget *parent) :
     mHeaderWidget= new HeaderPathWidget;
     mSplitter = new QSplitter(Qt::Horizontal);
     mModel = new FileSystemModel(mFbx);
+    mFolderModel = new QSortFilterProxyModel;
+
+
 
     mSplitter->setHandleWidth(4);
 
-    mTableView->setModel(mModel);
+//    mTableView->setModel(mModel);
+
     mTreeView->setModel(mModel);
 
-    qDebug()<<mModel->rowCount();
 
-    mTableView->horizontalHeader()->setSectionResizeMode(QHeaderView::ResizeToContents);
-    mTableView->horizontalHeader()->setSectionResizeMode(0, QHeaderView::Stretch);
-    mTableView->horizontalHeader()->setSectionResizeMode(1, QHeaderView::Interactive);
-    mTableView->horizontalHeader()->setSectionResizeMode(1, QHeaderView::Fixed);
-    mTableView->horizontalHeader()->setDefaultAlignment(Qt::AlignLeft);
+//    mTableView->horizontalHeader()->setSectionResizeMode(QHeaderView::ResizeToContents);
+//    mTableView->horizontalHeader()->setSectionResizeMode(0, QHeaderView::Stretch);
+//    mTableView->horizontalHeader()->setSectionResizeMode(1, QHeaderView::Interactive);
+//    mTableView->horizontalHeader()->setSectionResizeMode(1, QHeaderView::Fixed);
+//    mTableView->horizontalHeader()->setDefaultAlignment(Qt::AlignLeft);
 
 
-    mTableView->setSelectionBehavior(QAbstractItemView::SelectRows);
-    mTableView->verticalHeader()->setDefaultSectionSize(24);
-    mTableView->setAlternatingRowColors(true);
-    mTableView->verticalHeader()->hide();
+//    mTableView->setSelectionBehavior(QAbstractItemView::SelectRows);
+//    mTableView->verticalHeader()->setDefaultSectionSize(24);
+//    mTableView->setAlternatingRowColors(true);
+//    mTableView->verticalHeader()->hide();
 
     mTreeView->hideColumn(1);
     mTreeView->hideColumn(2);
@@ -49,7 +52,8 @@ FSMainWindow::FSMainWindow(QWidget *parent) :
     connect(login,SIGNAL(triggered()),this,SLOT(login()));
     //    connect(mFbx,SIGNAL(error(QString,Error)), this,SLOT(showError()));
     connect(mFbx,SIGNAL(loginSuccess()),mModel,SLOT(fetchMore()));
-    connect(mTreeView,SIGNAL(clicked(QModelIndex)),mTableView,SLOT(setRootIndex(QModelIndex)));
+
+//    connect(mTreeView,SIGNAL(clicked(QModelIndex)),mTableView,SLOT(setRootIndex(QModelIndex)));
 
 
     //   mToolBar->setStyleSheet("QToolBar{background:#3a3a3a;}");
