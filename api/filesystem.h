@@ -10,7 +10,8 @@ class MaFreeBox;
 class FileSystem;
 struct FileUpload;
 
-struct FileInfo {
+class FileInfo { // class et pas une struct pour etre utilisé dans le treeview
+public:
     QString path;
     QString name;
     QString mimetype;
@@ -45,7 +46,13 @@ public:
     ~FileSystem();
 
 public slots:
-    void requestList(const QString& path = QString());
+    void requestList(const QString& path = QString(),
+                     bool onlyFolder   =false,
+                     bool countSubFolder=false,
+                     bool removeHidden =true
+
+                     );
+
     void requestInfo(const QString& path);
     void requestMove(const QStringList& paths, const QString& dest,
                      ConflictMode mode = OverwriteMode);
@@ -135,7 +142,7 @@ struct FileUpload {
     QString id;
     unsigned int size;
     unsigned int uploaded;
-//    FileSystem::UploadStatus status;
+    //    FileSystem::UploadStatus status;
     QString status;
     QDateTime startDate;
     QDateTime lastUpdate;

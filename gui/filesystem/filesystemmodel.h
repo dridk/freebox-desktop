@@ -3,25 +3,62 @@
 
 #include <QAbstractListModel>
 #include <QMimeDatabase>
+#include <QStandardItemModel>
+#include <QSortFilterProxyModel>
 #include "mafreebox.h"
-class FileSystemModel : public QAbstractTableModel
+
+
+class FileSystemItem {
+public:
+    FileSystemItem(FileSystemItem * parent = 0);
+    ~FileSystemItem();
+    void appendChild(FileSystemItem * child);
+    int childCount() const;
+    FileSystemItem * parent();
+    FileSystemItem * child(int row);
+    const QList<FileSystemItem*>&  children();
+    void setParent(FileSystemItem * item);
+
+    const FileInfo& fileInfo() const {return mFileInfo;}
+    void setFileInfo(const FileInfo& info);
+
+private:
+    FileInfo mFileInfo;
+    FileSystemItem * mParent;
+    QList<FileSystemItem* > mChilds;
+
+};
+
+class FileSystemModel : public QAbstractItemModel
 {
     Q_OBJECT
 public:
     FileSystemModel(MaFreeBox * parent );
-    int rowCount(const QModelIndex &parent) const;
-    int columnCount(const QModelIndex &parent) const;
+    ~FileSystemModel();
     QVariant data(const QModelIndex &index, int role) const;
-    QVariant headerData(int section, Qt::Orientation orientation, int role) const;
+    int rowCount(const QModelIndex &parent = QModelIndex()) const;
+    int columnCount(const QModelIndex &parent = QModelIndex()) const;
+
+    QModelIndex index(int row, int column, const QModelIndex &parent) const;
+    QModelIndex parent(const QModelIndex &child) const;
+
+    bool canFetchMore(const QModelIndex &parent) const;
+    bool hasChildren(const QModelIndex &parent) const;
+
+
+   QVariant headerData(int section, Qt::Orientation orientation, int role) const;
 
 public slots:
-    void setPath(const QString& path = QString());
-    void setPath(const QModelIndex& index);
+    void fetchMore(const QModelIndex &parent = QModelIndex());
 
 protected slots:
     void load(const QList<FileInfo>& data);
 
 protected:
+
+
+    FileSystemItem * toItem(const QModelIndex& index) const;
+
     MaFreeBox * fbx() {
         return qobject_cast<MaFreeBox*>(QObject::parent());
     }
@@ -29,9 +66,14 @@ protected:
     QString sizeHuman(int size) const;
 
 private:
-    QList<FileInfo> mData;
+    FileSystemItem * mRootItem;
     QMimeDatabase mMimeDB;
+    QModelIndex mCurrentIndex;
 
 };
+
+
+
+
 
 #endif // FILESYSTEMMODEL_H

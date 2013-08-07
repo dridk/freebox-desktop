@@ -15,10 +15,17 @@ FileSystem::~FileSystem()
     mDownloads.clear();
 }
 
-void FileSystem::requestList(const QString &path)
+void FileSystem::requestList(const QString &path, bool onlyFolder, bool countSubFolder, bool removeHidden)
 {
+
+    QStringList param;
+    param.append("onlyFolder=" + QString::number(onlyFolder));
+    param.append("countSubFolder=" + QString::number(countSubFolder));
+    param.append("removeHidden=" + QString::number(removeHidden));
+
+
     QNetworkReply * reply =
-            fbx()->get(fbx()->createRequest(QString("fs/ls/%1").arg(path)));
+            fbx()->get(fbx()->createRequest(QString("fs/ls/%1?%2").arg(path).arg(param.join("&"))));
 
     connect(reply,SIGNAL(finished()),this,SLOT(requestListFinished()));
     connect(reply,SIGNAL(error(QNetworkReply::NetworkError)),fbx(),SLOT(errorReceived(QNetworkReply::NetworkError)));
@@ -255,6 +262,7 @@ void FileSystem::requestListFinished()
     QNetworkReply * reply  = qobject_cast<QNetworkReply*>(sender());
     QJsonDocument doc = QJsonDocument::fromJson(reply->readAll());
 
+
     if (fbx()->parseResult(doc))
     {
 
@@ -276,6 +284,9 @@ void FileSystem::requestListFinished()
             file.isDir = item.toObject().value("type").toString() == "dir";
             file.size = item.toObject().value("size").toDouble();
             list.append(file);
+
+
+            qDebug()<<file.name<<" "<<file.fileCount;
 
         }
 

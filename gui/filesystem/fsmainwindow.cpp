@@ -14,6 +14,10 @@ FSMainWindow::FSMainWindow(QWidget *parent) :
     mSplitter->setHandleWidth(4);
 
     mTableView->setModel(mModel);
+    mTreeView->setModel(mModel);
+
+    qDebug()<<mModel->rowCount();
+
     mTableView->horizontalHeader()->setSectionResizeMode(QHeaderView::ResizeToContents);
     mTableView->horizontalHeader()->setSectionResizeMode(0, QHeaderView::Stretch);
     mTableView->horizontalHeader()->setSectionResizeMode(1, QHeaderView::Interactive);
@@ -26,6 +30,12 @@ FSMainWindow::FSMainWindow(QWidget *parent) :
     mTableView->setAlternatingRowColors(true);
     mTableView->verticalHeader()->hide();
 
+    mTreeView->hideColumn(1);
+    mTreeView->hideColumn(2);
+    mTreeView->hideColumn(3);
+
+
+
 
     //    setStyleSheet("QMainWindow{background:#3a3a3a;}");
 
@@ -37,9 +47,9 @@ FSMainWindow::FSMainWindow(QWidget *parent) :
 
 
     connect(login,SIGNAL(triggered()),this,SLOT(login()));
-    connect(mFbx,SIGNAL(error(QString,Error)), this,SLOT(showError()));
-    connect(mFbx,SIGNAL(loginSuccess()),mModel,SLOT(setPath()));
-    connect(mTableView,SIGNAL(doubleClicked(QModelIndex)),mModel,SLOT(setPath(QModelIndex)));
+    //    connect(mFbx,SIGNAL(error(QString,Error)), this,SLOT(showError()));
+    connect(mFbx,SIGNAL(loginSuccess()),mModel,SLOT(fetchMore()));
+    connect(mTreeView,SIGNAL(clicked(QModelIndex)),mTableView,SLOT(setRootIndex(QModelIndex)));
 
 
     //   mToolBar->setStyleSheet("QToolBar{background:#3a3a3a;}");
@@ -96,5 +106,7 @@ void FSMainWindow::showError()
 {
     QMessageBox::critical(this,"freebox error", mFbx->errorString());
 }
+
+
 
 
