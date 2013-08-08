@@ -25,7 +25,7 @@ void FileSystem::requestList(const QString &path, bool onlyFolder, bool countSub
 
 
     QNetworkReply * reply =
-            fbx()->get(fbx()->createRequest(QString("fs/ls/%1?%2").arg(path).arg(param.join("&"))));
+            fbx()->get(fbx()->myCreateRequest(QString("fs/ls/%1?%2").arg(path).arg(param.join("&"))));
 
     connect(reply,SIGNAL(finished()),this,SLOT(requestListFinished()));
     connect(reply,SIGNAL(error(QNetworkReply::NetworkError)),fbx(),SLOT(errorReceived(QNetworkReply::NetworkError)));
@@ -38,7 +38,7 @@ void FileSystem::requestList(const QString &path, bool onlyFolder, bool countSub
 void FileSystem::requestInfo(const QString &path)
 {
     QNetworkReply * reply =
-            fbx()->get(fbx()->createRequest(QString("fs/info/%1").arg(path)));
+            fbx()->get(fbx()->myCreateRequest(QString("fs/info/%1").arg(path)));
 
     connect(reply,SIGNAL(finished()),this,SLOT(requestInfoFinished()));
     connect(reply,SIGNAL(error(QNetworkReply::NetworkError)),fbx(),SLOT(errorReceived(QNetworkReply::NetworkError)));
@@ -50,7 +50,7 @@ void FileSystem::requestInfo(const QString &path)
 
 void FileSystem::requestMove(const QStringList &paths, const QString &dest, FileSystem::ConflictMode mode)
 {
-    QNetworkRequest request = fbx()->createRequest(QString("fs/mv/"));
+    QNetworkRequest request = fbx()->myCreateRequest(QString("fs/mv/"));
 
     QString textMode = QString(metaObject()->enumerator(mode).valueToKey(mode));
     textMode = textMode.toLower().remove("mode");
@@ -73,7 +73,7 @@ void FileSystem::requestMove(const QStringList &paths, const QString &dest, File
 
 void FileSystem::requestCopy(const QStringList &paths, const QString &dest, FileSystem::ConflictMode mode)
 {
-    QNetworkRequest request = fbx()->createRequest(QString("fs/cp/"));
+    QNetworkRequest request = fbx()->myCreateRequest(QString("fs/cp/"));
 
     QString textMode = QString(metaObject()->enumerator(mode).valueToKey(mode));
     textMode = textMode.toLower().remove("mode");
@@ -95,7 +95,7 @@ void FileSystem::requestCopy(const QStringList &paths, const QString &dest, File
 
 void FileSystem::requestRemove(const QStringList &paths)
 {
-    QNetworkRequest request = fbx()->createRequest(QString("fs/rm/"));
+    QNetworkRequest request = fbx()->myCreateRequest(QString("fs/rm/"));
     QJsonObject json;
     json.insert("files", QJsonArray::fromStringList(paths));
     QJsonDocument doc(json);
@@ -106,7 +106,7 @@ void FileSystem::requestRemove(const QStringList &paths)
 
 void FileSystem::requestArchive(const QStringList &paths, const QString &dest)
 {
-    QNetworkRequest request = fbx()->createRequest(QString("fs/archive/"));
+    QNetworkRequest request = fbx()->myCreateRequest(QString("fs/archive/"));
 
     QJsonObject json;
     json.insert("files", QJsonArray::fromStringList(paths));
@@ -121,7 +121,7 @@ void FileSystem::requestArchive(const QStringList &paths, const QString &dest)
 
 void FileSystem::requestExtract(const QString &source, const QString &dest, const QString &password, bool deleteArchive, bool overwrite)
 {
-    QNetworkRequest request = fbx()->createRequest(QString("fs/extract/"));
+    QNetworkRequest request = fbx()->myCreateRequest(QString("fs/extract/"));
 
     QJsonObject json;
     json.insert("src", source);
@@ -140,7 +140,7 @@ void FileSystem::requestExtract(const QString &source, const QString &dest, cons
 
 void FileSystem::requestMkdir(const QString &path, const QString &dirName)
 {
-    QNetworkRequest request = fbx()->createRequest(QString("fs/mkdir/"));
+    QNetworkRequest request = fbx()->myCreateRequest(QString("fs/mkdir/"));
 
     QJsonObject json;
     json.insert("parent", path);
@@ -155,7 +155,7 @@ void FileSystem::requestMkdir(const QString &path, const QString &dirName)
 
 void FileSystem::requestRename(const QString &source, const QString &newName)
 {
-    QNetworkRequest request = fbx()->createRequest(QString("fs/rename/"));
+    QNetworkRequest request = fbx()->myCreateRequest(QString("fs/rename/"));
 
     QJsonObject json;
     json.insert("src", source);
@@ -170,7 +170,7 @@ void FileSystem::requestRename(const QString &source, const QString &newName)
 
 void FileSystem::requestDownload(const QString &path, const QString &localPath)
 {
-    QNetworkRequest request = fbx()->createRequest(QString("dl/%1").arg(path));
+    QNetworkRequest request = fbx()->myCreateRequest(QString("dl/%1").arg(path));
 
     QFile * file = new QFile(QDir::fromNativeSeparators(localPath +
                                                         QDir::separator() +
@@ -200,7 +200,7 @@ void FileSystem::requestUpload(const QString &file, const QString &destPath)
     // 1: Get ID from uri : 'upload/'
     // 2: send file from uri : 'upload/{id}/post multiPart
 
-    QNetworkRequest request = fbx()->createRequest(QString("upload/"));
+    QNetworkRequest request = fbx()->myCreateRequest(QString("upload/"));
     // just write the filename to get it back from response!
     request.setRawHeader(QByteArray("filename"), file.toUtf8());
     QJsonObject json;
@@ -217,7 +217,7 @@ void FileSystem::requestUpload(const QString &file, const QString &destPath)
 
 void FileSystem::requestUploadList()
 {
-    QNetworkRequest request = fbx()->createRequest(QString("upload/"));
+    QNetworkRequest request = fbx()->myCreateRequest(QString("upload/"));
 
     QNetworkReply * reply = fbx()->get(request);
     connect(reply,SIGNAL(finished()),this,SLOT(requestUploadListFinished()));
@@ -227,7 +227,7 @@ void FileSystem::requestUploadList()
 
 void FileSystem::requestUploadInfo(int id)
 {
-    QNetworkRequest request = fbx()->createRequest(QString("upload/%1").arg(id));
+    QNetworkRequest request = fbx()->myCreateRequest(QString("upload/%1").arg(id));
 
     QNetworkReply * reply = fbx()->get(request);
     connect(reply,SIGNAL(finished()),this,SLOT(requestUploadInfoFinished()));
@@ -237,7 +237,7 @@ void FileSystem::requestUploadInfo(int id)
 
 void FileSystem::requestDeleteUpload(int id)
 {
-    QNetworkRequest request = fbx()->createRequest(QString("upload/%1").arg(id));
+    QNetworkRequest request = fbx()->myCreateRequest(QString("upload/%1").arg(id));
 
     QNetworkReply * reply = fbx()->deleteResource(request);
     connect(reply,SIGNAL(finished()),this,SLOT(requestDeleteUploadFinished()));
@@ -249,7 +249,7 @@ void FileSystem::requestDeleteUpload(int id)
 
 void FileSystem::requestCleanUploads()
 {
-    QNetworkRequest request = fbx()->createRequest(QString("upload/clean"));
+    QNetworkRequest request = fbx()->myCreateRequest(QString("upload/clean"));
 
     QNetworkReply * reply = fbx()->deleteResource(request);
     connect(reply,SIGNAL(finished()),this,SLOT(requestCleanUploadsFinished()));
@@ -462,7 +462,7 @@ void FileSystem::requestStartUpload()
 
 
         QHttpMultiPart *multiPart = new QHttpMultiPart(QHttpMultiPart::FormDataType);
-        QNetworkRequest request = fbx()->createRequest(QString("upload/%1/send/").arg(id));
+        QNetworkRequest request = fbx()->myCreateRequest(QString("upload/%1/send/").arg(id));
         QHttpPart filePart;
         filePart.setHeader(QNetworkRequest::ContentTypeHeader,
                            mMimeDatabase.mimeTypeForFile(fileName).name());

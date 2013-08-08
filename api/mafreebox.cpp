@@ -145,7 +145,7 @@ void MaFreeBox::requestAuthorize(const QString &appId, const QString &appName, c
     json.insert("app_version",appVersion);
     json.insert("device_name",deviceName);
 
-    QNetworkRequest request = createRequest("login/authorize");
+    QNetworkRequest request = myCreateRequest("login/authorize");
     QNetworkReply * reply = post(request,QJsonDocument(json).toJson());
     connect(reply,SIGNAL(finished()),this,SLOT(requestAuthorizeFinished()));
     connect(reply,SIGNAL(error(QNetworkReply::NetworkError)),this,SLOT(errorReceived(QNetworkReply::NetworkError)));
@@ -155,7 +155,7 @@ void MaFreeBox::requestAuthorize(const QString &appId, const QString &appName, c
 
 void MaFreeBox::requestAuthorizeStatus(int trackId)
 {
-    QNetworkReply * reply = get(createRequest(QString("login/authorize/%1").arg(trackId)));
+    QNetworkReply * reply = get(myCreateRequest(QString("login/authorize/%1").arg(trackId)));
     connect(reply,SIGNAL(finished()),this,SLOT(requestAuthorizeStatusFinished()));
     connect(reply,SIGNAL(error(QNetworkReply::NetworkError)),this,SLOT(errorReceived(QNetworkReply::NetworkError)));
 
@@ -165,7 +165,7 @@ void MaFreeBox::requestAuthorizeStatus(int trackId)
 void MaFreeBox::requestLogin()
 {
     qDebug()<<"request Login";
-    QNetworkReply * reply = get(createRequest("login"));
+    QNetworkReply * reply = get(myCreateRequest("login"));
     connect(reply,SIGNAL(finished()),this,SLOT(requestLoginFinished()));
     connect(reply,SIGNAL(error(QNetworkReply::NetworkError)),this,SLOT(errorReceived(QNetworkReply::NetworkError)));
 
@@ -181,7 +181,7 @@ void MaFreeBox::requestSession()
                                     mChallenge.toUtf8()));
     QJsonDocument doc(json);
 
-    QNetworkReply * reply = post(createRequest("login/session"), doc.toJson());
+    QNetworkReply * reply = post(myCreateRequest("login/session"), doc.toJson());
 
     connect(reply,SIGNAL(finished()),this,SLOT(requestSessionFinished()));
     connect(reply,SIGNAL(error(QNetworkReply::NetworkError)),this,SLOT(errorReceived(QNetworkReply::NetworkError)));
@@ -279,7 +279,7 @@ QString MaFreeBox::hmacSha1(QByteArray key, QByteArray baseString)
     return hashed.toHex();
 }
 
-QNetworkRequest MaFreeBox:: createRequest(const QString &uri) const
+QNetworkRequest MaFreeBox:: myCreateRequest(const QString &uri) const
 {
     //convertion du string 1.0 en v1. Soit "v" + integer. Ca suppose que 1.1 => v1
     int version = qRound(mApiInfo.version.toDouble());

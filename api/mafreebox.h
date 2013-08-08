@@ -69,7 +69,7 @@ public:
     const Error& error() const;
     const QStringList& permissions() const;
 
-    QNetworkRequest createRequest(const QString& uri) const;
+    QNetworkRequest myCreateRequest(const QString& uri) const;
     bool parseResult(const QJsonDocument& doc);
     void sendError(const QString& message,Error code );
 

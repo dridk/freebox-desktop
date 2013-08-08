@@ -87,7 +87,7 @@ int FileSystemModel::rowCount(const QModelIndex &parent) const
 
 }
 
-int FileSystemModel::columnCount(const QModelIndex &parent) const
+int FileSystemModel::columnCount(const QModelIndex &/*parent*/) const
 {
     return 1;
 
@@ -326,7 +326,7 @@ QString FileSystemModel::sizeHuman(int size) const
 }
 
 //=================== FILTER =============================
-bool FolderFilterProxyModel::filterAcceptsRow(int row, const QModelIndex &parent) const
+bool FolderFilterProxyModel::filterAcceptsRow(int /*row*/, const QModelIndex &parent) const
 {
     if (!parent.isValid())
         return true;
