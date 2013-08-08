@@ -62,8 +62,8 @@ FSMainWindow::FSMainWindow(QWidget *parent) :
     mToolBar->setIconSize(QSize(16,16));
     mToolBar->setToolButtonStyle(Qt::ToolButtonTextBesideIcon);
 
-    QAction * mkdirAction = mToolBar->addAction(QIcon(":folder.png"),"Nouveau dosser");
-    QAction * uploadAction = mToolBar->addAction(QIcon(":folder_add.png"),"Uploader ici");
+    QAction * mkdirAction = mToolBar->addAction(QIcon(":folder.png"),"Nouveau dossier");
+    QAction * uploadAction = mToolBar->addAction(QIcon(":folder_add.png"),"Télécharger ici");
     QAction * refreshAction = mToolBar->addAction(QIcon(":arrow_refresh.png"),"Rafraîchir");
 
 
