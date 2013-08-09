@@ -10,9 +10,8 @@
 MaFreeBox::MaFreeBox(QObject *parent) :
     QNetworkAccessManager(parent)
 {
-    mHostName = "mafreebox.free.fr";
+    mHostName = "mafreebox.freebox.fr";
     mPort = 80;
-    //    mAppToken = "Cw0MVrumznvfZxn3xnGbKeg6afjVp+XTqptWeSraESzfxp/SAdZ9ML+zAvwNoPro";
 
     mApiInfo.version = "1.0";
     mApiInfo.baseUrl = "/api/";
@@ -369,10 +368,8 @@ void MaFreeBox::sendError(const QString &message, const QString &code)
 
 void MaFreeBox::errorReceived(QNetworkReply::NetworkError errCode)
 {
-    qDebug()<<"ERROR "<< errCode;
-
-
     QNetworkReply * reply = qobject_cast<QNetworkReply*>(sender());
+    qDebug()<<"ERROR "<< reply->errorString();
     if (reply)
     {
         QJsonDocument doc = QJsonDocument::fromJson(reply->readAll());
