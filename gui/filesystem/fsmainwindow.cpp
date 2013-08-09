@@ -107,6 +107,7 @@ void FSMainWindow::authorizeReceived(const QString &token, int trackId)
     {
         mFbx->setApplicationToken(token);
         mFbx->saveApplicationToken();
+        login();
     }
 
 }
