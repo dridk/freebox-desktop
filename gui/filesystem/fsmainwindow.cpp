@@ -43,9 +43,12 @@ FSMainWindow::FSMainWindow(QWidget *parent) :
 
     //construction de la ToolBar
     mToolBar = addToolBar("tool");
-    QAction * mkdirAction = mToolBar->addAction(QIcon(":folder.png"),"Nouveau dossier");
-    QAction * uploadAction = mToolBar->addAction(QIcon(":folder_add.png"),"Télécharger ici");
-    QAction * refreshAction = mToolBar->addAction(QIcon(":arrow_refresh.png"),"Rafraîchir");
+//    QAction * mkdirAction =
+    mToolBar->addAction(QIcon(":folder.png"),"Nouveau dossier");
+//    QAction * uploadAction =
+    mToolBar->addAction(QIcon(":folder_add.png"),"Télécharger ici");
+//    QAction * refreshAction =
+    mToolBar->addAction(QIcon(":arrow_refresh.png"),"Rafraîchir");
 
     mToolBar->setIconSize(QSize(16,16));
     mToolBar->setToolButtonStyle(Qt::ToolButtonTextBesideIcon);

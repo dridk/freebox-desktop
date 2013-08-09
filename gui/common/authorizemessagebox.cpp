@@ -1,7 +1,7 @@
 #include "authorizemessagebox.h"
 
 AuthorizeMessageBox::AuthorizeMessageBox(MaFreeBox *freebox, QWidget *parent):
-    mFbx(freebox),QMessageBox(parent)
+    QMessageBox(parent), mFbx(freebox)
 {
     mTimer = new QTimer(this);
     setWindowTitle("Authorisation");

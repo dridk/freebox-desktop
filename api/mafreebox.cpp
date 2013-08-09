@@ -366,7 +366,7 @@ void MaFreeBox::sendError(const QString &message, const QString &code)
 
 }
 
-void MaFreeBox::errorReceived(QNetworkReply::NetworkError errCode)
+void MaFreeBox::errorReceived(QNetworkReply::NetworkError /*errCode*/)
 {
     QNetworkReply * reply = qobject_cast<QNetworkReply*>(sender());
     qDebug()<<"ERROR "<< reply->errorString();
