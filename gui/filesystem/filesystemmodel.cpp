@@ -133,14 +133,10 @@ QModelIndex FileSystemModel::parent(const QModelIndex &child) const
 bool FileSystemModel::canFetchMore(const QModelIndex &parent) const
 {
 
-    if (!parent.isValid())
-        return false;
-
-
-    FileSystemItem * childItem = static_cast<FileSystemItem*>(parent.internalPointer());
+    FileSystemItem * childItem = toItem(parent);
 
     if (childItem) {
-        if (rowCount(parent) != (childItem->fileInfo().fileCount + childItem->fileInfo().folderCount ) )
+        if (rowCount(parent) == 0 && childItem->fileInfo().folderCount + childItem->fileInfo().fileCount  > 0 )
             return true;
     }
 
@@ -150,16 +146,18 @@ bool FileSystemModel::canFetchMore(const QModelIndex &parent) const
 
 void FileSystemModel::fetchMore(const QModelIndex &parent)
 {
+    mCurrentIndex = parent;
 
+    qDebug()<<"fetch more";
     if (!parent.isValid()){
         fbx()->fileSystem()->requestList(QString(),false,true,true);
+
         return;
     }
 
 
-    if (hasChildren(parent) && !mCurrentIndex.isValid()) { // hack... a cause du fetchmore repeté 2 fois...
+    else {
         FileSystemItem * item = toItem(parent);
-        mCurrentIndex = parent;
         fbx()->fileSystem()->requestList(item->fileInfo().path,false,true,true);
 
     }
@@ -172,7 +170,7 @@ bool FileSystemModel::hasChildren(const QModelIndex &parent) const
 
     FileSystemItem * item = toItem(parent);
 
-    if (item->fileInfo().fileCount || item->fileInfo().folderCount)
+    if (item->fileInfo().fileCount + item->fileInfo().folderCount > 0)
         return true;
 
     return false;
@@ -181,6 +179,37 @@ bool FileSystemModel::hasChildren(const QModelIndex &parent) const
 
 }
 
+void FileSystemModel::load(const QList<FileInfo> &data)
+{
+    FileSystemItem * parentItem = toItem(mCurrentIndex);
+
+    if (!data.count() || rowCount(mCurrentIndex) > 0)
+    return;
+
+    qDebug()<<"load";
+
+
+    beginInsertRows(mCurrentIndex,0,data.count() -1);
+
+    foreach (FileInfo info, data)
+    {
+        FileSystemItem * child = new FileSystemItem(parentItem);
+        child->setFileInfo(info);
+        parentItem->appendChild(child);
+    }
+
+    endInsertRows();
+
+//    emit layoutChanged();
+
+//    if (!parentItem->childCount())
+//        return;
+
+
+
+//    mCurrentIndex = QModelIndex(); // hack... a cause du fetchmore repeté 2 fois...
+
+}
 QVariant FileSystemModel::data(const QModelIndex &index, int role) const
 {
     if (!index.isValid())
@@ -247,56 +276,6 @@ QVariant FileSystemModel::headerData(int section, Qt::Orientation orientation, i
 }
 
 
-//void FileSystemModel::setPath(const QString &path)
-//{
-
-//    fbx()->fileSystem()->requestList(path);
-//}
-
-//void FileSystemModel::setPath(const QModelIndex &index)
-//{
-
-//    qDebug()<<"SET PATH "<<index;
-
-////    mCurrentIndex = index;
-////    if (!mCurrentIndex.isValid())
-////        fbx()->fileSystem()->requestList(QString(),false,true,true);
-////    else {
-
-////        FileSystemItem * item = static_cast<FileSystemItem*>(mCurrentIndex.internalPointer());
-////        fbx()->fileSystem()->requestList(item->fileInfo().path,false,true,true);
-
-////    }
-
-
-//}
-
-void FileSystemModel::load(const QList<FileInfo> &data)
-{
-    FileSystemItem * parentItem;
-    if (!mCurrentIndex.isValid())
-        parentItem = mRootItem;
-
-    else
-        parentItem = static_cast<FileSystemItem*>(mCurrentIndex.internalPointer());
-
-    foreach (FileInfo info, data)
-    {
-        FileSystemItem * child = new FileSystemItem(parentItem);
-        child->setFileInfo(info);
-        parentItem->appendChild(child);
-    }
-
-
-    if (!parentItem->childCount())
-        return;
-    beginInsertRows(mCurrentIndex,0,rowCount(mCurrentIndex)-1);
-    endInsertRows();
-
-    mCurrentIndex = QModelIndex(); // hack... a cause du fetchmore repeté 2 fois...
-
-}
-
 FileSystemItem *FileSystemModel::toItem(const QModelIndex &index) const
 {
     if (!index.isValid())
@@ -326,20 +305,5 @@ QString FileSystemModel::sizeHuman(int size) const
 }
 
 //=================== FILTER =============================
-bool FolderFilterProxyModel::filterAcceptsRow(int /*row*/, const QModelIndex &parent) const
-{
-    if (!parent.isValid())
-        return true;
 
-
-    FileSystemItem * item = static_cast<FileSystemItem*>(parent.internalPointer());
-
-    if (!item->fileInfo().isDir)
-        return false;
-
-
-    return true;
-
-
-}
 

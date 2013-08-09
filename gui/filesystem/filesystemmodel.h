@@ -46,7 +46,7 @@ public:
     bool hasChildren(const QModelIndex &parent) const;
 
 
-   QVariant headerData(int section, Qt::Orientation orientation, int role) const;
+    QVariant headerData(int section, Qt::Orientation orientation, int role) const;
 
 public slots:
     void fetchMore(const QModelIndex &parent = QModelIndex());
@@ -80,7 +80,16 @@ class FolderFilterProxyModel : public QSortFilterProxyModel
 {
 public:
 
-bool filterAcceptsRow(int row, const QModelIndex &parent) const;
+    bool filterAcceptsRow(int source_row, const QModelIndex &source_parent) const {
+        return true;
+    }
+
+    virtual bool canFetchMore(const QModelIndex &parent) const{
+        return sourceModel() != NULL && sourceModel()->canFetchMore(parent);
+    }
+    virtual void fetchMore(const QModelIndex& parent) {
+          sourceModel()->fetchMore(parent);
+      }
 
 
 };

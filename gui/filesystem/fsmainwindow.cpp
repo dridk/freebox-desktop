@@ -1,6 +1,7 @@
 #include "fsmainwindow.h"
 #include <QMessageBox>
 #include <QCoreApplication>
+#include "modeltest.h"
 #include "authorizemessagebox.h"
 FSMainWindow::FSMainWindow(QWidget *parent) :
     QMainWindow(parent)
@@ -12,21 +13,22 @@ FSMainWindow::FSMainWindow(QWidget *parent) :
     mHeaderWidget= new HeaderPathWidget;
     mSplitter = new QSplitter(Qt::Horizontal);
     mModel = new FileSystemModel(mFbx);
-    mFolderModel = new QSortFilterProxyModel;
+    mFolderModel = new FolderFilterProxyModel;
 
 
+ mFolderModel->setSourceModel(mModel);
 
     mSplitter->setHandleWidth(4);
 
     //Construction des Views
     mTableView->setModel(mModel);
-    mTreeView->setModel(mModel);
+  // mTreeView->setModel(mFolderModel);
     //    mTableView->horizontalHeader()->setSectionResizeMode(QHeaderView::ResizeToContents);
     //    mTableView->horizontalHeader()->setSectionResizeMode(0, QHeaderView::Stretch);
     //    mTableView->horizontalHeader()->setSectionResizeMode(1, QHeaderView::Interactive);
     //    mTableView->horizontalHeader()->setSectionResizeMode(1, QHeaderView::Fixed);
     //    mTableView->horizontalHeader()->setDefaultAlignment(Qt::AlignLeft);
-    //    mTableView->setSelectionBehavior(QAbstractItemView::SelectRows);
+        mTableView->setSelectionBehavior(QAbstractItemView::SelectRows);
     //    mTableView->verticalHeader()->setDefaultSectionSize(24);
     //    mTableView->setAlternatingRowColors(true);
     //    mTableView->verticalHeader()->hide();
@@ -79,6 +81,12 @@ FSMainWindow::FSMainWindow(QWidget *parent) :
     connect(mFbx,SIGNAL(authorizeReceived(QString,int)),this,SLOT(authorizeReceived(QString,int)));
     connect(mTreeView,SIGNAL(clicked(QModelIndex)),mTableView,SLOT(setRootIndex(QModelIndex)));
 
+    connect(mTableView,SIGNAL(doubleClicked(QModelIndex)),mTableView,SLOT(setRootIndex(QModelIndex)));
+
+    connect(mTableView,SIGNAL(clicked(QModelIndex)),mModel,SLOT(fetchMore()));
+
+
+//  new ModelTest(mModel, this);
 }
 
 void FSMainWindow::login()
@@ -98,6 +106,10 @@ void FSMainWindow::authorize()
     QString appId = "org.labsquare" + qApp->applicationName();
     mFbx->requestAuthorize(appId, qApp->applicationName(), qApp->applicationVersion(), "Desktop");
 
+}
+
+void FSMainWindow::test()
+{
 }
 
 void FSMainWindow::authorizeReceived(const QString &token, int trackId)

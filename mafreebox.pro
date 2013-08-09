@@ -4,7 +4,7 @@
 #
 #-------------------------------------------------
 
-QT       += core gui network
+QT       += core gui network testlib
 
 greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 
@@ -18,6 +18,7 @@ TEMPLATE = app
 include(api/api.pri)
 include(gui/common/common.pri)
 include(gui/filesystem/filesystem.pri)
+include (modeltest/modeltest.pri)
 
 SOURCES += main.cpp\
     mainapplication.cpp

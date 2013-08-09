@@ -18,6 +18,7 @@ public slots:
     void login();
     void showError();
     void authorize();
+    void test();
 
 
 protected slots:
@@ -33,7 +34,7 @@ private:
     QToolBar * mToolBar;
     MaFreeBox * mFbx;
     FileSystemModel * mModel;
-    QSortFilterProxyModel * mFolderModel;
+    FolderFilterProxyModel * mFolderModel;
 
 
 
