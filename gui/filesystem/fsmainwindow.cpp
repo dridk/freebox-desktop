@@ -81,7 +81,7 @@ FSMainWindow::FSMainWindow(QWidget *parent) :
 void FSMainWindow::login()
 {
     qDebug()<<qApp->applicationName();
-    mFbx->setApplicationId("fr.freebox." + qApp->applicationName());
+    mFbx->setApplicationId("org.labsquare" + qApp->applicationName());
     mFbx->requestLogin();
 }
 
@@ -108,6 +108,11 @@ void FSMainWindow::authorizeReceived(const QString &token, int trackId)
         mFbx->setApplicationToken(token);
         mFbx->saveApplicationToken();
         login();
+    }
+
+    else
+    {
+        QMessageBox::warning(this,"Authorisation", "Authorisation refusé");
     }
 
 }

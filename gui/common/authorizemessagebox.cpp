@@ -6,7 +6,7 @@ AuthorizeMessageBox::AuthorizeMessageBox(MaFreeBox *freebox, QWidget *parent):
     mTimer = new QTimer(this);
     setWindowTitle("Authorisation");
     setText("Authorisation en cours");
-
+    setStandardButtons(QMessageBox::Cancel);
     connect(mTimer,SIGNAL(timeout()),this,SLOT(getStatus()));
     connect(mFbx,SIGNAL(authorizeStatusChanged(MaFreeBox::AuthStatus)), this,SLOT(showMessage(MaFreeBox::AuthStatus)));
 
