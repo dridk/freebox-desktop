@@ -92,7 +92,7 @@ void FSMainWindow::showError()
 
 void FSMainWindow::authorize()
 {
-    QString appId = "fr.freebox." + qApp->applicationName();
+    QString appId = "org.labsquare" + qApp->applicationName();
     mFbx->requestAuthorize(appId, qApp->applicationName(), qApp->applicationVersion(), "Desktop");
 
 }
