@@ -11,6 +11,7 @@ class FSMainWindow : public QMainWindow
     Q_OBJECT
 public:
     explicit FSMainWindow(QWidget *parent = 0);
+    ~FSMainWindow();
     
 signals:
     
@@ -18,7 +19,7 @@ public slots:
     void login();
     void showError();
     void authorize();
-    void test();
+    void setRootIndex(const QModelIndex& index);
 
 
 protected slots:

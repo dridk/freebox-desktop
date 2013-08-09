@@ -5,6 +5,9 @@
 FileSystemItem::FileSystemItem(FileSystemItem *parent)
 {
     mParent = parent;
+    mFileInfo.name = "root";
+    mIsLoading = false;
+
 }
 
 FileSystemItem::~FileSystemItem()
@@ -59,12 +62,11 @@ FileSystemModel::FileSystemModel(MaFreeBox *parent) :
     QAbstractItemModel(parent)
 {
 
+    mRootItem = new FileSystemItem;
+
 
     connect(fbx()->fileSystem(),SIGNAL(listReceived(QList<FileInfo>)),
             this,SLOT(load(QList<FileInfo>)));
-
-
-    mRootItem = new FileSystemItem;
 
 
 
@@ -89,7 +91,7 @@ int FileSystemModel::rowCount(const QModelIndex &parent) const
 
 int FileSystemModel::columnCount(const QModelIndex &/*parent*/) const
 {
-    return 1;
+    return 3;
 
 }
 
@@ -132,13 +134,13 @@ QModelIndex FileSystemModel::parent(const QModelIndex &child) const
 
 bool FileSystemModel::canFetchMore(const QModelIndex &parent) const
 {
-
     FileSystemItem * childItem = toItem(parent);
 
     if (childItem) {
-        if (rowCount(parent) == 0 && childItem->fileInfo().folderCount + childItem->fileInfo().fileCount  > 0 )
+        if (rowCount(parent) == 0 && childItem->fileInfo().folderCount + childItem->fileInfo().fileCount  )
             return true;
     }
+
 
     return false;
 
@@ -148,18 +150,16 @@ void FileSystemModel::fetchMore(const QModelIndex &parent)
 {
     mCurrentIndex = parent;
 
-    qDebug()<<"fetch more";
     if (!parent.isValid()){
         fbx()->fileSystem()->requestList(QString(),false,true,true);
-
         return;
     }
 
-
     else {
-        FileSystemItem * item = toItem(parent);
-        fbx()->fileSystem()->requestList(item->fileInfo().path,false,true,true);
 
+        FileSystemItem * item = toItem(parent);
+        item->setLoading(true);
+        fbx()->fileSystem()->requestList(item->fileInfo().path,false,true,true);
     }
 }
 
@@ -170,7 +170,7 @@ bool FileSystemModel::hasChildren(const QModelIndex &parent) const
 
     FileSystemItem * item = toItem(parent);
 
-    if (item->fileInfo().fileCount + item->fileInfo().folderCount > 0)
+    if (item->fileInfo().folderCount > 0)
         return true;
 
     return false;
@@ -183,31 +183,25 @@ void FileSystemModel::load(const QList<FileInfo> &data)
 {
     FileSystemItem * parentItem = toItem(mCurrentIndex);
 
-    if (!data.count() || rowCount(mCurrentIndex) > 0)
-    return;
+        if (!data.count() || rowCount(mCurrentIndex) > 0)
+            return;
+
+
+
 
     qDebug()<<"load";
 
-
-    beginInsertRows(mCurrentIndex,0,data.count() -1);
+    QModelIndex begin = index(0,0,mCurrentIndex);
+    QModelIndex end =  index(data.count()-1,0,mCurrentIndex);
 
     foreach (FileInfo info, data)
     {
         FileSystemItem * child = new FileSystemItem(parentItem);
         child->setFileInfo(info);
         parentItem->appendChild(child);
+
+
     }
-
-    endInsertRows();
-
-//    emit layoutChanged();
-
-//    if (!parentItem->childCount())
-//        return;
-
-
-
-//    mCurrentIndex = QModelIndex(); // hack... a cause du fetchmore repeté 2 fois...
 
 }
 QVariant FileSystemModel::data(const QModelIndex &index, int role) const
@@ -215,11 +209,22 @@ QVariant FileSystemModel::data(const QModelIndex &index, int role) const
     if (!index.isValid())
         return QVariant();
 
+
+    if (role == Qt::UserRole && index.column() == 0) {
+
+    return toItem(index)->fileInfo().isDir;
+
+    }
+
+
     if (role == Qt::DisplayRole && index.column() == 0 )
         return toItem(index)->fileInfo().name;
 
     if (role == Qt::DecorationRole && index.column() == 0)
     {
+        if (toItem(index)->isLoading())
+            return QIcon(":arrow_refresh.png");
+
 
         if (toItem(index)->fileInfo().isDir)
             return QIcon(":folder.png");
@@ -306,4 +311,18 @@ QString FileSystemModel::sizeHuman(int size) const
 
 //=================== FILTER =============================
 
+
+bool FolderFilterProxyModel::canFetchMore(const QModelIndex &parent) const
+{
+
+    return sourceModel()->canFetchMore(mapToSource(parent));
+
+
+
+}
+
+void FolderFilterProxyModel::fetchMore(const QModelIndex &parent)
+{
+    sourceModel()->fetchMore(mapToSource(parent));
+}
 

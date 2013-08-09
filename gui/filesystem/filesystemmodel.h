@@ -22,10 +22,14 @@ public:
     const FileInfo& fileInfo() const {return mFileInfo;}
     void setFileInfo(const FileInfo& info);
 
+    bool isLoading() {return mIsLoading;}
+    void setLoading(bool loading) {mIsLoading = loading;}
+
 private:
     FileInfo mFileInfo;
     FileSystemItem * mParent;
     QList<FileSystemItem* > mChilds;
+    bool mIsLoading;
 
 };
 
@@ -47,6 +51,7 @@ public:
 
 
     QVariant headerData(int section, Qt::Orientation orientation, int role) const;
+    FileSystemItem * toItem(const QModelIndex& index) const;
 
 public slots:
     void fetchMore(const QModelIndex &parent = QModelIndex());
@@ -57,7 +62,6 @@ protected slots:
 protected:
 
 
-    FileSystemItem * toItem(const QModelIndex& index) const;
 
     MaFreeBox * fbx() {
         return qobject_cast<MaFreeBox*>(QObject::parent());
@@ -69,6 +73,7 @@ private:
     FileSystemItem * mRootItem;
     QMimeDatabase mMimeDB;
     QModelIndex mCurrentIndex;
+    bool mIsDirFilter ;
 
 };
 
@@ -80,17 +85,8 @@ class FolderFilterProxyModel : public QSortFilterProxyModel
 {
 public:
 
-    bool filterAcceptsRow(int source_row, const QModelIndex &source_parent) const {
-        return true;
-    }
-
-    virtual bool canFetchMore(const QModelIndex &parent) const{
-        return sourceModel() != NULL && sourceModel()->canFetchMore(parent);
-    }
-    virtual void fetchMore(const QModelIndex& parent) {
-          sourceModel()->fetchMore(parent);
-      }
-
+    bool canFetchMore(const QModelIndex &parent) const;
+    void fetchMore(const QModelIndex &parent);
 
 };
 

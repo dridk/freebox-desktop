@@ -1,4 +1,10 @@
 INCLUDEPATH += $$PWD
 DEPENDPATH += $$PWD
-SOURCES += $$PWD/modeltest.cpp
-HEADERS += $$PWD/modeltest.h
+
+HEADERS += \
+    modeltest/modeltest.h \
+    modeltest/dynamictreemodel.h
+
+SOURCES += \
+    modeltest/modeltest.cpp \
+    modeltest/dynamictreemodel.cpp

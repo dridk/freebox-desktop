@@ -1,7 +1,9 @@
 #include "fsmainwindow.h"
 #include <QMessageBox>
 #include <QCoreApplication>
+#include <QFileSystemModel>
 #include "modeltest.h"
+#include "dynamictreemodel.h"
 #include "authorizemessagebox.h"
 FSMainWindow::FSMainWindow(QWidget *parent) :
     QMainWindow(parent)
@@ -13,29 +15,34 @@ FSMainWindow::FSMainWindow(QWidget *parent) :
     mHeaderWidget= new HeaderPathWidget;
     mSplitter = new QSplitter(Qt::Horizontal);
     mModel = new FileSystemModel(mFbx);
+
     mFolderModel = new FolderFilterProxyModel;
 
+//    mFolderModel->setFilterKeyColumn(0);
+//    mFolderModel->setFilterRole(Qt::UserRole);
+//    mFolderModel->setFilterFixedString("true");
+//    mFolderModel->setDynamicSortFilter(true);
 
- mFolderModel->setSourceModel(mModel);
+    QFileSystemModel * m = new QFileSystemModel();
+    m->setRootPath("C://");
+    mFolderModel->setSourceModel(mModel);
+    mTreeView->setModel(mFolderModel);
+    mTableView->setModel(mModel);
+    mTreeView->setAnimated(true);
+    mTableView->horizontalHeader()->setSectionResizeMode(QHeaderView::ResizeToContents);
+    mTableView->horizontalHeader()->setSectionResizeMode(0, QHeaderView::Stretch);
+    mTableView->horizontalHeader()->setSectionResizeMode(1, QHeaderView::Interactive);
+    mTableView->horizontalHeader()->setSectionResizeMode(1, QHeaderView::Fixed);
+    mTableView->horizontalHeader()->setDefaultAlignment(Qt::AlignLeft);
+    mTableView->setSelectionBehavior(QAbstractItemView::SelectRows);
+    mTableView->verticalHeader()->setDefaultSectionSize(24);
+    mTableView->setAlternatingRowColors(true);
+    mTableView->verticalHeader()->hide();
+    mTreeView->hideColumn(1);
+    mTreeView->hideColumn(2);
+    mTreeView->hideColumn(3);
 
     mSplitter->setHandleWidth(4);
-
-    //Construction des Views
-    mTableView->setModel(mModel);
-  // mTreeView->setModel(mFolderModel);
-    //    mTableView->horizontalHeader()->setSectionResizeMode(QHeaderView::ResizeToContents);
-    //    mTableView->horizontalHeader()->setSectionResizeMode(0, QHeaderView::Stretch);
-    //    mTableView->horizontalHeader()->setSectionResizeMode(1, QHeaderView::Interactive);
-    //    mTableView->horizontalHeader()->setSectionResizeMode(1, QHeaderView::Fixed);
-    //    mTableView->horizontalHeader()->setDefaultAlignment(Qt::AlignLeft);
-        mTableView->setSelectionBehavior(QAbstractItemView::SelectRows);
-    //    mTableView->verticalHeader()->setDefaultSectionSize(24);
-    //    mTableView->setAlternatingRowColors(true);
-    //    mTableView->verticalHeader()->hide();
-    //    mTreeView->hideColumn(1);
-    //    mTreeView->hideColumn(2);
-    //    mTreeView->hideColumn(3);
-
 
     //construction du window Menu
     QMenu * fileMenu  = new QMenu("File",this);
@@ -45,11 +52,11 @@ FSMainWindow::FSMainWindow(QWidget *parent) :
 
     //construction de la ToolBar
     mToolBar = addToolBar("tool");
-//    QAction * mkdirAction =
+    //    QAction * mkdirAction =
     mToolBar->addAction(QIcon(":folder.png"),"Nouveau dossier");
-//    QAction * uploadAction =
+    //    QAction * uploadAction =
     mToolBar->addAction(QIcon(":folder_add.png"),"Télécharger ici");
-//    QAction * refreshAction =
+    //    QAction * refreshAction =
     mToolBar->addAction(QIcon(":arrow_refresh.png"),"Rafraîchir");
 
     mToolBar->setIconSize(QSize(16,16));
@@ -79,14 +86,30 @@ FSMainWindow::FSMainWindow(QWidget *parent) :
     connect(mFbx,SIGNAL(error(QString,QString)), this,SLOT(showError()));
     connect(mFbx,SIGNAL(loginSuccess()),mModel,SLOT(fetchMore()));
     connect(mFbx,SIGNAL(authorizeReceived(QString,int)),this,SLOT(authorizeReceived(QString,int)));
-    connect(mTreeView,SIGNAL(clicked(QModelIndex)),mTableView,SLOT(setRootIndex(QModelIndex)));
+    connect(mTreeView,SIGNAL(clicked(QModelIndex)),this,SLOT(setRootIndex(QModelIndex)));
 
-    connect(mTableView,SIGNAL(doubleClicked(QModelIndex)),mTableView,SLOT(setRootIndex(QModelIndex)));
+    connect(mTableView,SIGNAL(doubleClicked(QModelIndex)),this,SLOT(setRootIndex(QModelIndex)));
 
-    connect(mTableView,SIGNAL(clicked(QModelIndex)),mModel,SLOT(fetchMore()));
+//    connect(mTableView,SIGNAL(clicked(QModelIndex)),mModel,SLOT(fetchMore()));
 
 
-//  new ModelTest(mModel, this);
+    //   new ModelTest(mModel);
+
+
+
+}
+
+FSMainWindow::~FSMainWindow()
+{
+    delete mTreeView;
+    delete mTableView;
+    delete mHeaderWidget;
+    delete mSplitter;
+    delete mToolBar;
+    delete mModel;
+    delete mFolderModel;
+    delete mFbx;
+
 }
 
 void FSMainWindow::login()
@@ -108,9 +131,12 @@ void FSMainWindow::authorize()
 
 }
 
-void FSMainWindow::test()
+void FSMainWindow::setRootIndex(const QModelIndex &index)
 {
+
+    mTableView->setRootIndex(mFolderModel->mapToSource(index));
 }
+
 
 void FSMainWindow::authorizeReceived(const QString &token, int trackId)
 {
