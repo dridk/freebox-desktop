@@ -17,6 +17,12 @@ signals:
 public slots:
     void login();
     void showError();
+    void authorize();
+
+
+protected slots:
+    void authorizeReceived(const QString& token ,int trackId);
+
     
 
 private:

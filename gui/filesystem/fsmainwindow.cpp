@@ -1,5 +1,7 @@
 #include "fsmainwindow.h"
 #include <QMessageBox>
+#include <QCoreApplication>
+#include "authorizemessagebox.h"
 FSMainWindow::FSMainWindow(QWidget *parent) :
     QMainWindow(parent)
 {
@@ -16,63 +18,43 @@ FSMainWindow::FSMainWindow(QWidget *parent) :
 
     mSplitter->setHandleWidth(4);
 
-//    mTableView->setModel(mModel);
-
+    //Construction des Views
+    mTableView->setModel(mModel);
     mTreeView->setModel(mModel);
+    //    mTableView->horizontalHeader()->setSectionResizeMode(QHeaderView::ResizeToContents);
+    //    mTableView->horizontalHeader()->setSectionResizeMode(0, QHeaderView::Stretch);
+    //    mTableView->horizontalHeader()->setSectionResizeMode(1, QHeaderView::Interactive);
+    //    mTableView->horizontalHeader()->setSectionResizeMode(1, QHeaderView::Fixed);
+    //    mTableView->horizontalHeader()->setDefaultAlignment(Qt::AlignLeft);
+    //    mTableView->setSelectionBehavior(QAbstractItemView::SelectRows);
+    //    mTableView->verticalHeader()->setDefaultSectionSize(24);
+    //    mTableView->setAlternatingRowColors(true);
+    //    mTableView->verticalHeader()->hide();
+    //    mTreeView->hideColumn(1);
+    //    mTreeView->hideColumn(2);
+    //    mTreeView->hideColumn(3);
 
 
-//    mTableView->horizontalHeader()->setSectionResizeMode(QHeaderView::ResizeToContents);
-//    mTableView->horizontalHeader()->setSectionResizeMode(0, QHeaderView::Stretch);
-//    mTableView->horizontalHeader()->setSectionResizeMode(1, QHeaderView::Interactive);
-//    mTableView->horizontalHeader()->setSectionResizeMode(1, QHeaderView::Fixed);
-//    mTableView->horizontalHeader()->setDefaultAlignment(Qt::AlignLeft);
-
-
-//    mTableView->setSelectionBehavior(QAbstractItemView::SelectRows);
-//    mTableView->verticalHeader()->setDefaultSectionSize(24);
-//    mTableView->setAlternatingRowColors(true);
-//    mTableView->verticalHeader()->hide();
-
-    mTreeView->hideColumn(1);
-    mTreeView->hideColumn(2);
-    mTreeView->hideColumn(3);
-
-
-
-
-    //    setStyleSheet("QMainWindow{background:#3a3a3a;}");
-
-    mToolBar = addToolBar("tool");
-
+    //construction du window Menu
     QMenu * fileMenu  = new QMenu("File",this);
-    QAction * login = fileMenu->addAction("Connexion");
+    QAction * authAction = fileMenu->addAction("Authoriser l'application");
+    QAction * loginAction = fileMenu->addAction("Connexion");
     menuBar()->addMenu(fileMenu);
 
-
-    connect(login,SIGNAL(triggered()),this,SLOT(login()));
-    //    connect(mFbx,SIGNAL(error(QString,Error)), this,SLOT(showError()));
-    connect(mFbx,SIGNAL(loginSuccess()),mModel,SLOT(fetchMore()));
-
-//    connect(mTreeView,SIGNAL(clicked(QModelIndex)),mTableView,SLOT(setRootIndex(QModelIndex)));
-
-
-    //   mToolBar->setStyleSheet("QToolBar{background:#3a3a3a;}");
-    //   mToolBar->setStyleSheet("*{color:white; font-weight:bold; font-size: 12px }");
-
-    mToolBar->setIconSize(QSize(16,16));
-    mToolBar->setToolButtonStyle(Qt::ToolButtonTextBesideIcon);
-
+    //construction de la ToolBar
+    mToolBar = addToolBar("tool");
     QAction * mkdirAction = mToolBar->addAction(QIcon(":folder.png"),"Nouveau dossier");
     QAction * uploadAction = mToolBar->addAction(QIcon(":folder_add.png"),"Télécharger ici");
     QAction * refreshAction = mToolBar->addAction(QIcon(":arrow_refresh.png"),"Rafraîchir");
 
-
+    mToolBar->setIconSize(QSize(16,16));
+    mToolBar->setToolButtonStyle(Qt::ToolButtonTextBesideIcon);
     mHeaderWidget->addButton("C:", "");
     mHeaderWidget->addButton("Disque Dur", "");
     mHeaderWidget->addButton("Vidéo", "");
 
 
-
+    //construction de l'ensemble
     QVBoxLayout * centerLayout = new QVBoxLayout;
     centerLayout->addWidget(mHeaderWidget);
     centerLayout->addWidget(mTableView);
@@ -83,33 +65,52 @@ FSMainWindow::FSMainWindow(QWidget *parent) :
 
     mSplitter->addWidget(mTreeView);
     mSplitter->addWidget(centerWidget);
-
     setCentralWidget(mSplitter);
 
+    //connection
 
+    connect(loginAction,SIGNAL(triggered()),this,SLOT(login()));
+    connect(authAction,SIGNAL(triggered()),this,SLOT(authorize()));
+    connect(mFbx,SIGNAL(error(QString,QString)), this,SLOT(showError()));
+    connect(mFbx,SIGNAL(loginSuccess()),mModel,SLOT(fetchMore()));
+    connect(mFbx,SIGNAL(authorizeReceived(QString,int)),this,SLOT(authorizeReceived(QString,int)));
+    connect(mTreeView,SIGNAL(clicked(QModelIndex)),mTableView,SLOT(setRootIndex(QModelIndex)));
 
 }
 
 void FSMainWindow::login()
 {
-
-    //Attention.. ca marchera pas chez vous... Vous devez authorizer l'app
-    //faite un requestAuth pour récuperé l'app token et faite :
-    //mFbx->setApplicationToken(token);
-
-
-    mFbx->setApplicationId("fr.freebox.testapp2");
+    qDebug()<<qApp->applicationName();
+    mFbx->setApplicationId("fr.freebox." + qApp->applicationName());
     mFbx->requestLogin();
-
-
-
-
 }
 
 void FSMainWindow::showError()
 {
-    QMessageBox::critical(this,"freebox error", mFbx->errorString());
+    QMessageBox::critical(this,mFbx->errorCode(), mFbx->errorString());
 }
+
+void FSMainWindow::authorize()
+{
+    QString appId = "fr.freebox." + qApp->applicationName();
+    mFbx->requestAuthorize(appId, qApp->applicationName(), qApp->applicationVersion(), "Desktop");
+
+}
+
+void FSMainWindow::authorizeReceived(const QString &token, int trackId)
+{
+
+    AuthorizeMessageBox * box = new AuthorizeMessageBox(mFbx, this);
+    box->setTrackId(trackId);
+
+    if (box->exec() == QDialog::Accepted)
+    {
+        mFbx->setApplicationToken(token);
+        mFbx->saveApplicationToken();
+    }
+
+}
+
 
 
 

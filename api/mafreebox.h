@@ -14,35 +14,18 @@ struct ApiInfo
     QString deviceType;
 
 };
-
 class MaFreeBox : public QNetworkAccessManager
 {
     Q_OBJECT
 public:
 
     enum AuthStatus {
-        UnknownStatus ,
-        PendingStatus ,
-        TimeOutStatus ,
-        GrantedStatus ,
-        DeniedStatus
+        UnknownStatus = 0,
+        PendingStatus = 1 ,
+        TimeOutStatus = 2 ,
+        GrantedStatus = 3,
+        DeniedStatus  = 4
     };
-
-    enum Error {
-        UnknownError,
-        AuthRequiredError,
-        InvalidTokenError,
-        PendingTokenError,
-        InsufficientRightsError,
-        DeniedFromExternalIpError,
-        InvalidRequestError,
-        RateLimitedError,
-        NewAppsDeniedError,
-        AppsDeniedError,
-        InternalError
-    };
-
-
 
     explicit MaFreeBox(QObject *parent = 0);
     ~MaFreeBox();
@@ -66,12 +49,12 @@ public:
     const QString& deviceName() const;
     const QString& deviceType() const;
     const QString& errorString() const;
-    const Error& error() const;
+    const QString& errorCode() const;
     const QStringList& permissions() const;
 
     QNetworkRequest myCreateRequest(const QString& uri) const;
     bool parseResult(const QJsonDocument& doc);
-    void sendError(const QString& message,Error code );
+    void sendError(const QString& message, const QString& code);
 
     //request
     void requestApiInfo();
@@ -87,9 +70,9 @@ public:
 
 
 signals:
-    void error(const QString& message, MaFreeBox::Error code );
+    void error(const QString& message, const QString& errorCode);
     void authorizeReceived(const QString& applicationToken, int trackId);
-    void authorizeStatusChanged(const AuthStatus& status);
+    void authorizeStatusChanged(const MaFreeBox::AuthStatus& status);
 
     void apiInfoChanged();
     void challengeChanged();
@@ -115,8 +98,9 @@ private:
     QString mChallenge;
     QString mHostName;
     QString mErrorString;
+    QString mErrorCode;
     QStringList mPermissions;
-    Error mError;
+
     int mPort;
     int mRequestLoginAttempt;
 

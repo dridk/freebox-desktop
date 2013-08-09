@@ -49,14 +49,14 @@ void MaFreeBox::setApplicationId(const QString &id)
 bool MaFreeBox::saveApplicationToken()
 {
     QSettings settings;
-    settings.setValue(mApplicationId, qCompress(mApplicationToken.toUtf8()));
+    settings.setValue(mApplicationId, mApplicationToken.toUtf8());
     return settings.contains(mApplicationId);
 }
 
 bool MaFreeBox::loadApplicationToken()
 {
     QSettings settings;
-    mApplicationToken = qUncompress(settings.value(mApplicationId).toByteArray());
+    mApplicationToken = settings.value(mApplicationId).toByteArray();
     return settings.contains(mApplicationId);
 }
 
@@ -110,9 +110,9 @@ const QString &MaFreeBox::errorString() const
     return mErrorString;
 }
 
-const MaFreeBox::Error &MaFreeBox::error() const
+const QString &MaFreeBox::errorCode() const
 {
-    return mError;
+    return mErrorCode;
 }
 
 const QStringList &MaFreeBox::permissions() const
@@ -139,6 +139,9 @@ void MaFreeBox::requestApiInfo()
 
 void MaFreeBox::requestAuthorize(const QString &appId, const QString &appName, const QString &appVersion, const QString &deviceName)
 {
+
+
+
     QJsonObject json;
     json.insert("app_id", appId);
     json.insert("app_name",appName);
@@ -149,6 +152,7 @@ void MaFreeBox::requestAuthorize(const QString &appId, const QString &appName, c
     QNetworkReply * reply = post(request,QJsonDocument(json).toJson());
     connect(reply,SIGNAL(finished()),this,SLOT(requestAuthorizeFinished()));
     connect(reply,SIGNAL(error(QNetworkReply::NetworkError)),this,SLOT(errorReceived(QNetworkReply::NetworkError)));
+
 
 
 }
@@ -224,6 +228,41 @@ void MaFreeBox::requestAuthorizeFinished()
 
 void MaFreeBox::requestAuthorizeStatusFinished()
 {
+    QNetworkReply * reply = qobject_cast<QNetworkReply*>(sender());
+    QJsonDocument doc = QJsonDocument::fromJson(reply->readAll());
+
+    if(parseResult(doc)) {
+
+        QString statusString = doc.object().value("result").toObject().value("status").toString();
+        AuthStatus status;
+
+
+
+        if (statusString == "unknown")
+            status = UnknownStatus;
+
+        if (statusString == "pending")
+            status = PendingStatus;
+
+        if (statusString == "timeout")
+            status = TimeOutStatus;
+
+        if (statusString == "granted")
+            status = GrantedStatus;
+
+        if (statusString == "denied")
+            status = DeniedStatus;
+
+        qDebug()<<statusString<<status;
+
+        emit authorizeStatusChanged(status);
+
+    }
+
+    reply->deleteLater();
+
+
+
 }
 
 void MaFreeBox::requestLoginFinished()
@@ -307,7 +346,7 @@ bool MaFreeBox::parseResult(const QJsonDocument &doc)
         if (doc.object().contains("error_code")) {
             QString code = doc.object().value("error_code").toString();
             QString msg  = doc.object().value("msg").toString();
-            sendError(msg, UnknownError);
+            sendError(msg, code);
         }
         return false;
     }
@@ -320,42 +359,43 @@ bool MaFreeBox::parseResult(const QJsonDocument &doc)
 
 }
 
-void MaFreeBox::sendError(const QString &message, MaFreeBox::Error code)
+void MaFreeBox::sendError(const QString &message, const QString &code)
 {
-    mError = code;
+    mErrorCode = code;
     mErrorString = message;
-    emit error(mErrorString, mError);
+    emit error(mErrorString, mErrorCode);
 
 }
-
 
 void MaFreeBox::errorReceived(QNetworkReply::NetworkError errCode)
 {
     qDebug()<<"ERROR "<< errCode;
+
+
     QNetworkReply * reply = qobject_cast<QNetworkReply*>(sender());
     if (reply)
     {
         QJsonDocument doc = QJsonDocument::fromJson(reply->readAll());
-        QString code = doc.object().value("error_code").toString();
+        mErrorCode   = doc.object().value("error_code").toString();
         mErrorString = doc.object().value("msg").toString();
-        mError = UnknownError; // need to be compute
 
-        if ( code == "invalid_token") {
-            mRequestLoginAttempt++;
-            qDebug()<<mRequestLoginAttempt;
 
-            if (mRequestLoginAttempt < 5)
-                requestLogin();
-            else {
-                mRequestLoginAttempt = 0;
-                sendError(mErrorString, mError);
+        //Si l'erreur n'est pas une erreur d'authentification, ressayer 4 fois max, la connexion..
 
-            }
+        //        if ( errCode != QNetworkReply::ContentOperationNotPermittedError)
+        //        {
+        //            mRequestLoginAttempt++;
+        //            if (mRequestLoginAttempt < 5)
+        //                requestLogin();
+        //            else {
+        //                mRequestLoginAttempt = 0;
+        //                sendError(mErrorString, mErrorCode);
+        //            }
 
-        }
+        //        }
 
-        else
-            sendError(mErrorString, mError);
+        //        else
+        sendError(mErrorString, mErrorCode);
 
 
 
