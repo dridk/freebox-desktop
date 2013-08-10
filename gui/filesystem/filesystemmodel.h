@@ -10,7 +10,7 @@
 
 class FileSystemItem {
 public:
-    FileSystemItem(FileSystemItem * parent = 0);
+    FileSystemItem(const QString& name ="root", FileSystemItem * parent = 0);
     ~FileSystemItem();
     void appendChild(FileSystemItem * child);
     int childCount() const;
@@ -19,17 +19,21 @@ public:
     const QList<FileSystemItem*>&  children();
     void setParent(FileSystemItem * item);
 
-    const FileInfo& fileInfo() const {return mFileInfo;}
-    void setFileInfo(const FileInfo& info);
+    void clear();
+//    const FileInfo& fileInfo() const {return mFileInfo;}
+//    void setFileInfo(const FileInfo& info);
 
     bool isLoading() {return mIsLoading;}
     void setLoading(bool loading) {mIsLoading = loading;}
 
+    QString mName;
+
 private:
-    FileInfo mFileInfo;
     FileSystemItem * mParent;
     QList<FileSystemItem* > mChilds;
     bool mIsLoading;
+
+
 
 };
 
@@ -49,15 +53,17 @@ public:
     bool canFetchMore(const QModelIndex &parent) const;
     bool hasChildren(const QModelIndex &parent) const;
 
+    Qt::ItemFlags flags(const QModelIndex &index) const;
 
     QVariant headerData(int section, Qt::Orientation orientation, int role) const;
     FileSystemItem * toItem(const QModelIndex& index) const;
 
 public slots:
     void fetchMore(const QModelIndex &parent = QModelIndex());
-
+    void refresh();
 protected slots:
     void load(const QList<FileInfo>& data);
+
 
 protected:
 
@@ -87,6 +93,7 @@ public:
 
     bool canFetchMore(const QModelIndex &parent) const;
     void fetchMore(const QModelIndex &parent);
+    bool hasChildren(const QModelIndex &parent) const;
 
 };
 

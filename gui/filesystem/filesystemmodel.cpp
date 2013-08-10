@@ -2,11 +2,11 @@
 #include <QIcon>
 
 
-FileSystemItem::FileSystemItem(FileSystemItem *parent)
+FileSystemItem::FileSystemItem(const QString &name, FileSystemItem *parent)
 {
     mParent = parent;
-    mFileInfo.name = "root";
     mIsLoading = false;
+    mName = name;
 
 }
 
@@ -47,10 +47,15 @@ void FileSystemItem::setParent(FileSystemItem *item)
     mParent = item;
 }
 
-void FileSystemItem::setFileInfo(const FileInfo &info)
+void FileSystemItem::clear()
 {
-    mFileInfo = info;
+    mChilds.clear();
 }
+
+//void FileSystemItem::setFileInfo(const FileInfo &info)
+//{
+//    mFileInfo = info;
+//}
 
 
 
@@ -68,6 +73,10 @@ FileSystemModel::FileSystemModel(MaFreeBox *parent) :
             this,SLOT(load(QList<FileInfo>)));
 
     mRootItem = new FileSystemItem;
+
+    mRootItem->appendChild(new FileSystemItem("A"));
+    mRootItem->appendChild(new FileSystemItem("B"));
+
 
 
 
@@ -120,7 +129,10 @@ QModelIndex FileSystemModel::parent(const QModelIndex &child) const
     if (!child.isValid())
         return QModelIndex();
 
+
     FileSystemItem * childItem = static_cast<FileSystemItem*>(child.internalPointer());
+
+
     FileSystemItem * parentItem = childItem->parent();
 
     if ( parentItem == mRootItem)
@@ -134,15 +146,24 @@ QModelIndex FileSystemModel::parent(const QModelIndex &child) const
 
 bool FileSystemModel::canFetchMore(const QModelIndex &parent) const
 {
-    FileSystemItem * childItem = toItem(parent);
-
-    if (childItem) {
-        if (rowCount(parent) == 0 && (childItem->fileInfo().folderCount + childItem->fileInfo().fileCount) > 0 )
-            return true;
-    }
+    qDebug()<<"can fetchmore" <<toItem(parent)->mName;
 
 
-    return false;
+
+    if (toItem(parent)->childCount() == 0)
+        return true;
+
+    else return false;
+
+
+//    FileSystemItem * childItem = toItem(parent);
+
+//    if (childItem) {
+//        if (childItem->childCount()==0 && (childItem->fileInfo().folderCount + childItem->fileInfo().fileCount) > 0 )
+//            return true;
+//    }
+
+
 
 }
 
@@ -150,17 +171,46 @@ void FileSystemModel::fetchMore(const QModelIndex &parent)
 {
     mCurrentIndex = parent;
 
-    if (!parent.isValid()){
-        fbx()->fileSystem()->requestList(QString(),false,true,true);
-        return;
+    qDebug()<<"fetchmore" <<toItem(parent)->mName;
+
+    int max = toItem(parent)->childCount()+1;
+
+    for (int i=0; i<max; ++i)
+    {
+        beginInsertRows(mCurrentIndex,i,i);
+        toItem(parent)->appendChild(new FileSystemItem);
+        qDebug()<<"append..";
+        endInsertRows();
     }
 
-    else {
 
-        FileSystemItem * item = toItem(parent);
-        item->setLoading(true);
-        fbx()->fileSystem()->requestList(item->fileInfo().path,false,true,true);
-    }
+//    if (!parent.isValid()){
+//        fbx()->fileSystem()->requestList(QString(),false,true,true);
+//        return;
+//    }
+
+//    else {
+
+//        FileSystemItem * item = toItem(parent);
+//        qDebug()<<"is loading" <<item->isLoading();
+
+//        if(item->isLoading() == false) {
+//            item->setLoading(true);
+////            fbx()->fileSystem()->requestList(item->fileInfo().path,false,true,true);
+//        }
+//    }
+}
+
+void FileSystemModel::refresh()
+{
+    beginResetModel();
+    mRootItem->clear();
+    endResetModel();
+
+    mCurrentIndex = QModelIndex();
+     fbx()->fileSystem()->requestList(QString(),false,true,true);
+
+
 }
 
 bool FileSystemModel::hasChildren(const QModelIndex &parent) const
@@ -168,99 +218,121 @@ bool FileSystemModel::hasChildren(const QModelIndex &parent) const
     if (!parent.isValid())
         return true;
 
+    qDebug()<<"check children";
     FileSystemItem * item = toItem(parent);
 
-    if (item->fileInfo().folderCount > 0)
-        return true;
+//    if (item->fileInfo().folderCount > 0)
+//        return true;
 
-    return false;
+    return true;
 
 
 
 }
+
 
 void FileSystemModel::load(const QList<FileInfo> &data)
 {
     FileSystemItem * parentItem = toItem(mCurrentIndex);
+    parentItem->setLoading(false);
 
-    if (!data.count() || rowCount(mCurrentIndex) > 0)
-        return;
+    int max = parentItem->childCount() + 1;
 
-
-
-
-    qDebug()<<"load";
-
-    QModelIndex begin = index(0,0,mCurrentIndex);
-    QModelIndex end =  index(data.count()-1,0,mCurrentIndex);
-
-    int row = 0;
-    foreach (FileInfo info, data)
+    for (int i=0; i<max; ++i)
     {
-        FileSystemItem * child = new FileSystemItem(parentItem);
-        child->setFileInfo(info);
-        beginInsertRows(mCurrentIndex,row,row);
-        parentItem->appendChild(child);
+        beginInsertRows(mCurrentIndex,i,i);
+        parentItem->appendChild(new FileSystemItem);
         endInsertRows();
-        ++row;
-
     }
 
-    emit QAbstractItemModel::dataChanged(mCurrentIndex,mCurrentIndex);
+
+
+
+//    if (!data.count() || rowCount(mCurrentIndex) > 0)
+//        return;
+
+//    int row = 0;
+//    qDebug()<<"load"<<data.count();
+//    beginInsertRows(mCurrentIndex,0,data.count() -1);
+//    foreach (FileInfo info, data)
+//    {
+//        FileSystemItem * child = new FileSystemItem(parentItem);
+//        child->setFileInfo(info);
+//        parentItem->appendChild(child);
+//        ++row;
+
+//    }
+//    endInsertRows();
+//    changePersistentIndex(mCurrentIndex,mCurrentIndex);
+//    emit dataChanged(mCurrentIndex,mCurrentIndex);
 
 }
+
+Qt::ItemFlags FileSystemModel::flags(const QModelIndex &index) const
+{
+   return Qt::ItemIsSelectable|
+           Qt::ItemIsDragEnabled|
+           Qt::ItemIsDropEnabled |
+           Qt::ItemIsEnabled;
+}
+
 QVariant FileSystemModel::data(const QModelIndex &index, int role) const
 {
     if (!index.isValid())
         return QVariant();
 
-
-    if (role == Qt::UserRole && index.column() == 0) {
-
-        return toItem(index)->fileInfo().isDir;
-
-    }
+    if (role == Qt::DisplayRole)
+        return toItem(index)->mName;
 
 
-    if (role == Qt::DisplayRole && index.column() == 0 )
-        return toItem(index)->fileInfo().name;
-
-    if (role == Qt::DecorationRole && index.column() == 0)
-    {
-        if (toItem(index)->isLoading())
-            return QIcon(":arrow_refresh.png");
 
 
-        if (toItem(index)->fileInfo().isDir)
-            return QIcon(":folder.png");
-        QString fileName = toItem(index)->fileInfo().name;
-        QString iconPath = mMimeDB.mimeTypeForUrl(QUrl(fileName)).iconName()+".png";
-        iconPath.replace("-", "_");
-        iconPath = QString("mime")+QDir::separator()+iconPath;
-        if (QFile::exists(iconPath))
-            return QIcon(iconPath);
-        else
-            return QIcon(QString("mime")+QDir::separator()+QString("application_octet_stream.png"));
+//    if (role == Qt::UserRole && index.column() == 0) {
 
-    }
+//        return toItem(index)->fileInfo().isDir;
 
-    if (role == Qt::DisplayRole && index.column() == 1 )
-    {
-        FileInfo file =  toItem(index)->fileInfo();
-
-        if (file.isDir)
-            return QString::number(file.fileCount) + " éléments";
-        else
-            return sizeHuman(file.size);
-
-    }
+//    }
 
 
-    if (role == Qt::DisplayRole && index.column() == 2 )
-    {
-        return toItem(index)->fileInfo().modified.toString("dd/MM/yyyy hh:mm:ss");
+//    if (role == Qt::DisplayRole && index.column() == 0 )
+//        return toItem(index)->fileInfo().name;
 
-    }
+//    if (role == Qt::DecorationRole && index.column() == 0)
+//    {
+//        if (toItem(index)->isLoading())
+//            return QIcon(":arrow_refresh.png");
+
+
+//        if (toItem(index)->fileInfo().isDir)
+//            return QIcon(":folder.png");
+//        QString fileName = toItem(index)->fileInfo().name;
+//        QString iconPath = mMimeDB.mimeTypeForUrl(QUrl(fileName)).iconName()+".png";
+//        iconPath.replace("-", "_");
+//        iconPath = QString("mime")+QDir::separator()+iconPath;
+//        if (QFile::exists(iconPath))
+//            return QIcon(iconPath);
+//        else
+//            return QIcon(QString("mime")+QDir::separator()+QString("application_octet_stream.png"));
+
+//    }
+
+//    if (role == Qt::DisplayRole && index.column() == 1 )
+//    {
+//        FileInfo file =  toItem(index)->fileInfo();
+
+//        if (file.isDir)
+//            return QString::number(file.fileCount) + " éléments";
+//        else
+//            return sizeHuman(file.size);
+
+//    }
+
+
+//    if (role == Qt::DisplayRole && index.column() == 2 )
+//    {
+//        return toItem(index)->fileInfo().modified.toString("dd/MM/yyyy hh:mm:ss");
+
+//    }
 
     return QVariant();
 }
@@ -329,5 +401,12 @@ bool FolderFilterProxyModel::canFetchMore(const QModelIndex &parent) const
 void FolderFilterProxyModel::fetchMore(const QModelIndex &parent)
 {
     sourceModel()->fetchMore(mapToSource(parent));
+}
+
+bool FolderFilterProxyModel::hasChildren(const QModelIndex &parent) const
+{
+
+    return sourceModel()->hasChildren(mapToSource(parent));
+
 }
 

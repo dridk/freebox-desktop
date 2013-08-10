@@ -6,6 +6,7 @@
 #include "mafreebox.h"
 #include "headerpathwidget.h"
 #include "filesystemmodel.h"
+#include "stdmodel.h"
 class FSMainWindow : public QMainWindow
 {
     Q_OBJECT
@@ -17,13 +18,14 @@ signals:
     
 public slots:
     void login();
-    void showError();
     void authorize();
-    void setRootIndex(const QModelIndex& index);
+    void refresh();
 
 
 protected slots:
     void authorizeReceived(const QString& token ,int trackId);
+    void setRootIndex(const QModelIndex& index);
+    void showError();
 
     
 
@@ -34,7 +36,7 @@ private:
     QSplitter * mSplitter;
     QToolBar * mToolBar;
     MaFreeBox * mFbx;
-    FileSystemModel * mModel;
+     StdModel * model;
     FolderFilterProxyModel * mFolderModel;
 
 
