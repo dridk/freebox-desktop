@@ -137,7 +137,7 @@ bool FileSystemModel::canFetchMore(const QModelIndex &parent) const
     FileSystemItem * childItem = toItem(parent);
 
     if (childItem) {
-        if (rowCount(parent) == 0 && childItem->fileInfo().folderCount + childItem->fileInfo().fileCount >0 )
+        if (rowCount(parent) == 0 && (childItem->fileInfo().folderCount + childItem->fileInfo().fileCount) > 0 )
             return true;
     }
 
@@ -194,14 +194,19 @@ void FileSystemModel::load(const QList<FileInfo> &data)
     QModelIndex begin = index(0,0,mCurrentIndex);
     QModelIndex end =  index(data.count()-1,0,mCurrentIndex);
 
+    int row = 0;
     foreach (FileInfo info, data)
     {
         FileSystemItem * child = new FileSystemItem(parentItem);
         child->setFileInfo(info);
+        beginInsertRows(mCurrentIndex,row,row);
         parentItem->appendChild(child);
-
+        endInsertRows();
+        ++row;
 
     }
+
+    emit QAbstractItemModel::dataChanged(mCurrentIndex,mCurrentIndex);
 
 }
 QVariant FileSystemModel::data(const QModelIndex &index, int role) const

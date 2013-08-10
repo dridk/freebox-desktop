@@ -12,6 +12,16 @@ struct FileUpload;
 
 class FileInfo { // class et pas une struct pour etre utilisé dans le treeview
 public:
+    FileInfo() {
+        isDir = false;
+        size = 0;
+        index = 0;
+        link = false;
+        hidden = false;
+        folderCount = 0;
+        fileCount = 0;
+    }
+
     QString path;
     QString name;
     QString mimetype;
@@ -51,7 +61,7 @@ public slots:
                      bool countSubFolder=false,
                      bool removeHidden =true
 
-                     );
+            );
 
     void requestInfo(const QString& path);
     void requestMove(const QStringList& paths, const QString& dest,
