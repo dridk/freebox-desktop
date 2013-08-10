@@ -62,12 +62,12 @@ FileSystemModel::FileSystemModel(MaFreeBox *parent) :
     QAbstractItemModel(parent)
 {
 
-    mRootItem = new FileSystemItem;
 
 
     connect(fbx()->fileSystem(),SIGNAL(listReceived(QList<FileInfo>)),
             this,SLOT(load(QList<FileInfo>)));
 
+    mRootItem = new FileSystemItem;
 
 
 
@@ -137,7 +137,7 @@ bool FileSystemModel::canFetchMore(const QModelIndex &parent) const
     FileSystemItem * childItem = toItem(parent);
 
     if (childItem) {
-        if (rowCount(parent) == 0 && childItem->fileInfo().folderCount + childItem->fileInfo().fileCount  )
+        if (rowCount(parent) == 0 && childItem->fileInfo().folderCount + childItem->fileInfo().fileCount >0 )
             return true;
     }
 
@@ -183,8 +183,8 @@ void FileSystemModel::load(const QList<FileInfo> &data)
 {
     FileSystemItem * parentItem = toItem(mCurrentIndex);
 
-        if (!data.count() || rowCount(mCurrentIndex) > 0)
-            return;
+    if (!data.count() || rowCount(mCurrentIndex) > 0)
+        return;
 
 
 
@@ -212,7 +212,7 @@ QVariant FileSystemModel::data(const QModelIndex &index, int role) const
 
     if (role == Qt::UserRole && index.column() == 0) {
 
-    return toItem(index)->fileInfo().isDir;
+        return toItem(index)->fileInfo().isDir;
 
     }
 
