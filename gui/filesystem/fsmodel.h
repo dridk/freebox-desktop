@@ -22,9 +22,8 @@ public:
 
 
     explicit FSModel(MaFreeBox * fbx, QObject *parent = 0);
-
-    bool canFetchMore(const QModelIndex &parent) const;
     void fetchMore(const QModelIndex &parent);
+    bool canFetchMore(const QModelIndex &parent) const;
     bool hasChildren(const QModelIndex &parent) const;
     QString sizeHuman(int size) const;
     QByteArray currentPath(const QModelIndex& index);
@@ -32,25 +31,32 @@ public:
 
 
 signals:
-    
+    //Quand ca telecharge, on disable la vue, pour eviter des erreurs
+    void enableChanged(bool enable);
+
 public slots:
     void init();
-    void load(const QList<FileInfo>& list);
+    void dataReceived(const QList<FileInfo>& list);
+    void mkdir(const QString& name, const QModelIndex& parent);
+    void remove(const QModelIndexList& indexes);
+    void refresh(const QModelIndex& parent = QModelIndex());
+
+protected slots:
+    void refreshCurrentIndex();
+
+
+
 private:
     MaFreeBox * mFbx;
     QModelIndex mCurrentIndex;
     bool mIsLoading;
+
+    QMap<QNetworkReply*, QModelIndex> mReplyIndexes;
 };
 
 
 
-class FolderFilterProxyModel : public QSortFilterProxyModel
-{
-public:
-bool filterAcceptsRow(int source_row, const QModelIndex &source_parent) const;
 
-
-};
 
 
 #endif // STDMODEL_H

@@ -9,8 +9,14 @@ FSModel::FSModel(MaFreeBox *fbx, QObject *parent) :
 {
     mFbx = fbx;
     setHorizontalHeaderLabels(QStringList()<<"Nom"<<"Taille"<<"Date de modification");
-
     setColumnCount(3);
+
+
+    connect(mFbx->fileSystem(),SIGNAL(listReceived(QList<FileInfo>)),
+            this,SLOT(dataReceived(QList<FileInfo>)));
+
+    connect(mFbx->fileSystem(),SIGNAL(mkdirFinished()),this,SLOT(refreshCurrentIndex()));
+    connect(mFbx->fileSystem(),SIGNAL(removeFinished()),this,SLOT(refreshCurrentIndex()));
 }
 
 bool FSModel::canFetchMore(const QModelIndex &parent) const
@@ -28,8 +34,6 @@ void FSModel::fetchMore(const QModelIndex &parent)
 {
     QString path = parent.data(PathRole).toString();
 
-    if (itemFromIndex(parent)->rowCount()>0)
-        return ;
 
     mCurrentIndex = parent;
     if (!mIsLoading) {
@@ -41,27 +45,20 @@ void FSModel::fetchMore(const QModelIndex &parent)
 bool FSModel::hasChildren(const QModelIndex &parent) const
 {
     int t = parent.data(FolderCountRole).toInt();
-
     if (t > 0 )
         return true;
-
     else
         return QStandardItemModel::hasChildren(parent);
-
-
 }
 
 void FSModel::init()
 {
     mCurrentIndex = QModelIndex();
     mFbx->fileSystem()->requestList(QString(),false,true,true);
-    connect(mFbx->fileSystem(),SIGNAL(listReceived(QList<FileInfo>)),
-            this,SLOT(load(QList<FileInfo>)));
 }
 
-void FSModel::load(const QList<FileInfo> &list)
+void FSModel::dataReceived(const QList<FileInfo> &list)
 {
-
     mIsLoading = false;
     QStandardItem * rootItem ;
 
@@ -69,6 +66,8 @@ void FSModel::load(const QList<FileInfo> &list)
         rootItem = invisibleRootItem();
     else
         rootItem = itemFromIndex(mCurrentIndex);
+
+    rootItem->removeRows(0, rootItem->rowCount());
 
     foreach (FileInfo i, list)
     {
@@ -117,11 +116,46 @@ void FSModel::load(const QList<FileInfo> &list)
         rootItem->appendRow(lines);
 
         emit dataChanged(indexFromItem(firstItem), indexFromItem(firstItem));
-  }
+    }
 
 
 
 
+}
+
+void FSModel::mkdir(const QString &name, const QModelIndex &parent)
+{
+    if (!parent.parent().isValid())
+        return ;
+
+    QString path = parent.parent().data(PathRole).toString();
+    mCurrentIndex = parent.parent();
+    mFbx->fileSystem()->requestMkdir(path, name);
+
+}
+
+void FSModel::remove(const QModelIndexList &indexes)
+{
+    QStringList paths;
+    foreach (QModelIndex index, indexes)
+        paths.append(index.data(PathRole).toString());
+
+
+    mCurrentIndex = indexes.first().parent();
+    mFbx->fileSystem()->requestRemove(paths);
+}
+
+
+
+
+void FSModel::refreshCurrentIndex()
+{
+    fetchMore(mCurrentIndex);
+}
+
+void FSModel::refresh(const QModelIndex &parent)
+{
+    fetchMore(parent);
 }
 QString FSModel::sizeHuman(int size) const
 {
@@ -150,15 +184,6 @@ QByteArray FSModel::currentPath(const QModelIndex &index)
 
 
 
+
 //=====================================================================
 //================FilterModel
-
-bool FolderFilterProxyModel::filterAcceptsRow(int source_row, const QModelIndex &source_parent) const
-{
-    Q_UNUSED(source_row);
-
-    return true;
-
-
-
-}

@@ -4,5 +4,12 @@
         <file>arrow_refresh.png</file>
         <file>folder.png</file>
         <file>folder_add.png</file>
+        <file>page_copy.png</file>
+        <file>share.png</file>
+        <file>folder_edit.png</file>
+        <file>folder_delete.png</file>
+        <file>disk.png</file>
+        <file>cut.png</file>
+        <file>compress.png</file>
     </qresource>
 </RCC>

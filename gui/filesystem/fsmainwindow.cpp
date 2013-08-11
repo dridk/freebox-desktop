@@ -74,10 +74,7 @@ FSMainWindow::FSMainWindow(QWidget *parent) :
     connect(fbx(),SIGNAL(loginSuccess()),mModel,SLOT(init()));
     connect(mTreeView,SIGNAL(clicked(QModelIndex)),this,SLOT(setRootIndex(QModelIndex)));
     connect(mHeaderWidget,SIGNAL(clicked(QModelIndex)),this,SLOT(setRootIndex(QModelIndex)));
-
-
-
-
+    connect(refreshAction,SIGNAL(triggered()),this,SLOT(refresh()));
 
 
 }
@@ -97,7 +94,7 @@ FSMainWindow::~FSMainWindow()
 
 void FSMainWindow::refresh()
 {
-    mTreeView->reset();
+    mModel->refresh(mFolderModel->mapToSource(mTreeView->currentIndex()));
 
 }
 
