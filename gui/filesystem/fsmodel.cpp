@@ -67,7 +67,8 @@ void FSModel::dataReceived(const QList<FileInfo> &list)
     else
         rootItem = itemFromIndex(mCurrentIndex);
 
-    rootItem->removeRows(0, rootItem->rowCount());
+    int c = rootItem->rowCount();
+    rootItem->removeRows(0,c);
 
     foreach (FileInfo i, list)
     {
@@ -115,9 +116,11 @@ void FSModel::dataReceived(const QList<FileInfo> &list)
         lines.append(thirdItem);
         rootItem->appendRow(lines);
 
-        emit dataChanged(indexFromItem(firstItem), indexFromItem(firstItem));
     }
 
+    QModelIndex begin  = indexFromItem(rootItem->child(0));
+    QModelIndex end = indexFromItem(rootItem->child(rootItem->rowCount()));
+    emit dataChanged(begin,end);
 
 
 
@@ -125,11 +128,10 @@ void FSModel::dataReceived(const QList<FileInfo> &list)
 
 void FSModel::mkdir(const QString &name, const QModelIndex &parent)
 {
-    if (!parent.parent().isValid())
-        return ;
 
-    QString path = parent.parent().data(PathRole).toString();
-    mCurrentIndex = parent.parent();
+
+    QString path = parent.data(PathRole).toString();
+    mCurrentIndex = parent;
     mFbx->fileSystem()->requestMkdir(path, name);
 
 }
@@ -137,11 +139,12 @@ void FSModel::mkdir(const QString &name, const QModelIndex &parent)
 void FSModel::remove(const QModelIndexList &indexes)
 {
     QStringList paths;
-    foreach (QModelIndex index, indexes)
+    foreach (QModelIndex index, indexes) {
         paths.append(index.data(PathRole).toString());
-
+    }
 
     mCurrentIndex = indexes.first().parent();
+    qDebug()<<mCurrentIndex.data();
     mFbx->fileSystem()->requestRemove(paths);
 }
 

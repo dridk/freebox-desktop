@@ -104,8 +104,9 @@ void FSTableView::itemActionTriggered(QAction *action)
         dialog.setWindowTitle("Nouveau dossier");
         dialog.setInputMode(QInputDialog::TextInput);
 
+
         if (dialog.exec() == QDialog::Accepted) {
-            fsModel()->mkdir(dialog.textValue(), currentIndex());
+            fsModel()->mkdir(dialog.textValue(), rootIndex());
         }
     }
     //--------------------------------------------------------------------
