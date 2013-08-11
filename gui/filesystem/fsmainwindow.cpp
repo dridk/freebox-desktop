@@ -24,10 +24,11 @@ FSMainWindow::FSMainWindow(QWidget *parent) :
     mHeaderWidget->setModel(model);
 
     mTreeView->setAnimated(true);
-    //    mTableView->horizontalHeader()->setSectionResizeMode(2,QHeaderView::ResizeToContents);
-    //    mTableView->horizontalHeader()->setSectionResizeMode(0, QHeaderView::Stretch);
-    //    mTableView->horizontalHeader()->setSectionResizeMode(1,QHeaderView::Stretch);
-    mTableView->horizontalHeader()->setSectionResizeMode(QHeaderView::Stretch);
+    mTableView->horizontalHeader()->setSectionResizeMode(0, QHeaderView::Stretch);
+    mTableView->horizontalHeader()->setSectionResizeMode(1,QHeaderView::ResizeToContents);
+    mTableView->horizontalHeader()->setSectionResizeMode(2,QHeaderView::ResizeToContents);
+
+//    mTableView->horizontalHeader()->setSectionResizeMode(QHeaderView::Stretch);
     mTableView->horizontalHeader()->setDefaultAlignment(Qt::AlignLeft);
     mTableView->setSelectionBehavior(QAbstractItemView::SelectRows);
     mTableView->verticalHeader()->setDefaultSectionSize(24);
@@ -40,7 +41,7 @@ FSMainWindow::FSMainWindow(QWidget *parent) :
 
     mSplitter->setHandleWidth(4);
 
-  //construction de la ToolBar
+    //construction de la ToolBar
     mToolBar = addToolBar("tool");
     //    QAction * mkdirAction =
     mToolBar->addAction(QIcon(":folder.png"),"Nouveau dossier");
