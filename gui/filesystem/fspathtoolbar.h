@@ -3,7 +3,7 @@
 
 #include <QFrame>
 #include <QtWidgets>
-#include "stdmodel.h"
+
 class FSPathToolBar : public QToolBar
 {
     Q_OBJECT

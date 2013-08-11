@@ -3,12 +3,12 @@
 #include <QCoreApplication>
 #include <QFileSystemModel>
 #include "authorizemessagebox.h"
-#include "stdmodel.h"
+
 FSMainWindow::FSMainWindow(QWidget *parent) :
     AbstractMainWindow(parent)
 {
-    mTreeView = new QTreeView;
-    mTableView = new QTableView;
+    mTreeView = new FSTreeView;
+    mTableView = new FSTableView;
     mHeaderWidget= new FSPathToolBar;
     mSplitter = new QSplitter(Qt::Horizontal);
     model = new FSModel(fbx());

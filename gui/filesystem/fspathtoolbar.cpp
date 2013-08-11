@@ -1,6 +1,6 @@
 #include "fspathtoolbar.h"
 #include <QHBoxLayout>
-
+#include "fsmodel.h"
 FSPathToolBar::FSPathToolBar( QWidget *parent) :
     QToolBar(parent)
 {

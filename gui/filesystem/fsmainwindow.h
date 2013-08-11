@@ -6,6 +6,8 @@
 #include "mafreebox.h"
 #include "fspathtoolbar.h"
 #include "fsmodel.h"
+#include "fstableview.h"
+#include "fstreeview.h"
 #include "abstractmainwindow.h"
 
 class FSMainWindow : public AbstractMainWindow
@@ -28,8 +30,8 @@ protected slots:
     
 
 private:
-    QTreeView * mTreeView;
-    QTableView * mTableView;
+    FSTreeView * mTreeView;
+    FSTableView * mTableView;
     FSPathToolBar * mHeaderWidget;
     QSplitter * mSplitter;
     QToolBar * mToolBar;
