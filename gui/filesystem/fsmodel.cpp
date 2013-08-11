@@ -10,6 +10,7 @@ FSModel::FSModel(MaFreeBox *fbx, QObject *parent) :
     mFbx = fbx;
     setHorizontalHeaderLabels(QStringList()<<"Nom"<<"Taille"<<"Date de modification");
 
+    setColumnCount(3);
 }
 
 bool FSModel::canFetchMore(const QModelIndex &parent) const
@@ -76,6 +77,7 @@ void FSModel::load(const QList<FileInfo> &list)
 
         QStandardItem * firstItem  = new QStandardItem;
         firstItem->setText(i.name);
+        firstItem->setColumnCount(3);
         QString iconUrl = QString(":/mime/%1.png").arg(i.mimetype.replace("/", "_").replace("-","_"));
 
         if(!QFile::exists(iconUrl))
@@ -84,6 +86,7 @@ void FSModel::load(const QList<FileInfo> &list)
             firstItem->setIcon(QIcon(iconUrl));
 
         QStandardItem * secondItem = new QStandardItem;
+        secondItem->setColumnCount(3);
         if (i.isDir)
             secondItem->setText(QString("%1 élément").arg(i.folderCount+i.fileCount));
         else
@@ -94,6 +97,7 @@ void FSModel::load(const QList<FileInfo> &list)
         QStandardItem * thirdItem = new QStandardItem;
         thirdItem->setText(i.modified.toString("dd/MM/yyyy hh:mm"));
         thirdItem->setEditable(false);
+        thirdItem->setColumnCount(3);
 
         firstItem->setData(i.folderCount, FolderCountRole);
         firstItem->setData(i.fileCount, FileCountRole);

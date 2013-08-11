@@ -29,6 +29,8 @@ public:
     QString sizeHuman(int size) const;
     QByteArray currentPath(const QModelIndex& index);
 
+
+
 signals:
     
 public slots:

@@ -5,10 +5,10 @@
 #include <QtWidgets>
 #include "mafreebox.h"
 #include "fspathtoolbar.h"
-#include "fsmodel.h"
 #include "fstableview.h"
 #include "fstreeview.h"
 #include "abstractmainwindow.h"
+#include "fsmodel.h"
 
 class FSMainWindow : public AbstractMainWindow
 {
@@ -35,10 +35,8 @@ private:
     FSPathToolBar * mHeaderWidget;
     QSplitter * mSplitter;
     QToolBar * mToolBar;
-    FSModel * model;
     QSortFilterProxyModel * mFolderModel;
-
-
+    FSModel * mModel;
 
 
 

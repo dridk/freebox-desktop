@@ -11,24 +11,24 @@ FSMainWindow::FSMainWindow(QWidget *parent) :
     mTableView = new FSTableView;
     mHeaderWidget= new FSPathToolBar;
     mSplitter = new QSplitter(Qt::Horizontal);
-    model = new FSModel(fbx());
+    mModel = new FSModel(fbx());
     mFolderModel = new QSortFilterProxyModel;
 
     mFolderModel->setFilterKeyColumn(0);
     mFolderModel->setFilterRole(FSModel::IsDirRole);
     mFolderModel->setFilterFixedString("true");
 
-    mFolderModel->setSourceModel(model);
+    mFolderModel->setSourceModel(mModel);
     mTreeView->setModel(mFolderModel);
-    mTableView->setModel(model);
-    mHeaderWidget->setModel(model);
+    mTableView->setModel(mModel);
+    mHeaderWidget->setModel(mModel);
 
     mTreeView->setAnimated(true);
-    mTableView->horizontalHeader()->setSectionResizeMode(0, QHeaderView::Stretch);
-    mTableView->horizontalHeader()->setSectionResizeMode(1,QHeaderView::ResizeToContents);
+
+    mTableView->horizontalHeader()->setSectionResizeMode(0,QHeaderView::Stretch);
+    mTableView->horizontalHeader()->setSectionResizeMode(1,QHeaderView::Fixed);
     mTableView->horizontalHeader()->setSectionResizeMode(2,QHeaderView::ResizeToContents);
 
-//    mTableView->horizontalHeader()->setSectionResizeMode(QHeaderView::Stretch);
     mTableView->horizontalHeader()->setDefaultAlignment(Qt::AlignLeft);
     mTableView->setSelectionBehavior(QAbstractItemView::SelectRows);
     mTableView->verticalHeader()->setDefaultSectionSize(24);
@@ -71,7 +71,7 @@ FSMainWindow::FSMainWindow(QWidget *parent) :
     //connection
 
 
-    connect(fbx(),SIGNAL(loginSuccess()),model,SLOT(init()));
+    connect(fbx(),SIGNAL(loginSuccess()),mModel,SLOT(init()));
     connect(mTreeView,SIGNAL(clicked(QModelIndex)),this,SLOT(setRootIndex(QModelIndex)));
     connect(mHeaderWidget,SIGNAL(clicked(QModelIndex)),this,SLOT(setRootIndex(QModelIndex)));
 
@@ -89,7 +89,7 @@ FSMainWindow::~FSMainWindow()
     delete mHeaderWidget;
     delete mSplitter;
     delete mToolBar;
-    delete model;
+    delete mModel;
     delete mFolderModel;
 
 }
@@ -104,18 +104,31 @@ void FSMainWindow::refresh()
 void FSMainWindow::setRootIndex(const QModelIndex &index)
 {
     qDebug()<<sender()->metaObject()->className();
-    if (sender()->metaObject()->className() == QString("QTreeView") )
+    if (sender()->metaObject()->className() == QString("FSTreeView") )
         mTableView->setRootIndex(mFolderModel->mapToSource(index));
 
-    if (sender()->metaObject()->className() == QString("QTableView"))
+    if (sender()->metaObject()->className() == QString("FSTableView"))
         mTableView->setRootIndex(index);
 
-    if (sender()->metaObject()->className() == QString("HeaderPathWidget"))
+    if (sender()->metaObject()->className() == QString("FSPathToolBar"))
     {
         mTableView->setRootIndex(mFolderModel->mapToSource(index));
         mTreeView->setCurrentIndex(index);
     }
     mHeaderWidget->setCurrentIndex(index);
+
+
+    qDebug()<<mModel->columnCount();
+//    if (mModel->columnCount() >=3)
+//    {
+
+//        mTableView->horizontalHeader()->setSectionResizeMode(0,QHeaderView::Stretch);
+//        mTableView->horizontalHeader()->setSectionResizeMode(1,QHeaderView::ResizeToContents);
+//        mTableView->horizontalHeader()->setSectionResizeMode(2,QHeaderView::ResizeToContents);
+//    }
+
+
+
 }
 
 

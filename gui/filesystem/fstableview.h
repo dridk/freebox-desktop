@@ -15,7 +15,10 @@ public:
 signals:
     
 public slots:
-    
+
+private:
+    QMenu * mItemMenu;
+    QMenu * mMenu;
 };
 
 #endif // FSTABLEVIEW_H

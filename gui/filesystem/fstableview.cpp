@@ -12,6 +12,10 @@ void FSTableView::contextMenuEvent(QContextMenuEvent * event)
 {
     qDebug()<<"show";
 
+    QModelIndex index = indexAt(event->pos());
+
+    qDebug()<<index.isValid();
+
 //    if (indexAt(event->pos())) {
 //            QMenu menu;
 //            menu.addAction(QIcon(),"Télécharger");
