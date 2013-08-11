@@ -7,13 +7,13 @@ INCLUDEPATH += $$PWD
 
 HEADERS += \
     gui/filesystem/fsmainwindow.h \
-    gui/filesystem/headerpathwidget.h \
-    gui/filesystem/filesystemmodel.h
+    gui/filesystem/fsmodel.h \
+    gui/filesystem/fspathtoolbar.h
 
 SOURCES += \
     gui/filesystem/fsmainwindow.cpp \
-    gui/filesystem/headerpathwidget.cpp \
-    gui/filesystem/filesystemmodel.cpp
+    gui/filesystem/fsmodel.cpp \
+    gui/filesystem/fspathtoolbar.cpp
 
 
 

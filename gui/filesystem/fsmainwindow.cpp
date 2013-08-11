@@ -9,13 +9,13 @@ FSMainWindow::FSMainWindow(QWidget *parent) :
 {
     mTreeView = new QTreeView;
     mTableView = new QTableView;
-    mHeaderWidget= new HeaderPathWidget;
+    mHeaderWidget= new FSPathToolBar;
     mSplitter = new QSplitter(Qt::Horizontal);
-    model = new FileSystemModel(fbx());
+    model = new FSModel(fbx());
     mFolderModel = new QSortFilterProxyModel;
 
     mFolderModel->setFilterKeyColumn(0);
-    mFolderModel->setFilterRole(FileSystemModel::IsDirRole);
+    mFolderModel->setFilterRole(FSModel::IsDirRole);
     mFolderModel->setFilterFixedString("true");
 
     mFolderModel->setSourceModel(model);

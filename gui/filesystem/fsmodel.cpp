@@ -1,10 +1,10 @@
-#include "filesystemmodel.h"
+#include "fsmodel.h"
 #include <QDebug>
 #include <QStandardItem>
 #include <QMimeDatabase>
 #include <QResource>
 
-FileSystemModel::FileSystemModel(MaFreeBox *fbx, QObject *parent) :
+FSModel::FSModel(MaFreeBox *fbx, QObject *parent) :
     QStandardItemModel(parent)
 {
     mFbx = fbx;
@@ -12,7 +12,7 @@ FileSystemModel::FileSystemModel(MaFreeBox *fbx, QObject *parent) :
 
 }
 
-bool FileSystemModel::canFetchMore(const QModelIndex &parent) const
+bool FSModel::canFetchMore(const QModelIndex &parent) const
 {
     int t = parent.data(FolderCountRole).toInt() +
             parent.data(FileCountRole).toInt();
@@ -23,7 +23,7 @@ bool FileSystemModel::canFetchMore(const QModelIndex &parent) const
     return QStandardItemModel::canFetchMore(parent);
 }
 
-void FileSystemModel::fetchMore(const QModelIndex &parent)
+void FSModel::fetchMore(const QModelIndex &parent)
 {
     QString path = parent.data(PathRole).toString();
 
@@ -37,7 +37,7 @@ void FileSystemModel::fetchMore(const QModelIndex &parent)
     }
 }
 
-bool FileSystemModel::hasChildren(const QModelIndex &parent) const
+bool FSModel::hasChildren(const QModelIndex &parent) const
 {
     int t = parent.data(FolderCountRole).toInt();
 
@@ -50,7 +50,7 @@ bool FileSystemModel::hasChildren(const QModelIndex &parent) const
 
 }
 
-void FileSystemModel::init()
+void FSModel::init()
 {
     mCurrentIndex = QModelIndex();
     mFbx->fileSystem()->requestList(QString(),false,true,true);
@@ -58,7 +58,7 @@ void FileSystemModel::init()
             this,SLOT(load(QList<FileInfo>)));
 }
 
-void FileSystemModel::load(const QList<FileInfo> &list)
+void FSModel::load(const QList<FileInfo> &list)
 {
 
     mIsLoading = false;
@@ -119,7 +119,7 @@ void FileSystemModel::load(const QList<FileInfo> &list)
 
 
 }
-QString FileSystemModel::sizeHuman(int size) const
+QString FSModel::sizeHuman(int size) const
 {
     float num = size;
     QStringList list;
@@ -139,7 +139,7 @@ QString FileSystemModel::sizeHuman(int size) const
 
 
 
-QByteArray FileSystemModel::currentPath(const QModelIndex &index)
+QByteArray FSModel::currentPath(const QModelIndex &index)
 {
     return index.data(PathRole).toString().toUtf8();
 }

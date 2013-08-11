@@ -4,8 +4,8 @@
 #include <QMainWindow>
 #include <QtWidgets>
 #include "mafreebox.h"
-#include "headerpathwidget.h"
-#include "stdmodel.h"
+#include "fspathtoolbar.h"
+#include "fsmodel.h"
 #include "abstractmainwindow.h"
 
 class FSMainWindow : public AbstractMainWindow
@@ -30,10 +30,10 @@ protected slots:
 private:
     QTreeView * mTreeView;
     QTableView * mTableView;
-    HeaderPathWidget * mHeaderWidget;
+    FSPathToolBar * mHeaderWidget;
     QSplitter * mSplitter;
     QToolBar * mToolBar;
-    FileSystemModel * model;
+    FSModel * model;
     QSortFilterProxyModel * mFolderModel;
 
 

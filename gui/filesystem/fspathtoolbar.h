@@ -4,11 +4,11 @@
 #include <QFrame>
 #include <QtWidgets>
 #include "stdmodel.h"
-class HeaderPathWidget : public QToolBar
+class FSPathToolBar : public QToolBar
 {
     Q_OBJECT
 public:
-    explicit HeaderPathWidget( QWidget *parent = 0);
+    explicit FSPathToolBar( QWidget *parent = 0);
     void setModel(QStandardItemModel * model);
 
     void setCurrentIndex(const QModelIndex& index);

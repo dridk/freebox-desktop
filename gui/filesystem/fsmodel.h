@@ -3,7 +3,7 @@
 
 #include <QStandardItemModel>
 #include "mafreebox.h"
-class FileSystemModel : public QStandardItemModel
+class FSModel : public QStandardItemModel
 {
     Q_OBJECT
 public:
@@ -21,7 +21,7 @@ public:
   };
 
 
-    explicit FileSystemModel(MaFreeBox * fbx, QObject *parent = 0);
+    explicit FSModel(MaFreeBox * fbx, QObject *parent = 0);
 
     bool canFetchMore(const QModelIndex &parent) const;
     void fetchMore(const QModelIndex &parent);

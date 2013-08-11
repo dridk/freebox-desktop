@@ -1,6 +1,7 @@
-#include "headerpathwidget.h"
+#include "fspathtoolbar.h"
 #include <QHBoxLayout>
-HeaderPathWidget::HeaderPathWidget( QWidget *parent) :
+
+FSPathToolBar::FSPathToolBar( QWidget *parent) :
     QToolBar(parent)
 {
     layout()->setContentsMargins(0,0,0,0);
@@ -8,17 +9,17 @@ HeaderPathWidget::HeaderPathWidget( QWidget *parent) :
     connect(this,SIGNAL(actionTriggered(QAction*)),this,SLOT(buttonClicked(QAction*)));
 }
 
-void HeaderPathWidget::setModel(QStandardItemModel *model)
+void FSPathToolBar::setModel(QStandardItemModel *model)
 {
     mModel = model;
 
 }
 
-void HeaderPathWidget::setCurrentIndex(const QModelIndex &index)
+void FSPathToolBar::setCurrentIndex(const QModelIndex &index)
 {
     clear();
     mCurrentIndex = index;
-    QByteArray array = index.data(FileSystemModel::PathRole).toByteArray();
+    QByteArray array = index.data(FSModel::PathRole).toByteArray();
     array = QByteArray::fromBase64(array);
 
     //convert array to path list as stringList
@@ -40,7 +41,7 @@ void HeaderPathWidget::setCurrentIndex(const QModelIndex &index)
 
 }
 
-void HeaderPathWidget::buttonClicked(QAction *action)
+void FSPathToolBar::buttonClicked(QAction *action)
 {
 
     int total = actions().count();
