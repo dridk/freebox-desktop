@@ -2,6 +2,7 @@
 #include <QMessageBox>
 #include <QCoreApplication>
 #include <QFileSystemModel>
+#include <QFileDialog>
 #include "authorizemessagebox.h"
 
 FSMainWindow::FSMainWindow(QWidget *parent) :
@@ -43,10 +44,10 @@ FSMainWindow::FSMainWindow(QWidget *parent) :
 
     //construction de la ToolBar
     mToolBar = addToolBar("tool");
-    //    QAction * mkdirAction =
-    mToolBar->addAction(QIcon(":folder.png"),"Nouveau dossier");
-    //    QAction * uploadAction =
-    mToolBar->addAction(QIcon(":folder_add.png"),"Télécharger ici");
+    QAction * mkdirAction =
+            mToolBar->addAction(QIcon(":folder.png"),"Nouveau dossier");
+    QAction * uploadAction =
+            mToolBar->addAction(QIcon(":folder_add.png"),"Télécharger ici");
     QAction * refreshAction =
             mToolBar->addAction(QIcon(":arrow_refresh.png"),"Rafraîchir");
 
@@ -75,6 +76,9 @@ FSMainWindow::FSMainWindow(QWidget *parent) :
     connect(mTreeView,SIGNAL(clicked(QModelIndex)),this,SLOT(setRootIndex(QModelIndex)));
     connect(mHeaderWidget,SIGNAL(clicked(QModelIndex)),this,SLOT(setRootIndex(QModelIndex)));
     connect(refreshAction,SIGNAL(triggered()),this,SLOT(refresh()));
+    connect(mkdirAction,SIGNAL(triggered()),this,SLOT(mkdir()));
+    connect(uploadAction,SIGNAL(triggered()),this,SLOT(upload()));
+    //    addDockWidget(Qt::RightDockWidgetArea,new QDockWidget);
 
 
 }
@@ -98,6 +102,30 @@ void FSMainWindow::refresh()
 
 }
 
+void FSMainWindow::mkdir()
+{
+    QInputDialog dialog;
+    dialog.setLabelText("Nom du nouveau dossier:");
+    dialog.setWindowTitle("Nouveau dossier");
+    dialog.setInputMode(QInputDialog::TextInput);
+
+
+    if (dialog.exec() == QDialog::Accepted) {
+        mModel->mkdir(dialog.textValue(), mTableView->rootIndex());
+    }
+}
+
+void FSMainWindow::upload()
+{
+    QFileDialog dialog;
+    dialog.setWindowTitle("Uploader");
+    QString filename = dialog.getOpenFileName(this,"Uploader");
+
+    mModel->upload(filename, mTableView->rootIndex());
+
+
+}
+
 void FSMainWindow::setRootIndex(const QModelIndex &index)
 {
     qDebug()<<sender()->metaObject()->className();
@@ -116,13 +144,13 @@ void FSMainWindow::setRootIndex(const QModelIndex &index)
 
 
     qDebug()<<mModel->columnCount();
-//    if (mModel->columnCount() >=3)
-//    {
+    //    if (mModel->columnCount() >=3)
+    //    {
 
-//        mTableView->horizontalHeader()->setSectionResizeMode(0,QHeaderView::Stretch);
-//        mTableView->horizontalHeader()->setSectionResizeMode(1,QHeaderView::ResizeToContents);
-//        mTableView->horizontalHeader()->setSectionResizeMode(2,QHeaderView::ResizeToContents);
-//    }
+    //        mTableView->horizontalHeader()->setSectionResizeMode(0,QHeaderView::Stretch);
+    //        mTableView->horizontalHeader()->setSectionResizeMode(1,QHeaderView::ResizeToContents);
+    //        mTableView->horizontalHeader()->setSectionResizeMode(2,QHeaderView::ResizeToContents);
+    //    }
 
 
 

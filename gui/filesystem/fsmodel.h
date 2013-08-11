@@ -25,8 +25,13 @@ public:
     void fetchMore(const QModelIndex &parent);
     bool canFetchMore(const QModelIndex &parent) const;
     bool hasChildren(const QModelIndex &parent) const;
+
+    bool dropMimeData(const QMimeData *data, Qt::DropAction action, int row, int column, const QModelIndex &parent);
+
+
     QString sizeHuman(int size) const;
     QByteArray currentPath(const QModelIndex& index);
+
 
 
 
@@ -39,10 +44,12 @@ public slots:
     void dataReceived(const QList<FileInfo>& list);
     void mkdir(const QString& name, const QModelIndex& parent);
     void remove(const QModelIndexList& indexes);
+    void upload(const QString& filename, const QModelIndex& parent);
     void refresh(const QModelIndex& parent = QModelIndex());
 
 protected slots:
     void refreshCurrentIndex();
+    void itemToBeRenamed(QStandardItem * item);
 
 
 

@@ -16,6 +16,8 @@ public:
 
     FSModel * fsModel();
 
+
+
 protected:
     QMenu * createItemMenu();
     QMenu * createMenu();
@@ -26,8 +28,7 @@ public slots:
     void itemActionTriggered(QAction * action);
 
 private:
-    QMenu * mItemMenu;
-    QMenu * mMenu;
+
     QModelIndexList mCopyIndexes;
     QModelIndexList mCutIndexes;
 };

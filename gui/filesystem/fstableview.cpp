@@ -6,22 +6,10 @@ FSTableView::FSTableView(QWidget *parent) :
     QTableView(parent)
 {
     setContextMenuPolicy(Qt::DefaultContextMenu);
-
-    mItemMenu = new QMenu(this);
-    mMenu = new QMenu(this);
-    mItemMenu->addAction(QIcon(":disk.png"),"Télécharger")->setObjectName("dl");
-    mItemMenu->addSeparator();
-    mItemMenu->addAction(QIcon(":folder_edit.png"),"Renommer")->setObjectName("rename");
-    mItemMenu->addSeparator();
-    mItemMenu->addAction(QIcon(":folder_add.png"),"Nouveau sous-dosser")->setObjectName("mkdir");
-    mItemMenu->addAction(QIcon(":folder_delete.png"),"Supprimer")->setObjectName("delete");
-    mItemMenu->addSeparator();
-    mItemMenu->addAction(QIcon(":page_copy.png"),"Copier")->setObjectName("copy");
-    mItemMenu->addAction(QIcon(":cut.png"),"Couper")->setObjectName("cut");
-
-    connect(mItemMenu,SIGNAL(triggered(QAction*)),this,SLOT(itemActionTriggered(QAction*)));
-
-
+    setEditTriggers(QAbstractItemView::EditKeyPressed);
+    setAcceptDrops(true);
+    setDragEnabled(true);
+    setDropIndicatorShown(true);
 }
 
 void FSTableView::contextMenuEvent(QContextMenuEvent * event)
@@ -49,6 +37,8 @@ FSModel *FSTableView::fsModel()
 {
     return qobject_cast<FSModel*>(model());
 }
+
+
 
 QMenu* FSTableView::createItemMenu()
 {
@@ -139,6 +129,14 @@ void FSTableView::itemActionTriggered(QAction *action)
     if (action->objectName() == QString("past"))
     {
 
+
+    }
+    //--------------------------------------------------------------------
+
+    if (action->objectName() == QString("rename"))
+    {
+
+        edit(currentIndex());
 
     }
 

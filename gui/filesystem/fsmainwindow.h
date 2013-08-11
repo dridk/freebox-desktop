@@ -21,6 +21,8 @@ signals:
     
 public slots:
     void refresh();
+    void mkdir();
+    void upload();
 
 
 protected slots:
