@@ -177,6 +177,13 @@ void FSModel::upload(const QString &filename, const QModelIndex &parent)
 
 }
 
+void FSModel::download(const QString &destination, const QModelIndex &index)
+{
+    mFbx->fileSystem()->requestDownload(index.data(PathRole).toString()
+                                        ,destination);
+
+}
+
 
 
 

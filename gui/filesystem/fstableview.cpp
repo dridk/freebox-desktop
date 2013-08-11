@@ -2,6 +2,7 @@
 #include <QDebug>
 #include <QInputDialog>
 #include <QMessageBox>
+#include <QFileDialog>
 FSTableView::FSTableView(QWidget *parent) :
     QTableView(parent)
 {
@@ -43,7 +44,7 @@ FSModel *FSTableView::fsModel()
 QMenu* FSTableView::createItemMenu()
 {
     QMenu * menu = new QMenu;
-    menu->addAction(QIcon(":disk.png"),"Télécharger")->setObjectName("dl");
+    menu->addAction(QIcon(":disk.png"),"Télécharger")->setObjectName("download");
     menu->addSeparator();
     menu->addAction(QIcon(":folder_edit.png"),"Renommer")->setObjectName("rename");
     menu->addSeparator();
@@ -139,5 +140,16 @@ void FSTableView::itemActionTriggered(QAction *action)
         edit(currentIndex());
 
     }
+    //--------------------------------------------------------------------
 
+    if (action->objectName() == QString("download"))
+    {
+
+        QFileDialog dialog;
+        dialog.setWindowTitle("Télécharger");
+        QString dirPath = dialog.getExistingDirectory(this);
+        if (!dirPath.isEmpty())
+            fsModel()->download(dirPath,currentIndex());
+
+    }
 }

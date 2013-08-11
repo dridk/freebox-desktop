@@ -172,9 +172,15 @@ void FileSystem::requestDownload(const QString &path, const QString &localPath)
 {
     QNetworkRequest request = fbx()->myCreateRequest(QString("dl/%1").arg(path));
 
+    request.setRawHeader(QByteArray("destination"), localPath.toUtf8());
+
     QFile * file = new QFile(QDir::fromNativeSeparators(localPath +
                                                         QDir::separator() +
                                                         path));
+
+    qDebug()<<QDir::fromNativeSeparators(localPath +
+                                         QDir::separator() +
+                                         path);
     if (!file->open(QIODevice::WriteOnly))
     {
         qDebug()<<"cannot open file "<<file->fileName();
@@ -385,15 +391,21 @@ void FileSystem::requestRenameFinished()
 
 void FileSystem::requestDownloadFinished()
 {
+
     QNetworkReply * reply  = qobject_cast<QNetworkReply*>(sender());
+
+
     if (mDownloads.contains(reply)){
         QString rawName = reply->rawHeader("Content-disposition");
         rawName.remove("attachment; filename=");
         rawName.chop(1); // remove last quote
         rawName.remove(0,1); // remove first quote
         QString fileName = rawName;
+        qDebug()<<fileName;
 
         QString completeFileName = QFileInfo(*(mDownloads[reply])).absoluteFilePath();
+
+        qDebug()<<completeFileName;
 
         mDownloads[reply]->rename(fileName);
         mDownloads[reply]->close();
@@ -409,16 +421,19 @@ void FileSystem::requestDownloadFinished()
 
 void FileSystem::requestDownloadReadyRead()
 {
+    qDebug()<<"ready read";
+
     QNetworkReply * reply  = qobject_cast<QNetworkReply*>(sender());
     if (mDownloads.contains(reply)){
         mDownloads[reply]->write(reply->readAll());
     }
-    reply->deleteLater();
+    //    reply->deleteLater();
 
 }
 
 void FileSystem::requestDownloadError()
 {
+    qDebug()<<"download Error";
     QNetworkReply * reply  = qobject_cast<QNetworkReply*>(sender());
     if (mDownloads.contains(reply)) {
         mDownloads[reply]->remove();
