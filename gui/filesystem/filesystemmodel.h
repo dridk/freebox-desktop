@@ -27,7 +27,6 @@ public:
     void fetchMore(const QModelIndex &parent);
     bool hasChildren(const QModelIndex &parent) const;
     QString sizeHuman(int size) const;
-    QVariant headerData(int section, Qt::Orientation orientation, int role) const;
     QByteArray currentPath(const QModelIndex& index);
 
 signals:
