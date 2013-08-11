@@ -15,36 +15,34 @@ FSMainWindow::FSMainWindow(QWidget *parent) :
     mSplitter = new QSplitter(Qt::Horizontal);
     model = new StdModel(mFbx);
 
-    mFolderModel = new FolderFilterProxyModel;
+    mFolderModel = new QSortFilterProxyModel;
 
 
-
-    //    QFileSystemModel * m = new QFileSystemModel();
-    //    m->setRootPath("C://");
-
-
+    mFolderModel->setFilterKeyColumn(0);
+    mFolderModel->setFilterRole(StdModel::IsDirRole);
+    mFolderModel->setFilterFixedString("true");
 
     mFolderModel->setSourceModel(model);
-
-
     mTreeView->setModel(mFolderModel);
-//    mTreeView->setIndentation(20);
     mTableView->setModel(model);
 
-    mTreeView->setAnimated(true);
-    //    mTableView->horizontalHeader()->setSectionResizeMode(QHeaderView::ResizeToContents);
-    //    mTableView->horizontalHeader()->setSectionResizeMode(0, QHeaderView::Stretch);
-    //    mTableView->horizontalHeader()->setSectionResizeMode(1, QHeaderView::Interactive);
-    //    mTableView->horizontalHeader()->setSectionResizeMode(1, QHeaderView::Fixed);
-    //    mTableView->horizontalHeader()->setDefaultAlignment(Qt::AlignLeft);
+  mTreeView->setAnimated(true);
+//    mTableView->horizontalHeader()->setSectionResizeMode(2,QHeaderView::ResizeToContents);
+//    mTableView->horizontalHeader()->setSectionResizeMode(0, QHeaderView::Stretch);
+//    mTableView->horizontalHeader()->setSectionResizeMode(1,QHeaderView::Stretch);
+mTableView->horizontalHeader()->setSectionResizeMode(QHeaderView::Stretch);
+    mTableView->horizontalHeader()->setDefaultAlignment(Qt::AlignLeft);
     mTableView->setSelectionBehavior(QAbstractItemView::SelectRows);
-    //    mTableView->verticalHeader()->setDefaultSectionSize(24);
-    //    mTableView->setAlternatingRowColors(true);
-    //    mTableView->verticalHeader()->hide();
+    mTableView->verticalHeader()->setDefaultSectionSize(24);
+    mTableView->setAlternatingRowColors(true);
+    mTableView->verticalHeader()->hide();
     mTreeView->hideColumn(1);
     mTreeView->hideColumn(2);
     mTreeView->hideColumn(3);
+
+
     mSplitter->setHandleWidth(4);
+
 
     //construction du window Menu
     QMenu * fileMenu  = new QMenu("File",this);
@@ -63,9 +61,7 @@ FSMainWindow::FSMainWindow(QWidget *parent) :
 
     mToolBar->setIconSize(QSize(16,16));
     mToolBar->setToolButtonStyle(Qt::ToolButtonTextBesideIcon);
-    mHeaderWidget->addButton("C:", "");
-    mHeaderWidget->addButton("Disque Dur", "");
-    mHeaderWidget->addButton("Vidéo", "");
+
 
 
     //construction de l'ensemble
@@ -86,17 +82,20 @@ FSMainWindow::FSMainWindow(QWidget *parent) :
     connect(loginAction,SIGNAL(triggered()),this,SLOT(login()));
     connect(authAction,SIGNAL(triggered()),this,SLOT(authorize()));
     connect(mFbx,SIGNAL(error(QString,QString)), this,SLOT(showError()));
-   connect(mFbx,SIGNAL(loginSuccess()),model,SLOT(init()));
-//    connect(mFbx,SIGNAL(authorizeReceived(QString,int)),this,SLOT(authorizeReceived(QString,int)));
-   connect(mTreeView,SIGNAL(clicked(QModelIndex)),this,SLOT(setRootIndex(QModelIndex)));
-   connect(mTableView,SIGNAL(doubleClicked(QModelIndex)),this,SLOT(setRootIndex(QModelIndex)));
+    connect(mFbx,SIGNAL(loginSuccess()),model,SLOT(init()));
+    //    connect(mFbx,SIGNAL(authorizeReceived(QString,int)),this,SLOT(authorizeReceived(QString,int)));
+
+    connect(mTreeView,SIGNAL(clicked(QModelIndex)),this,SLOT(setRootIndex(QModelIndex)));
+
+
+    //    connect(mTableView,SIGNAL(doubleClicked(QModelIndex)),this,SLOT(setRootIndex(QModelIndex)));
 
     //    connect(mTableView,SIGNAL(clicked(QModelIndex)),mModel,SLOT(fetchMore()));
 
-//    connect(refreshAction,SIGNAL(triggered()),this,SLOT(refresh()));
+    //    connect(refreshAction,SIGNAL(triggered()),this,SLOT(refresh()));
 
 
-
+    resize(800,600);
 
 }
 
@@ -147,6 +146,9 @@ void FSMainWindow::setRootIndex(const QModelIndex &index)
     if (sender()->metaObject()->className() == QString("QTableView"))
         mTableView->setRootIndex(index);
 
+
+    mTableView->horizontalHeader()->setSectionResizeMode(QHeaderView::Stretch);
+    mHeaderWidget->setPath(model->currentPath(index));
 
 }
 

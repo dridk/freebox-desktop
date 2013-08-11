@@ -7,12 +7,29 @@ class StdModel : public QStandardItemModel
 {
     Q_OBJECT
 public:
+  enum FileInfoRole {
+      PathRole = Qt::UserRole+1,
+      MimeTypeRole,
+      IsDirRole,
+      SizeRole,
+      ModifiedRole,
+      IndexRole,
+      IsLinkRole,
+      IsHiddenRole,
+      FolderCountRole,
+      FileCountRole
+  };
+
+
     explicit StdModel(MaFreeBox * fbx, QObject *parent = 0);
 
     bool canFetchMore(const QModelIndex &parent) const;
     void fetchMore(const QModelIndex &parent);
     bool hasChildren(const QModelIndex &parent) const;
-    
+    QString sizeHuman(int size) const;
+    QVariant headerData(int section, Qt::Orientation orientation, int role) const;
+
+    QStringList currentPath(const QModelIndex& index);
 signals:
     
 public slots:
@@ -21,6 +38,18 @@ public slots:
 private:
     MaFreeBox * mFbx;
     QModelIndex mCurrentIndex;
+    bool mIsLoading;
 };
+
+
+
+class FolderFilterProxyModel : public QSortFilterProxyModel
+{
+public:
+bool filterAcceptsRow(int source_row, const QModelIndex &source_parent) const;
+
+
+};
+
 
 #endif // STDMODEL_H

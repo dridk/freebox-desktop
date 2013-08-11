@@ -262,7 +262,7 @@ void FileSystem::requestListFinished()
     QNetworkReply * reply  = qobject_cast<QNetworkReply*>(sender());
     QJsonDocument doc = QJsonDocument::fromJson(reply->readAll());
 
-
+    qDebug()<<"list received";
     if (fbx()->parseResult(doc))
     {
 

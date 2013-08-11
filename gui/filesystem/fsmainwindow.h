@@ -37,7 +37,7 @@ private:
     QToolBar * mToolBar;
     MaFreeBox * mFbx;
      StdModel * model;
-    FolderFilterProxyModel * mFolderModel;
+    QSortFilterProxyModel * mFolderModel;
 
 
 

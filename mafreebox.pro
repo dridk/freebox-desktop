@@ -24,5 +24,6 @@ HEADERS  += \
     mainapplication.h
 
 RESOURCES += \
-    assets/assets.qrc
+    assets/assets.qrc \
+    assets/mime.qrc
 

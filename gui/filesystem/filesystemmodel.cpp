@@ -388,25 +388,3 @@ QString FileSystemModel::sizeHuman(int size) const
 
 //=================== FILTER =============================
 
-
-bool FolderFilterProxyModel::canFetchMore(const QModelIndex &parent) const
-{
-
-    return sourceModel()->canFetchMore(mapToSource(parent));
-
-
-
-}
-
-void FolderFilterProxyModel::fetchMore(const QModelIndex &parent)
-{
-    sourceModel()->fetchMore(mapToSource(parent));
-}
-
-bool FolderFilterProxyModel::hasChildren(const QModelIndex &parent) const
-{
-
-    return sourceModel()->hasChildren(mapToSource(parent));
-
-}
-
