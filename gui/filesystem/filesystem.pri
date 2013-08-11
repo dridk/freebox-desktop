@@ -6,16 +6,14 @@
 INCLUDEPATH += $$PWD
 
 HEADERS += \
-    gui/filesystem/filesystemmodel.h \
     gui/filesystem/fsmainwindow.h \
     gui/filesystem/headerpathwidget.h \
-    gui/filesystem/stdmodel.h
+    gui/filesystem/filesystemmodel.h
 
 SOURCES += \
-    gui/filesystem/filesystemmodel.cpp \
     gui/filesystem/fsmainwindow.cpp \
     gui/filesystem/headerpathwidget.cpp \
-    gui/filesystem/stdmodel.cpp
+    gui/filesystem/filesystemmodel.cpp
 
 
 

@@ -1,375 +1,126 @@
 #include "filesystemmodel.h"
-#include <QIcon>
+#include <QDebug>
+#include <QStandardItem>
+#include <QMimeDatabase>
+#include <QResource>
 
-
-FileSystemItem::FileSystemItem(const QString &name, FileSystemItem *parent)
+FileSystemModel::FileSystemModel(MaFreeBox *fbx, QObject *parent) :
+    QStandardItemModel(parent)
 {
-    mParent = parent;
-    mIsLoading = false;
-    mName = name;
-
-}
-
-FileSystemItem::~FileSystemItem()
-{
-    qDeleteAll(mChilds);
-}
-
-void FileSystemItem::appendChild(FileSystemItem *child)
-{
-    child->setParent(this);
-    mChilds.append(child);
-
-}
-
-int FileSystemItem::childCount() const
-{
-    return mChilds.count();
-}
-
-FileSystemItem *FileSystemItem::parent()
-{
-    return mParent;
-}
-
-FileSystemItem *FileSystemItem::child(int row)
-{
-    return mChilds.at(row);
-}
-
-const QList<FileSystemItem *>&  FileSystemItem::children()
-{
-    return mChilds;
-}
-
-void FileSystemItem::setParent(FileSystemItem *item)
-{
-    mParent = item;
-}
-
-void FileSystemItem::clear()
-{
-    mChilds.clear();
-}
-
-//void FileSystemItem::setFileInfo(const FileInfo &info)
-//{
-//    mFileInfo = info;
-//}
-
-
-
-
-
-////=============== TreeModel =========================
-
-FileSystemModel::FileSystemModel(MaFreeBox *parent) :
-    QAbstractItemModel(parent)
-{
-
-
-
-    connect(fbx()->fileSystem(),SIGNAL(listReceived(QList<FileInfo>)),
-            this,SLOT(load(QList<FileInfo>)));
-
-    mRootItem = new FileSystemItem;
-
-    mRootItem->appendChild(new FileSystemItem("A"));
-    mRootItem->appendChild(new FileSystemItem("B"));
-
-
-
-
-}
-
-FileSystemModel::~FileSystemModel()
-{
-    delete mRootItem;
-}
-
-int FileSystemModel::rowCount(const QModelIndex &parent) const
-{
-    if (!parent.isValid())
-        return mRootItem->childCount();
-
-
-    FileSystemItem * item = static_cast<FileSystemItem*>(parent.internalPointer());
-    return item->childCount();
-
-}
-
-int FileSystemModel::columnCount(const QModelIndex &/*parent*/) const
-{
-    return 3;
-
-}
-
-QModelIndex FileSystemModel::index(int row, int column, const QModelIndex &parent) const
-{
-    if (!hasIndex(row,column,parent))
-        return QModelIndex();
-
-    FileSystemItem * parentItem;
-    if (!parent.isValid())
-        parentItem = mRootItem;
-
-    else
-        parentItem = static_cast<FileSystemItem*>(parent.internalPointer());
-
-    FileSystemItem * childItem = parentItem->child(row);
-
-    if (childItem)
-        return createIndex(row,column, childItem);
-    else
-        return QModelIndex();
-}
-
-QModelIndex FileSystemModel::parent(const QModelIndex &child) const
-{
-    if (!child.isValid())
-        return QModelIndex();
-
-
-    FileSystemItem * childItem = static_cast<FileSystemItem*>(child.internalPointer());
-
-
-    FileSystemItem * parentItem = childItem->parent();
-
-    if ( parentItem == mRootItem)
-        return QModelIndex();
-
-    int row = parentItem->children().indexOf(childItem);
-
-    return createIndex(row,0, parentItem);
+    mFbx = fbx;
+    setHorizontalHeaderLabels(QStringList()<<"Nom"<<"Taille"<<"Date de modification");
 
 }
 
 bool FileSystemModel::canFetchMore(const QModelIndex &parent) const
 {
-    qDebug()<<"can fetchmore" <<toItem(parent)->mName;
+    int t = parent.data(FolderCountRole).toInt() +
+            parent.data(FileCountRole).toInt();
 
-
-
-    if (toItem(parent)->childCount() == 0)
+    if (t > 0 && itemFromIndex(parent)->rowCount() == 0)
         return true;
 
-    else return false;
-
-
-//    FileSystemItem * childItem = toItem(parent);
-
-//    if (childItem) {
-//        if (childItem->childCount()==0 && (childItem->fileInfo().folderCount + childItem->fileInfo().fileCount) > 0 )
-//            return true;
-//    }
-
-
-
+    return QStandardItemModel::canFetchMore(parent);
 }
 
 void FileSystemModel::fetchMore(const QModelIndex &parent)
 {
+    QString path = parent.data(PathRole).toString();
+
+    if (itemFromIndex(parent)->rowCount()>0)
+        return ;
+
     mCurrentIndex = parent;
-
-    qDebug()<<"fetchmore" <<toItem(parent)->mName;
-
-    int max = toItem(parent)->childCount()+1;
-
-    for (int i=0; i<max; ++i)
-    {
-        beginInsertRows(mCurrentIndex,i,i);
-        toItem(parent)->appendChild(new FileSystemItem);
-        qDebug()<<"append..";
-        endInsertRows();
+    if (!mIsLoading) {
+        mFbx->fileSystem()->requestList(path,false,true,true);
+        mIsLoading = true;
     }
-
-
-//    if (!parent.isValid()){
-//        fbx()->fileSystem()->requestList(QString(),false,true,true);
-//        return;
-//    }
-
-//    else {
-
-//        FileSystemItem * item = toItem(parent);
-//        qDebug()<<"is loading" <<item->isLoading();
-
-//        if(item->isLoading() == false) {
-//            item->setLoading(true);
-////            fbx()->fileSystem()->requestList(item->fileInfo().path,false,true,true);
-//        }
-//    }
-}
-
-void FileSystemModel::refresh()
-{
-    beginResetModel();
-    mRootItem->clear();
-    endResetModel();
-
-    mCurrentIndex = QModelIndex();
-     fbx()->fileSystem()->requestList(QString(),false,true,true);
-
-
 }
 
 bool FileSystemModel::hasChildren(const QModelIndex &parent) const
 {
-    if (!parent.isValid())
+    int t = parent.data(FolderCountRole).toInt();
+
+    if (t > 0 )
         return true;
 
-    qDebug()<<"check children";
-    FileSystemItem * item = toItem(parent);
-
-//    if (item->fileInfo().folderCount > 0)
-//        return true;
-
-    return true;
-
+    else
+        return QStandardItemModel::hasChildren(parent);
 
 
 }
 
-
-void FileSystemModel::load(const QList<FileInfo> &data)
+void FileSystemModel::init()
 {
-    FileSystemItem * parentItem = toItem(mCurrentIndex);
-    parentItem->setLoading(false);
+    mCurrentIndex = QModelIndex();
+    mFbx->fileSystem()->requestList(QString(),false,true,true);
+    connect(mFbx->fileSystem(),SIGNAL(listReceived(QList<FileInfo>)),
+            this,SLOT(load(QList<FileInfo>)));
+}
 
-    int max = parentItem->childCount() + 1;
+void FileSystemModel::load(const QList<FileInfo> &list)
+{
 
-    for (int i=0; i<max; ++i)
+    mIsLoading = false;
+    QStandardItem * rootItem ;
+
+    if (!mCurrentIndex.isValid())
+        rootItem = invisibleRootItem();
+    else
+        rootItem = itemFromIndex(mCurrentIndex);
+
+    foreach (FileInfo i, list)
     {
-        beginInsertRows(mCurrentIndex,i,i);
-        parentItem->appendChild(new FileSystemItem);
-        endInsertRows();
-    }
+        QList<QStandardItem*> lines;
+
+
+        QStandardItem * firstItem  = new QStandardItem;
+        firstItem->setText(i.name);
+        QString iconUrl = QString(":/mime/%1.png").arg(i.mimetype.replace("/", "_").replace("-","_"));
+
+        if(!QFile::exists(iconUrl))
+            firstItem->setIcon(QIcon(":mime/application_octet_stream.png"));
+        else
+            firstItem->setIcon(QIcon(iconUrl));
+
+        QStandardItem * secondItem = new QStandardItem;
+        if (i.isDir)
+            secondItem->setText(QString("%1 élément").arg(i.folderCount+i.fileCount));
+        else
+            secondItem->setText(sizeHuman(i.size));
+
+        secondItem->setEditable(false);
+
+        QStandardItem * thirdItem = new QStandardItem;
+        thirdItem->setText(i.modified.toString("dd/MM/yyyy hh:mm"));
+        thirdItem->setEditable(false);
+
+        firstItem->setData(i.folderCount, FolderCountRole);
+        firstItem->setData(i.fileCount, FileCountRole);
+        firstItem->setData(i.path, PathRole);
+        firstItem->setData(i.mimetype, MimeTypeRole);
+        firstItem->setData(i.isDir, IsDirRole);
+        firstItem->setData(i.size, SizeRole);
+        firstItem->setData(i.modified, ModifiedRole);
+        firstItem->setData(i.index, IndexRole);
+        firstItem->setData(i.link, IsLinkRole);
+        firstItem->setData(i.hidden, IsHiddenRole);
+        firstItem->setEditable(false);
+
+        lines.append(firstItem);
+        lines.append(secondItem);
+        lines.append(thirdItem);
+        rootItem->appendRow(lines);
+
+        emit dataChanged(indexFromItem(firstItem), indexFromItem(firstItem));
+  }
 
 
 
-
-//    if (!data.count() || rowCount(mCurrentIndex) > 0)
-//        return;
-
-//    int row = 0;
-//    qDebug()<<"load"<<data.count();
-//    beginInsertRows(mCurrentIndex,0,data.count() -1);
-//    foreach (FileInfo info, data)
-//    {
-//        FileSystemItem * child = new FileSystemItem(parentItem);
-//        child->setFileInfo(info);
-//        parentItem->appendChild(child);
-//        ++row;
-
-//    }
-//    endInsertRows();
-//    changePersistentIndex(mCurrentIndex,mCurrentIndex);
-//    emit dataChanged(mCurrentIndex,mCurrentIndex);
 
 }
-
-Qt::ItemFlags FileSystemModel::flags(const QModelIndex &index) const
-{
-   return Qt::ItemIsSelectable|
-           Qt::ItemIsDragEnabled|
-           Qt::ItemIsDropEnabled |
-           Qt::ItemIsEnabled;
-}
-
-QVariant FileSystemModel::data(const QModelIndex &index, int role) const
-{
-    if (!index.isValid())
-        return QVariant();
-
-    if (role == Qt::DisplayRole)
-        return toItem(index)->mName;
-
-
-
-
-//    if (role == Qt::UserRole && index.column() == 0) {
-
-//        return toItem(index)->fileInfo().isDir;
-
-//    }
-
-
-//    if (role == Qt::DisplayRole && index.column() == 0 )
-//        return toItem(index)->fileInfo().name;
-
-//    if (role == Qt::DecorationRole && index.column() == 0)
-//    {
-//        if (toItem(index)->isLoading())
-//            return QIcon(":arrow_refresh.png");
-
-
-//        if (toItem(index)->fileInfo().isDir)
-//            return QIcon(":folder.png");
-//        QString fileName = toItem(index)->fileInfo().name;
-//        QString iconPath = mMimeDB.mimeTypeForUrl(QUrl(fileName)).iconName()+".png";
-//        iconPath.replace("-", "_");
-//        iconPath = QString("mime")+QDir::separator()+iconPath;
-//        if (QFile::exists(iconPath))
-//            return QIcon(iconPath);
-//        else
-//            return QIcon(QString("mime")+QDir::separator()+QString("application_octet_stream.png"));
-
-//    }
-
-//    if (role == Qt::DisplayRole && index.column() == 1 )
-//    {
-//        FileInfo file =  toItem(index)->fileInfo();
-
-//        if (file.isDir)
-//            return QString::number(file.fileCount) + " éléments";
-//        else
-//            return sizeHuman(file.size);
-
-//    }
-
-
-//    if (role == Qt::DisplayRole && index.column() == 2 )
-//    {
-//        return toItem(index)->fileInfo().modified.toString("dd/MM/yyyy hh:mm:ss");
-
-//    }
-
-    return QVariant();
-}
-
-QVariant FileSystemModel::headerData(int section, Qt::Orientation orientation, int role) const
-{
-    if (orientation == Qt::Horizontal && role == Qt::DisplayRole) {
-
-        switch (section)
-        {
-        case 0: return "Nom"; break;
-        case 1: return "Taille"; break;
-        case 2: return "Date de modification"; break;
-
-
-        }
-
-
-
-    }
-
-    return QVariant();
-}
-
-
-FileSystemItem *FileSystemModel::toItem(const QModelIndex &index) const
-{
-    if (!index.isValid())
-        return mRootItem;
-
-    return  static_cast<FileSystemItem*>(index.internalPointer());
-
-}
-
 QString FileSystemModel::sizeHuman(int size) const
 {
-
     float num = size;
     QStringList list;
     list << "KB" << "MB" << "GB" << "TB";
@@ -386,5 +137,30 @@ QString FileSystemModel::sizeHuman(int size) const
 
 }
 
-//=================== FILTER =============================
+QVariant FileSystemModel::headerData(int section, Qt::Orientation orientation, int role) const
+{
+    if (role == Qt::DisplayRole)
+        return "test";
 
+    return QVariant();
+}
+
+QByteArray FileSystemModel::currentPath(const QModelIndex &index)
+{
+    return index.data(PathRole).toString().toUtf8();
+}
+
+
+
+//=====================================================================
+//================FilterModel
+
+bool FolderFilterProxyModel::filterAcceptsRow(int source_row, const QModelIndex &source_parent) const
+{
+    Q_UNUSED(source_row);
+
+    return true;
+
+
+
+}

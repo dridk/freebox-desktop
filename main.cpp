@@ -10,7 +10,6 @@ int main(int argc, char *argv[])
 
 
     FSMainWindow w ;
-
     w.show();
 
 

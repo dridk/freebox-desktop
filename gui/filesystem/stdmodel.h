@@ -3,7 +3,7 @@
 
 #include <QStandardItemModel>
 #include "mafreebox.h"
-class StdModel : public QStandardItemModel
+class FileSystemModel : public QStandardItemModel
 {
     Q_OBJECT
 public:
@@ -21,15 +21,15 @@ public:
   };
 
 
-    explicit StdModel(MaFreeBox * fbx, QObject *parent = 0);
+    explicit FileSystemModel(MaFreeBox * fbx, QObject *parent = 0);
 
     bool canFetchMore(const QModelIndex &parent) const;
     void fetchMore(const QModelIndex &parent);
     bool hasChildren(const QModelIndex &parent) const;
     QString sizeHuman(int size) const;
     QVariant headerData(int section, Qt::Orientation orientation, int role) const;
+    QByteArray currentPath(const QModelIndex& index);
 
-    QStringList currentPath(const QModelIndex& index);
 signals:
     
 public slots:

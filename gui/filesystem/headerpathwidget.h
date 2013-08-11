@@ -3,21 +3,26 @@
 
 #include <QFrame>
 #include <QtWidgets>
+#include "stdmodel.h"
 class HeaderPathWidget : public QToolBar
 {
     Q_OBJECT
 public:
-    explicit HeaderPathWidget(QWidget *parent = 0);
-    void addButton(const QString& name, const QString& path);
+    explicit HeaderPathWidget( QWidget *parent = 0);
+    void setModel(QStandardItemModel * model);
 
-    void setPath(const QStringList& list);
+    void setCurrentIndex(const QModelIndex& index);
+//    void setPath(const QByteArray& path);
 signals:
+   void clicked(const QModelIndex& index);
     
-public slots:
+private slots:
+   void buttonClicked(QAction * action);
 
 private:
     QHBoxLayout * mLayout;
-    QList<QToolButton*> mButtonList;
+    QModelIndex mCurrentIndex;
+    QStandardItemModel * mModel;
     
 };
 

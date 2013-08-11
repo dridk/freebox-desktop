@@ -4,7 +4,7 @@
 #include <QMimeDatabase>
 #include <QResource>
 
-StdModel::StdModel(MaFreeBox *fbx, QObject *parent) :
+FileSystemModel::FileSystemModel(MaFreeBox *fbx, QObject *parent) :
     QStandardItemModel(parent)
 {
     mFbx = fbx;
@@ -12,7 +12,7 @@ StdModel::StdModel(MaFreeBox *fbx, QObject *parent) :
 
 }
 
-bool StdModel::canFetchMore(const QModelIndex &parent) const
+bool FileSystemModel::canFetchMore(const QModelIndex &parent) const
 {
     int t = parent.data(FolderCountRole).toInt() +
             parent.data(FileCountRole).toInt();
@@ -23,7 +23,7 @@ bool StdModel::canFetchMore(const QModelIndex &parent) const
     return QStandardItemModel::canFetchMore(parent);
 }
 
-void StdModel::fetchMore(const QModelIndex &parent)
+void FileSystemModel::fetchMore(const QModelIndex &parent)
 {
     QString path = parent.data(PathRole).toString();
 
@@ -37,7 +37,7 @@ void StdModel::fetchMore(const QModelIndex &parent)
     }
 }
 
-bool StdModel::hasChildren(const QModelIndex &parent) const
+bool FileSystemModel::hasChildren(const QModelIndex &parent) const
 {
     int t = parent.data(FolderCountRole).toInt();
 
@@ -50,7 +50,7 @@ bool StdModel::hasChildren(const QModelIndex &parent) const
 
 }
 
-void StdModel::init()
+void FileSystemModel::init()
 {
     mCurrentIndex = QModelIndex();
     mFbx->fileSystem()->requestList(QString(),false,true,true);
@@ -58,7 +58,7 @@ void StdModel::init()
             this,SLOT(load(QList<FileInfo>)));
 }
 
-void StdModel::load(const QList<FileInfo> &list)
+void FileSystemModel::load(const QList<FileInfo> &list)
 {
 
     mIsLoading = false;
@@ -119,7 +119,7 @@ void StdModel::load(const QList<FileInfo> &list)
 
 
 }
-QString StdModel::sizeHuman(int size) const
+QString FileSystemModel::sizeHuman(int size) const
 {
     float num = size;
     QStringList list;
@@ -137,7 +137,7 @@ QString StdModel::sizeHuman(int size) const
 
 }
 
-QVariant StdModel::headerData(int section, Qt::Orientation orientation, int role) const
+QVariant FileSystemModel::headerData(int section, Qt::Orientation orientation, int role) const
 {
     if (role == Qt::DisplayRole)
         return "test";
@@ -145,19 +145,9 @@ QVariant StdModel::headerData(int section, Qt::Orientation orientation, int role
     return QVariant();
 }
 
-QStringList StdModel::currentPath(const QModelIndex &index)
+QByteArray FileSystemModel::currentPath(const QModelIndex &index)
 {
-  QByteArray text = QByteArray::fromBase64(index.data(PathRole).toString().toUtf8());
-QStringList result;
-  foreach (QByteArray path, text.split(0x2F))
-  {
-      if (!path.isEmpty())
-          result.append(QString::fromUtf8(path));
-  }
-
-
-  return result;
-
+    return index.data(PathRole).toString().toUtf8();
 }
 
 

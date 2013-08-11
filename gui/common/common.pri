@@ -6,10 +6,12 @@
 INCLUDEPATH += $$PWD
 
 SOURCES += \
-    gui/common/authorizemessagebox.cpp
+    gui/common/authorizemessagebox.cpp \
+    gui/common/abstractmainwindow.cpp
 
 HEADERS += \
-    gui/common/authorizemessagebox.h
+    gui/common/authorizemessagebox.h \
+    gui/common/abstractmainwindow.h
 
 
 
