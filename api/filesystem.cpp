@@ -639,6 +639,8 @@ void FileSystem::requestTaskListFinished()
 {
     QNetworkReply * reply  = qobject_cast<QNetworkReply*>(sender());
     QJsonDocument doc = QJsonDocument::fromJson(reply->readAll());
+    qDebug()<<"task list received";
+    qDebug()<<doc.toJson();
 
     if(fbx()->parseResult(doc))
     {
@@ -668,6 +670,9 @@ void FileSystem::requestTaskListFinished()
 
             list.append(file);
         }
+
+        if (list.count() > 0 )
+            qDebug()<<"YEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEES";
 
         emit taskListReceived(list);
 

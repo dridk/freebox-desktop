@@ -9,6 +9,7 @@
 #include "fstreeview.h"
 #include "abstractmainwindow.h"
 #include "fsmodel.h"
+#include "fstaskwidget.h"
 
 class FSMainWindow : public AbstractMainWindow
 {
@@ -27,6 +28,7 @@ public slots:
 
 protected slots:
     void setRootIndex(const QModelIndex& index);
+    void showTaskWidget(bool show);
 
 
     
@@ -39,6 +41,7 @@ private:
     QToolBar * mToolBar;
     QSortFilterProxyModel * mFolderModel;
     FSModel * mModel;
+    FSTaskWidget * mTaskWidget;
 
 
 

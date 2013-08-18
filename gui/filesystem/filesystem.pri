@@ -11,7 +11,10 @@ HEADERS += \
     gui/filesystem/fspathtoolbar.h \
     gui/filesystem/fstreeview.h \
     gui/filesystem/fstableview.h \
-    gui/filesystem/fsmenu.h
+    gui/filesystem/fsmenu.h \
+    gui/filesystem/fstaskmodel.h \
+    gui/filesystem/fstaskwidget.h \
+    gui/filesystem/fstaskdelegate.h
 
 SOURCES += \
     gui/filesystem/fsmainwindow.cpp \
@@ -19,7 +22,10 @@ SOURCES += \
     gui/filesystem/fspathtoolbar.cpp \
     gui/filesystem/fstreeview.cpp \
     gui/filesystem/fstableview.cpp \
-    gui/filesystem/fsmenu.cpp
+    gui/filesystem/fsmenu.cpp \
+    gui/filesystem/fstaskmodel.cpp \
+    gui/filesystem/fstaskwidget.cpp \
+    gui/filesystem/fstaskdelegate.cpp
 
 
 

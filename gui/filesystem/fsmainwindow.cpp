@@ -14,6 +14,7 @@ FSMainWindow::FSMainWindow(QWidget *parent) :
     mSplitter = new QSplitter(Qt::Horizontal);
     mModel = new FSModel(fbx());
     mFolderModel = new QSortFilterProxyModel;
+    mTaskWidget = new FSTaskWidget(fbx());
 
     mFolderModel->setFilterKeyColumn(0);
     mFolderModel->setFilterRole(FSModel::IsDirRole);
@@ -51,6 +52,11 @@ FSMainWindow::FSMainWindow(QWidget *parent) :
     QAction * refreshAction =
             mToolBar->addAction(QIcon(":arrow_refresh.png"),"Rafraîchir");
 
+    QAction * taskAction =
+            mToolBar->addAction(QIcon(""),"Tâche en cours");
+
+    taskAction->setCheckable(true);
+
     mToolBar->setIconSize(QSize(16,16));
     mToolBar->setToolButtonStyle(Qt::ToolButtonTextBesideIcon);
 
@@ -78,6 +84,7 @@ FSMainWindow::FSMainWindow(QWidget *parent) :
     connect(refreshAction,SIGNAL(triggered()),this,SLOT(refresh()));
     connect(mkdirAction,SIGNAL(triggered()),this,SLOT(mkdir()));
     connect(uploadAction,SIGNAL(triggered()),this,SLOT(upload()));
+    connect(taskAction,SIGNAL(triggered(bool)),this,SLOT(showTaskWidget(bool)));
     //    addDockWidget(Qt::RightDockWidgetArea,new QDockWidget);
 
 
@@ -155,6 +162,13 @@ void FSMainWindow::setRootIndex(const QModelIndex &index)
 
 
 }
+
+void FSMainWindow::showTaskWidget(bool show)
+{
+    mTaskWidget->setVisible(show);
+    mTaskWidget->start();
+}
+
 
 
 
