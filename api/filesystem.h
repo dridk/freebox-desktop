@@ -8,6 +8,7 @@
 
 class MaFreeBox;
 class FileSystem;
+class FileTask;
 struct FileUpload;
 
 class FileInfo { // class et pas une struct pour etre utilisé dans le treeview
@@ -35,6 +36,39 @@ public:
     int fileCount;
 };
 
+class FileTask {
+public:
+    FileTask(){
+        id = 0;
+        duration = 0;
+        progress = 0;
+        eta = 0;
+        nfiles = 0;
+        nfilesDone = 0;
+        totalBytes = 0;
+        totalBytesDone = 0;
+        currBytes = 0;
+        rate = 0;
+    }
+    int id;
+    QString type;
+    QString state;
+    QString error;
+    QDateTime createdDate;
+    QDateTime startedDate;
+    QDateTime doneDate;
+    int duration;
+    int progress;
+    int eta;
+    QString from;
+    QString to;
+    int nfiles;
+    int nfilesDone;
+    int totalBytes;
+    int totalBytesDone;
+    int currBytes;
+    int rate;
+};
 
 
 class FileSystem : public QObject
@@ -87,6 +121,10 @@ public slots:
     void requestUploadInfo(int id);
     void requestDeleteUpload(int id);
     void requestCleanUploads();
+    void requestTaskList();
+    void requestTask(int id);
+    void requestDeleteTask(int id);
+    void requestUpdateTask(int id, const QString& state);
 
 
 
@@ -107,6 +145,10 @@ signals:
     void uploadInfoReceived(const FileUpload& file);
     void deleteUploadFinished();
     void cleanUploadFinished();
+    void taskListReceived(const QList<FileTask>& list);
+    void taskReceived(const FileTask& task);
+    void deleteTaskFinished();
+    void updateTaskFinished();
 
 
 
@@ -129,6 +171,10 @@ protected slots:
     void requestUploadInfoFinished();
     void requestDeleteUploadFinished();
     void requestCleanUploadsFinished();
+    void requestTaskListFinished();
+    void requestTaskFinished();
+    void requestDeleteTaskFinished();
+    void requestUpdateTaskFinished();
 
 
     MaFreeBox * fbx() {

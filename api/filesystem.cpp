@@ -263,6 +263,49 @@ void FileSystem::requestCleanUploads()
 
 
 }
+
+void FileSystem::requestTaskList()
+{
+    QNetworkRequest request = fbx()->myCreateRequest(QString("fs/tasks/"));
+    QNetworkReply * reply = fbx()->get(request);
+    connect(reply,SIGNAL(finished()),this,SLOT(requestTaskListFinished()));
+    connect(reply,SIGNAL(error(QNetworkReply::NetworkError)),fbx(),SLOT(errorReceived(QNetworkReply::NetworkError)));
+}
+
+void FileSystem::requestTask(int id)
+{
+    QNetworkRequest request = fbx()->myCreateRequest(QString("fs/tasks/%1").arg(id));
+    QNetworkReply * reply = fbx()->get(request);
+    connect(reply,SIGNAL(finished()),this,SLOT(requestTaskFinished()));
+    connect(reply,SIGNAL(error(QNetworkReply::NetworkError)),fbx(),SLOT(errorReceived(QNetworkReply::NetworkError)));
+}
+
+void FileSystem::requestDeleteTask(int id)
+{
+    QNetworkRequest request = fbx()->myCreateRequest(QString("fs/tasks/%1").arg(id));
+    QNetworkReply * reply = fbx()->deleteResource(request);
+    connect(reply,SIGNAL(finished()),this,SLOT(requestDeleteTaskFinished()));
+    connect(reply,SIGNAL(error(QNetworkReply::NetworkError)),fbx(),SLOT(errorReceived(QNetworkReply::NetworkError)));
+
+
+
+}
+
+void FileSystem::requestUpdateTask(int id, const QString &state)
+{
+    QNetworkRequest request = fbx()->myCreateRequest(QString("fs/tasks/%1").arg(id));
+
+    QJsonObject json;
+    json.insert("state", state);
+    QJsonDocument doc(json);
+
+    QNetworkReply * reply = fbx()->put(request,doc.toJson());
+    connect(reply,SIGNAL(finished()),this,SLOT(requestUpdateTaskFinished()));
+    connect(reply,SIGNAL(error(QNetworkReply::NetworkError)),fbx(),SLOT(errorReceived(QNetworkReply::NetworkError)));
+
+
+}
+
 void FileSystem::requestListFinished()
 {
     QNetworkReply * reply  = qobject_cast<QNetworkReply*>(sender());
@@ -588,6 +631,103 @@ void FileSystem::requestCleanUploadsFinished()
 
     if(fbx()->parseResult(doc))
         emit cleanUploadFinished();
+
+    reply->deleteLater();
+}
+
+void FileSystem::requestTaskListFinished()
+{
+    QNetworkReply * reply  = qobject_cast<QNetworkReply*>(sender());
+    QJsonDocument doc = QJsonDocument::fromJson(reply->readAll());
+
+    if(fbx()->parseResult(doc))
+    {
+        QList<FileTask> list;
+
+        foreach (QJsonValue item,  doc.object().value("result").toArray())
+        {
+            FileTask file;
+            file.id = item.toObject().value("id").toVariant().toInt();
+            file.type = item.toObject().value("type").toString();
+            file.state = item.toObject().value("state").toString();
+            file.error = item.toObject().value("error").toString();
+            file.createdDate = QDateTime::fromTime_t(item.toObject().value("created_ts").toDouble());
+            file.startedDate = QDateTime::fromTime_t(item.toObject().value("started_ts").toDouble());
+            file.doneDate = QDateTime::fromTime_t(item.toObject().value("done_ts").toDouble());
+            file.duration = item.toObject().value("duration").toVariant().toInt();
+            file.progress = item.toObject().value("progress").toVariant().toInt();
+            file.eta = item.toObject().value("eta").toVariant().toInt();
+            file.from = item.toObject().value("from").toString();
+            file.to = item.toObject().value("to").toString();
+            file.nfiles = item.toObject().value("nfiles").toVariant().toInt();
+            file.nfilesDone = item.toObject().value("nfiles_done").toVariant().toInt();
+            file.totalBytes = item.toObject().value("total_bytes").toVariant().toInt();
+            file.totalBytesDone = item.toObject().value("total_bytes_done").toVariant().toInt();
+            file.currBytes = item.toObject().value("curr_bytes").toVariant().toInt();
+            file.rate = item.toObject().value("rate").toVariant().toInt();
+
+            list.append(file);
+        }
+
+        emit taskListReceived(list);
+
+    }
+    reply->deleteLater();
+}
+
+void FileSystem::requestTaskFinished()
+{
+
+    QNetworkReply * reply  = qobject_cast<QNetworkReply*>(sender());
+    QJsonDocument doc = QJsonDocument::fromJson(reply->readAll());
+
+    if(fbx()->parseResult(doc))
+    {
+        QJsonValue item = doc.object().value("result");
+        FileTask file;
+        file.id = item.toObject().value("id").toVariant().toInt();
+        file.type = item.toObject().value("type").toString();
+        file.state = item.toObject().value("state").toString();
+        file.error = item.toObject().value("error").toString();
+        file.createdDate = QDateTime::fromTime_t(item.toObject().value("created_ts").toDouble());
+        file.startedDate = QDateTime::fromTime_t(item.toObject().value("started_ts").toDouble());
+        file.doneDate = QDateTime::fromTime_t(item.toObject().value("done_ts").toDouble());
+        file.duration = item.toObject().value("duration").toVariant().toInt();
+        file.progress = item.toObject().value("progress").toVariant().toInt();
+        file.eta = item.toObject().value("eta").toVariant().toInt();
+        file.from = item.toObject().value("from").toString();
+        file.to = item.toObject().value("to").toString();
+        file.nfiles = item.toObject().value("nfiles").toVariant().toInt();
+        file.nfilesDone = item.toObject().value("nfiles_done").toVariant().toInt();
+        file.totalBytes = item.toObject().value("total_bytes").toVariant().toInt();
+        file.totalBytesDone = item.toObject().value("total_bytes_done").toVariant().toInt();
+        file.currBytes = item.toObject().value("curr_bytes").toVariant().toInt();
+        file.rate = item.toObject().value("rate").toVariant().toInt();
+
+        emit taskReceived(file);
+    }
+
+    reply->deleteLater();
+}
+
+void FileSystem::requestDeleteTaskFinished()
+{
+    QNetworkReply * reply  = qobject_cast<QNetworkReply*>(sender());
+    QJsonDocument doc = QJsonDocument::fromJson(reply->readAll());
+
+    if(fbx()->parseResult(doc))
+        emit deleteTaskFinished();
+
+    reply->deleteLater();
+}
+
+void FileSystem::requestUpdateTaskFinished()
+{
+    QNetworkReply * reply  = qobject_cast<QNetworkReply*>(sender());
+    QJsonDocument doc = QJsonDocument::fromJson(reply->readAll());
+
+    if(fbx()->parseResult(doc))
+        emit updateTaskFinished();
 
     reply->deleteLater();
 }

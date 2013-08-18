@@ -45,6 +45,7 @@ public slots:
     void mkdir(const QString& name, const QModelIndex& parent);
     void remove(const QModelIndexList& indexes);
     void upload(const QString& filename, const QModelIndex& parent);
+    void upload(const QStringList& list, const QModelIndex& parent);
     void download(const QString& destination, const QModelIndex& index);
     void refresh(const QModelIndex& parent = QModelIndex());
 

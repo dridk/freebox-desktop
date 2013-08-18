@@ -39,6 +39,22 @@ FSModel *FSTableView::fsModel()
     return qobject_cast<FSModel*>(model());
 }
 
+void FSTableView::dragEnterEvent(QDragEnterEvent *event)
+{
+    event->acceptProposedAction();
+}
+
+void FSTableView::dragMoveEvent(QDragMoveEvent *event)
+{
+    event->acceptProposedAction();
+}
+
+void FSTableView::dropEvent(QDropEvent *event)
+{
+    qDebug()<<"Drop";
+    qDebug()<<event->mimeData()->urls();
+}
+
 
 
 QMenu* FSTableView::createItemMenu()
