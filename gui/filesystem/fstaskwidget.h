@@ -2,11 +2,12 @@
 #define FSTASKWIDGET_H
 
 #include <QWidget>
-#include <QListView>
+#include <QTableView>
 #include <QTimer>
 #include "mafreebox.h"
 #include "fstaskmodel.h"
 #include "fstaskdelegate.h"
+#include "fsdownloadmodel.h"
 
 class FSTaskWidget : public QWidget
 {
@@ -20,8 +21,9 @@ public:
 
 private:
     QTimer * mTimer;
-    QListView * mView;
+    QTableView * mView;
     FSTaskModel * mModel;
+    FSDownloadModel * mDownloadModel;
     FSTaskDelegate * mDelegate;
     MaFreeBox * mFbx;
     int updateDelay;

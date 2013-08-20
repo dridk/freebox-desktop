@@ -15,6 +15,17 @@ FileSystem::~FileSystem()
     mDownloads.clear();
 }
 
+QFile *FileSystem::downloadFile(QNetworkReply *reply)
+{
+   return mDownloads.value(reply,NULL);
+}
+
+QFile *FileSystem::uploadFile(QNetworkReply *reply)
+{
+    return mUploads.value(reply,NULL);
+
+}
+
 void FileSystem::requestList(const QString &path, bool onlyFolder, bool countSubFolder, bool removeHidden)
 {
 
@@ -192,6 +203,7 @@ void FileSystem::requestDownload(const QString &path, const QString &localPath)
     file->setParent(reply); // delete file when reply is deleted
 
     mDownloads.insert(reply, file);
+    emit downloadStarted(reply);
     connect(reply,SIGNAL(readyRead()),this,SLOT(requestDownloadReadyRead()));
     connect(reply,SIGNAL(finished()),this,SLOT(requestDownloadFinished()));
     connect(reply,SIGNAL(error(QNetworkReply::NetworkError)),fbx(),SLOT(errorReceived(QNetworkReply::NetworkError)));
@@ -455,8 +467,9 @@ void FileSystem::requestDownloadFinished()
 
         delete mDownloads[reply];
         mDownloads.remove(reply);
-
         emit downloadFinished(completeFileName);
+        emit downloadEnded(reply);
+
     }
     reply->deleteLater();
 

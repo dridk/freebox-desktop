@@ -89,6 +89,11 @@ public:
     explicit FileSystem(MaFreeBox *parent = 0);
     ~FileSystem();
 
+    QFile * downloadFile(QNetworkReply * reply);
+    QFile * uploadFile(QNetworkReply * reply);
+
+
+
 public slots:
     void requestList(const QString& path = QString(),
                      bool onlyFolder   =false,
@@ -149,6 +154,11 @@ signals:
     void taskReceived(const FileTask& task);
     void deleteTaskFinished();
     void updateTaskFinished();
+
+    void downloadStarted(QNetworkReply * reply);
+    void downloadEnded(QNetworkReply * reply);
+    void uploadStarted(QNetworkReply* reply);
+    void uploadEnded(QNetworkReply * reply);
 
 
 
