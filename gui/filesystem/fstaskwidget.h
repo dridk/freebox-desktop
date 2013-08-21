@@ -4,6 +4,7 @@
 #include <QWidget>
 #include <QListView>
 #include <QTimer>
+#include <QTabWidget>
 #include "mafreebox.h"
 #include "fstaskmodel.h"
 #include "fstaskdelegate.h"
@@ -18,6 +19,10 @@ public:
     void setUpdateDelay(int ms);
     void start();
     void stop();
+    int count();
+
+signals:
+    void countChanged();
 
 private:
     QTimer * mTimer;
@@ -26,6 +31,7 @@ private:
     FSDownloadModel * mDownloadModel;
     FSTaskDelegate * mDelegate;
     MaFreeBox * mFbx;
+    QTabWidget * mTabWidget;
     int updateDelay;
 
     

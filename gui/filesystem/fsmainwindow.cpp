@@ -45,17 +45,12 @@ FSMainWindow::FSMainWindow(QWidget *parent) :
 
     //construction de la ToolBar
     mToolBar = addToolBar("tool");
-    QAction * mkdirAction =
-            mToolBar->addAction(QIcon(":folder.png"),"Nouveau dossier");
-    QAction * uploadAction =
-            mToolBar->addAction(QIcon(":folder_add.png"),"Télécharger ici");
-    QAction * refreshAction =
-            mToolBar->addAction(QIcon(":arrow_refresh.png"),"Rafraîchir");
+    mMkdirAction   = mToolBar->addAction(QIcon(":folder.png"),"Nouveau dossier");
+    mUploadAction  = mToolBar->addAction(QIcon(":folder_add.png"),"Télécharger ici");
+    mRefreshAction = mToolBar->addAction(QIcon(":arrow_refresh.png"),"Rafraîchir");
+    mTaskAction    = mToolBar->addAction(QIcon(""),"Tâche en cours");
 
-    QAction * taskAction =
-            mToolBar->addAction(QIcon(""),"Tâche en cours");
-
-    taskAction->setCheckable(true);
+    mTaskAction->setCheckable(true);
 
     mToolBar->setIconSize(QSize(16,16));
     mToolBar->setToolButtonStyle(Qt::ToolButtonTextBesideIcon);
@@ -81,11 +76,12 @@ FSMainWindow::FSMainWindow(QWidget *parent) :
     connect(fbx(),SIGNAL(loginSuccess()),mModel,SLOT(init()));
     connect(mTreeView,SIGNAL(clicked(QModelIndex)),this,SLOT(setRootIndex(QModelIndex)));
     connect(mHeaderWidget,SIGNAL(clicked(QModelIndex)),this,SLOT(setRootIndex(QModelIndex)));
-    connect(refreshAction,SIGNAL(triggered()),this,SLOT(refresh()));
-    connect(mkdirAction,SIGNAL(triggered()),this,SLOT(mkdir()));
-    connect(uploadAction,SIGNAL(triggered()),this,SLOT(upload()));
-    connect(taskAction,SIGNAL(triggered(bool)),this,SLOT(showTaskWidget(bool)));
-    //    addDockWidget(Qt::RightDockWidgetArea,new QDockWidget);
+    connect(mRefreshAction,SIGNAL(triggered()),this,SLOT(refresh()));
+    connect(mMkdirAction,SIGNAL(triggered()),this,SLOT(mkdir()));
+    connect(mUploadAction,SIGNAL(triggered()),this,SLOT(upload()));
+    connect(mTaskAction,SIGNAL(triggered(bool)),this,SLOT(showTaskWidget(bool)));
+
+    connect(mTaskWidget,SIGNAL(countChanged()),this,SLOT(setTaskCount()));
 
     resize(800,600);
 
@@ -168,6 +164,17 @@ void FSMainWindow::showTaskWidget(bool show)
 {
     mTaskWidget->setVisible(show);
     mTaskWidget->start();
+}
+
+void FSMainWindow::setTaskCount()
+{
+
+    int count = mTaskWidget->count();
+    QFont font = mTaskAction->font();
+    font.setBold(count > 0);
+    mTaskAction->setFont(font);
+    mTaskAction->setText(QString("%3 en cours").arg(count));
+
 }
 
 

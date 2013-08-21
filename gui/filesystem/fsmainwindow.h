@@ -29,6 +29,7 @@ public slots:
 protected slots:
     void setRootIndex(const QModelIndex& index);
     void showTaskWidget(bool show);
+    void setTaskCount();
 
 
     
@@ -43,6 +44,10 @@ private:
     FSModel * mModel;
     FSTaskWidget * mTaskWidget;
 
+    QAction * mMkdirAction;
+    QAction * mUploadAction;
+    QAction * mRefreshAction;
+    QAction * mTaskAction;
 
 
 };

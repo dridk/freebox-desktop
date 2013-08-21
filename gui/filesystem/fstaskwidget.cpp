@@ -1,6 +1,7 @@
 #include "fstaskwidget.h"
 #include <QVBoxLayout>
 #include <QHeaderView>
+#include <QToolBar>
 FSTaskWidget::FSTaskWidget(MaFreeBox *fbx, QWidget *parent) :
     QWidget(parent)
 {
@@ -10,6 +11,7 @@ FSTaskWidget::FSTaskWidget(MaFreeBox *fbx, QWidget *parent) :
     mView   = new QListView;
     mDelegate = new FSTaskDelegate;
     mTimer = new QTimer;
+    mTabWidget = new QTabWidget;
 
 
 //    mTimer->setInterval(1000);
@@ -19,13 +21,18 @@ FSTaskWidget::FSTaskWidget(MaFreeBox *fbx, QWidget *parent) :
     mView->setModel(mDownloadModel);
     mView->setItemDelegate(mDelegate);
 
+    mTabWidget->addTab(mView,QIcon(":inbox_download"),"Download");
+    mTabWidget->addTab(new QWidget,QIcon(":inbox_upload"),"Upload");
 
-    QVBoxLayout * layout = new QVBoxLayout;
-    layout->addWidget(mView);
-    setLayout(layout);
 
-//    connect(mTimer,SIGNAL(timeout()),mModel,SLOT(load()));
+    setLayout(new QVBoxLayout);
+    QToolBar * test = new QToolBar();
+    test->addAction("Effacer les terminés");
+    test->addAction("Arreter");
+    layout()->addWidget(test);
+    layout()->addWidget(mTabWidget);
 
+    connect(mDownloadModel,SIGNAL(countChanged()),this,SIGNAL(countChanged()));
     resize(700,480);
 
 }
@@ -42,5 +49,12 @@ void FSTaskWidget::start()
 
 void FSTaskWidget::stop()
 {
-//    mTimer->stop();
+    //    mTimer->stop();
 }
+
+int FSTaskWidget::count()
+{
+    return mDownloadModel->count();
+}
+
+
