@@ -12,6 +12,13 @@ FSTaskDelegate::FSTaskDelegate(QObject *parent) :
 void FSTaskDelegate::paint(QPainter *painter, const QStyleOptionViewItem &option, const QModelIndex &index) const
 {
 
+    QString title         = index.data(Qt::DisplayRole).toString();
+    QString subTitle      = index.data(Qt::WhatsThisRole).toString();
+    int progress          = index.data(Qt::UserRole).toInt();
+    QString mimeIconPath  = index.data(Qt::DecorationRole).toString();
+    QString actionIconPath= index.data(Qt::StatusTipRole).toString();
+
+
     if (option.state & QStyle::State_Selected)
     {
         painter->setBrush(QBrush(QColor("#316AC5")));
@@ -21,29 +28,31 @@ void FSTaskDelegate::paint(QPainter *painter, const QStyleOptionViewItem &option
     painter->setPen(QPen(Qt::black));
 
 
-    QPixmap icon (":mime/video_x_matroska.png");
+    QPixmap icon (mimeIconPath);
 
     painter->drawPixmap(5, option.rect.center().y()-icon.height()/2, icon);
 
     QRect progressRect = option.rect;
     progressRect.setX(40);
     progressRect.setY(option.rect.center().y() - 7);
-    progressRect.setHeight(14);
     progressRect.setRight(option.rect.right() - 30);
 
+    progressRect.setHeight(progress < 100 ? 14 : 1);
 
+    if (progress <100) {
     QStyleOptionProgressBar progressBarOption;
     progressBarOption.rect = progressRect;
 
     progressBarOption.minimum = 0;
     progressBarOption.maximum = 100;
-    progressBarOption.progress = 60;
-    progressBarOption.text = QString::number(index.data().toInt()) + "%";
+    progressBarOption.progress = progress;
+    progressBarOption.text = QString::number(progress) + "%";
     progressBarOption.textVisible = true;
     progressBarOption.textAlignment = Qt::AlignCenter;
 
     qApp->style()->drawControl(QStyle::CE_ProgressBar,
                                &progressBarOption, painter);
+    }
 
     QFontMetrics metrics(painter->font());
 
@@ -53,12 +62,13 @@ void FSTaskDelegate::paint(QPainter *painter, const QStyleOptionViewItem &option
         painter->setPen(QPen(Qt::black));
 
     painter->setFont(QFont(painter->font().family(),10));
-    painter->drawText(progressRect.topLeft()-QPoint(-5,5),"WindowsXP-GGHYT65.exe");
+    painter->drawText(progressRect.topLeft()-QPoint(-5,5),title);
     painter->setFont(QFont(painter->font().family(),8));
-    painter->drawText(progressRect.bottomLeft()+QPoint(5,5+metrics.height()),"2.6 sur 24.8 MB à 67.0 KB/sec; 05:15 restant");
+    painter->drawText(progressRect.bottomLeft()+QPoint(5,5+metrics.height()),
+                      subTitle);
 
 
-   QPixmap rightPixmap(":cancel.png");
+   QPixmap rightPixmap(actionIconPath);
 //    if (mClicked.contains(index))
 //        painter->setOpacity(0.4);
 //    else

@@ -184,7 +184,11 @@ void FSModel::upload(const QStringList &list, const QModelIndex &parent)
 
 void FSModel::download(const QString &destination, const QModelIndex &index)
 {
-    mFbx->fileSystem()->requestDownload(index.data(PathRole).toString()
+    //si on lance sur un index autre que la colum 0, alors mettre la colum 0
+    //permet de récuperé le pathRole qui se trouve uniquement dans la col 1
+    QModelIndex i = FSModel::index(index.row(),0, index.parent());
+
+    mFbx->fileSystem()->requestDownload(i.data(PathRole).toString()
                                         ,destination);
 
 }
@@ -214,7 +218,7 @@ void FSModel::refresh(const QModelIndex &parent)
 {
     fetchMore(parent);
 }
-QString FSModel::sizeHuman(int size) const
+QString FSModel::sizeHuman(int size)
 {
     float num = size;
     QStringList list;

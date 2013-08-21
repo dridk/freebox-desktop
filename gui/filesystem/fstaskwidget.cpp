@@ -26,6 +26,7 @@ FSTaskWidget::FSTaskWidget(MaFreeBox *fbx, QWidget *parent) :
 
 //    connect(mTimer,SIGNAL(timeout()),mModel,SLOT(load()));
 
+    resize(700,480);
 
 }
 

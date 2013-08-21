@@ -4,23 +4,25 @@
 #include <QAbstractListModel>
 #include <QNetworkReply>
 #include "mafreebox.h"
-
+#include "fsmodel.h"  // pour utilise sizeHuman....
 class FSDownloadItem {
 public:
     FSDownloadItem () {
         reply = NULL;
         bytes = 0;
-        total = 0;
         progress = 0;
-        speed = 0;
+
     }
 
     QNetworkReply * reply ;
-    QString filename;
-    qint64 bytes;
-    qint64 total;
+    QString title;
+    QString subTitle;
     double progress;
-    double speed;
+    double bytes;
+    QString mimeIconPath;
+    QString actionIconPath;
+    QTime time;
+
 
 };
 
@@ -49,7 +51,7 @@ signals:
 private:
     MaFreeBox * mFbx;
     QHash<QNetworkReply*, FSDownloadItem> mDatas;
-
+    QMimeDatabase mMimeDb;
 };
 
 #endif // FSDOWNLOADMODEL_H

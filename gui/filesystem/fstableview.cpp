@@ -164,8 +164,11 @@ void FSTableView::itemActionTriggered(QAction *action)
         QFileDialog dialog;
         dialog.setWindowTitle("Télécharger");
         QString dirPath = dialog.getExistingDirectory(this);
-        if (!dirPath.isEmpty())
+        if (!dirPath.isEmpty()) {
+
+
             fsModel()->download(dirPath,currentIndex());
 
+        }
     }
 }

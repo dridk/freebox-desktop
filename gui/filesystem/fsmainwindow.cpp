@@ -87,6 +87,7 @@ FSMainWindow::FSMainWindow(QWidget *parent) :
     connect(taskAction,SIGNAL(triggered(bool)),this,SLOT(showTaskWidget(bool)));
     //    addDockWidget(Qt::RightDockWidgetArea,new QDockWidget);
 
+    resize(800,600);
 
 }
 

@@ -29,7 +29,7 @@ public:
     bool dropMimeData(const QMimeData *data, Qt::DropAction action, int row, int column, const QModelIndex &parent);
 
 
-    QString sizeHuman(int size) const;
+    static QString sizeHuman(int size);
     QByteArray currentPath(const QModelIndex& index);
 
 
