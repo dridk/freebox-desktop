@@ -2,7 +2,7 @@
 #define FSTASKWIDGET_H
 
 #include <QWidget>
-#include <QTableView>
+#include <QListView>
 #include <QTimer>
 #include "mafreebox.h"
 #include "fstaskmodel.h"
@@ -21,7 +21,7 @@ public:
 
 private:
     QTimer * mTimer;
-    QTableView * mView;
+    QListView * mView;
     FSTaskModel * mModel;
     FSDownloadModel * mDownloadModel;
     FSTaskDelegate * mDelegate;

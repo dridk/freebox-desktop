@@ -12,6 +12,7 @@ public:
         bytes = 0;
         total = 0;
         progress = 0;
+        speed = 0;
     }
 
     QNetworkReply * reply ;
@@ -19,18 +20,20 @@ public:
     qint64 bytes;
     qint64 total;
     double progress;
+    double speed;
 
 };
 
-class FSDownloadModel : public QAbstractTableModel
+class FSDownloadModel : public QAbstractListModel
 {
     Q_OBJECT
 public:
     explicit FSDownloadModel(MaFreeBox * fbx, QObject *parent = 0);
     int rowCount(const QModelIndex &parent = QModelIndex()) const;
-    int columnCount(const QModelIndex &parent = QModelIndex()) const;
     QVariant data(const QModelIndex &index, int role) const;
     int count() const;
+    const FSDownloadItem& item(const QModelIndex& index);
+    Qt::ItemFlags flags(const QModelIndex &index) const;
 
 public slots:
     void add(QNetworkReply* reply);

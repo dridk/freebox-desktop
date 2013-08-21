@@ -1,7 +1,7 @@
 #include "fsdownloadmodel.h"
 
 FSDownloadModel::FSDownloadModel(MaFreeBox *fbx, QObject *parent):
-    QAbstractTableModel(parent)
+    QAbstractListModel(parent)
 {
     mFbx = fbx;
     connect(mFbx->fileSystem(),SIGNAL(downloadStarted(QNetworkReply*)),
@@ -9,6 +9,18 @@ FSDownloadModel::FSDownloadModel(MaFreeBox *fbx, QObject *parent):
 
     connect(mFbx->fileSystem(),SIGNAL(downloadEnded(QNetworkReply*)),
             this,SLOT(rem(QNetworkReply*)));
+
+    FSDownloadItem item;
+    item.bytes = 43;
+    item.total = 132;
+    item.progress = 55;
+    item.speed = 4.3;
+
+    QNetworkReply* a;
+    QNetworkReply* b;
+    mDatas.insert(a, item);
+    mDatas.insert(b, item);
+
 }
 
 int FSDownloadModel::rowCount(const QModelIndex &parent) const
@@ -16,27 +28,10 @@ int FSDownloadModel::rowCount(const QModelIndex &parent) const
     return mDatas.count();
 }
 
-int FSDownloadModel::columnCount(const QModelIndex &parent) const
-{
-    return 2;
-}
-
 QVariant FSDownloadModel::data(const QModelIndex &index, int role) const
 {
     if (!index.isValid())
         return QVariant();
-
-    FSDownloadItem item = mDatas.values().at(index.row());
-
-    if (!item.reply)
-        return QVariant();
-
-
-    if (role == Qt::DisplayRole && index.column() == 0)
-        return item.filename;
-
-    if (role == Qt::DisplayRole && index.column() == 1)
-        return item.progress;
 
     return QVariant();
 }
@@ -46,11 +41,23 @@ int FSDownloadModel::count() const
     return rowCount();
 }
 
+const FSDownloadItem &FSDownloadModel::item(const QModelIndex &index)
+{
+    return mDatas.values()[index.row()];
+}
+
+Qt::ItemFlags FSDownloadModel::flags(const QModelIndex &index) const
+{
+
+    return Qt::ItemIsSelectable|Qt::ItemIsEnabled;
+}
+
 void FSDownloadModel::add(QNetworkReply *reply)
 {
     beginInsertRows(QModelIndex(),0,0);
     FSDownloadItem item;
     item.reply = reply;
+    qDebug()<<"add download "<<reply;
 
     mDatas.insert(reply, item);
     connect(reply,SIGNAL(downloadProgress(qint64,qint64)),
@@ -90,7 +97,7 @@ void FSDownloadModel::downloadProgress(qint64 bytes, qint64 total)
 
         int row = mDatas.keys().indexOf(reply);
         if (row > -1)
-            emit dataChanged(index(row,0), index(row,columnCount()-1));
+            emit dataChanged(index(row),index(row));
 
 
 

@@ -12,5 +12,6 @@
         <file>cut.png</file>
         <file>compress.png</file>
         <file>drive-harddisk.png</file>
+        <file>cancel.png</file>
     </qresource>
 </RCC>

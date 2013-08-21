@@ -7,7 +7,7 @@ FSTaskWidget::FSTaskWidget(MaFreeBox *fbx, QWidget *parent) :
     mFbx = fbx;
     mModel =  new FSTaskModel(mFbx);
     mDownloadModel = new FSDownloadModel(mFbx);
-    mView   = new QTableView;
+    mView   = new QListView;
     mDelegate = new FSTaskDelegate;
     mTimer = new QTimer;
 
@@ -19,8 +19,6 @@ FSTaskWidget::FSTaskWidget(MaFreeBox *fbx, QWidget *parent) :
     mView->setModel(mDownloadModel);
     mView->setItemDelegate(mDelegate);
 
-    mView->horizontalHeader()->setSectionResizeMode(0,QHeaderView::ResizeToContents);
-    mView->horizontalHeader()->setSectionResizeMode(1,QHeaderView::Stretch);
 
     QVBoxLayout * layout = new QVBoxLayout;
     layout->addWidget(mView);

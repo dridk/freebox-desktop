@@ -477,14 +477,11 @@ void FileSystem::requestDownloadFinished()
 
 void FileSystem::requestDownloadReadyRead()
 {
-    qDebug()<<"ready read";
 
     QNetworkReply * reply  = qobject_cast<QNetworkReply*>(sender());
     if (mDownloads.contains(reply)){
         mDownloads[reply]->write(reply->readAll());
     }
-    //    reply->deleteLater();
-
 }
 
 void FileSystem::requestDownloadError()
