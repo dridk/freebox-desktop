@@ -3,6 +3,7 @@
 #include <QCoreApplication>
 #include <QFileSystemModel>
 #include <QFileDialog>
+#include "fstaskbutton.h"
 #include "authorizemessagebox.h"
 
 FSMainWindow::FSMainWindow(QWidget *parent) :
@@ -55,6 +56,7 @@ FSMainWindow::FSMainWindow(QWidget *parent) :
     mToolBar->setIconSize(QSize(16,16));
     mToolBar->setToolButtonStyle(Qt::ToolButtonTextBesideIcon);
 
+    mToolBar->addWidget(new FSTaskButton);
 
 
     //construction de l'ensemble

@@ -4,7 +4,7 @@
 #include <QMainWindow>
 #include "mafreebox.h"
 #include "authorizemessagebox.h"
-
+#include "aboutdialog.h"
 class AbstractMainWindow : public QMainWindow
 {
     Q_OBJECT
@@ -22,6 +22,8 @@ public slots:
 protected slots:
     void showError();
     void authorizeReceived(const QString& token ,int trackId);
+    void showAboutDialog();
+    void openGithub();
 
 private:
     MaFreeBox * mFbx;

@@ -1,5 +1,6 @@
 #include "abstractmainwindow.h"
 #include <QApplication>
+#include <QDesktopServices>
 #include <QtWidgets>
 AbstractMainWindow::AbstractMainWindow(QWidget *parent) :
     QMainWindow(parent)
@@ -7,15 +8,26 @@ AbstractMainWindow::AbstractMainWindow(QWidget *parent) :
     mFbx = new MaFreeBox;
 
     //construction du window Menu
-    QMenu * fileMenu  = new QMenu("File",this);
+    QMenu * fileMenu  = new QMenu("Fichier",this);
     QAction * authAction = fileMenu->addAction("Authoriser l'application");
     QAction * loginAction = fileMenu->addAction("Connexion");
     menuBar()->addMenu(fileMenu);
+
+
+    QMenu * helpMenu = new QMenu("Aide",this);
+    QAction * githubAction  = helpMenu->addAction(QIcon(":github.png"),"reporter un bug sur Github");
+    QAction * aboutAction   = helpMenu->addAction("A propos de "+qApp->applicationName()+"...");
+    QAction * aboutQtAction = helpMenu->addAction("A propos de Qt...");
+
+    menuBar()->addMenu(helpMenu);
 
     connect(loginAction,SIGNAL(triggered()),this,SLOT(login()));
     connect(authAction,SIGNAL(triggered()),this,SLOT(authorize()));
     connect(fbx(),SIGNAL(error(QString,QString)), this,SLOT(showError()));
     connect(fbx(),SIGNAL(authorizeReceived(QString,int)),this,SLOT(authorizeReceived(QString,int)));
+    connect(githubAction,SIGNAL(triggered()),this,SLOT(openGithub()));
+    connect(aboutAction,SIGNAL(triggered()),this,SLOT(showAboutDialog()));
+    connect(aboutQtAction,SIGNAL(triggered()),qApp, SLOT(aboutQt()));
 
 }
 
@@ -60,5 +72,18 @@ void AbstractMainWindow::authorizeReceived(const QString &token, int trackId)
         QMessageBox::warning(this,"Authorisation", "Authorisation refusé");
     }
 
+
+}
+
+void AbstractMainWindow::showAboutDialog()
+{
+    AboutDialog dialog;
+    dialog.exec();
+}
+
+void AbstractMainWindow::openGithub()
+{
+
+    QDesktopServices::openUrl(QUrl("https://github.com/dridk/mafreebox/issues?state=open"));
 
 }

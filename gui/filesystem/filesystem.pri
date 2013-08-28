@@ -15,7 +15,8 @@ HEADERS += \
     gui/filesystem/fstaskmodel.h \
     gui/filesystem/fstaskwidget.h \
     gui/filesystem/fstaskdelegate.h \
-    gui/filesystem/fsdownloadmodel.h
+    gui/filesystem/fsdownloadmodel.h \
+    gui/filesystem/fstaskbutton.h
 
 SOURCES += \
     gui/filesystem/fsmainwindow.cpp \
@@ -27,7 +28,8 @@ SOURCES += \
     gui/filesystem/fstaskmodel.cpp \
     gui/filesystem/fstaskwidget.cpp \
     gui/filesystem/fstaskdelegate.cpp \
-    gui/filesystem/fsdownloadmodel.cpp
+    gui/filesystem/fsdownloadmodel.cpp \
+    gui/filesystem/fstaskbutton.cpp
 
 
 

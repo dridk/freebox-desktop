@@ -15,5 +15,8 @@
         <file>cancel.png</file>
         <file>inbox_download.png</file>
         <file>inbox_upload.png</file>
+        <file>loading.gif</file>
+        <file>github.png</file>
+        <file>about.png</file>
     </qresource>
 </RCC>
