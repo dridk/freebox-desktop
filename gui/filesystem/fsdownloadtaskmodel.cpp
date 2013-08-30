@@ -104,6 +104,8 @@ void FSDownloadTaskModel::clearFinished()
 
 void FSDownloadTaskModel::removeTask(const QModelIndex &index)
 {
+    if (!index.isValid())
+        return;
     QNetworkReply* reply = mDatas.values().at(index.row()).reply;
     rem(reply);
     if (reply)

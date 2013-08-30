@@ -117,6 +117,8 @@ void FSTaskWidget::clearTasks()
 
 void FSTaskWidget::removeSelectedTasks()
 {
+
+
     switch (mTabWidget->currentIndex())
     {
     case 0 : mDownloadModel->removeTask(mDownloadView->currentIndex()); break;
