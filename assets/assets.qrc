@@ -20,5 +20,10 @@
         <file>about.png</file>
         <file>broom.png</file>
         <file>progressbar.png</file>
+        <file>connect.png</file>
+        <file>server_connect.png</file>
+        <file>email_authentication.png</file>
+        <file>help.png</file>
+        <file>qt.png</file>
     </qresource>
 </RCC>

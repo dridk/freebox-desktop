@@ -9,15 +9,15 @@ AbstractMainWindow::AbstractMainWindow(QWidget *parent) :
 
     //construction du window Menu
     QMenu * fileMenu  = new QMenu("Fichier",this);
-    QAction * authAction = fileMenu->addAction("Authoriser l'application");
-    QAction * loginAction = fileMenu->addAction("Connexion");
+    QAction * authAction = fileMenu->addAction(QIcon(":email_authentication.png"),"Authoriser l'application");
+    QAction * loginAction = fileMenu->addAction(QIcon(":server_connect.png"),"Connexion");
     menuBar()->addMenu(fileMenu);
 
 
     QMenu * helpMenu = new QMenu("Aide",this);
     QAction * githubAction  = helpMenu->addAction(QIcon(":github.png"),"reporter un bug sur Github");
-    QAction * aboutAction   = helpMenu->addAction("A propos de "+qApp->applicationName()+"...");
-    QAction * aboutQtAction = helpMenu->addAction("A propos de Qt...");
+    QAction * aboutAction   = helpMenu->addAction(QIcon(":help.png"),"A propos de "+qApp->applicationName()+"...");
+    QAction * aboutQtAction = helpMenu->addAction(QIcon(":qt.png"),"A propos de Qt...");
 
     menuBar()->addMenu(helpMenu);
 
