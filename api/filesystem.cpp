@@ -456,13 +456,14 @@ void FileSystem::requestDownloadFinished()
         rawName.chop(1); // remove last quote
         rawName.remove(0,1); // remove first quote
         QString fileName = rawName;
-        qDebug()<<fileName;
+        qDebug()<<"filename"<<fileName;
 
         QString completeFileName = QFileInfo(*(mDownloads[reply])).absoluteFilePath();
 
-        qDebug()<<completeFileName;
+        QFileInfo path(completeFileName);
 
-        mDownloads[reply]->rename(fileName);
+
+        mDownloads[reply]->rename(path.absoluteDir().path()+QDir::separator()+fileName);
         mDownloads[reply]->close();
 
         delete mDownloads[reply];

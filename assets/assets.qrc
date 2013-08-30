@@ -25,5 +25,6 @@
         <file>email_authentication.png</file>
         <file>help.png</file>
         <file>qt.png</file>
+        <file>drop.png</file>
     </qresource>
 </RCC>

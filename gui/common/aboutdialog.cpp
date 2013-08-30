@@ -34,6 +34,7 @@ AboutDialog::AboutDialog(QWidget *parent) :
     mTextLabel->setText(QString("%1\n\nversion: %2\nbuild: %3")
                         .arg(qApp->applicationName(),
                              qApp->applicationVersion(),
+                             "crée par Sacha Schutz"
                              "f0cdc42116"
                              ));
 

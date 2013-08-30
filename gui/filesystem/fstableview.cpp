@@ -41,8 +41,15 @@ FSModel *FSTableView::fsModel()
 
 void FSTableView::dragEnterEvent(QDragEnterEvent *event)
 {
+    if (rootIndex().isValid()) {
+
     event->acceptProposedAction();
-    setStyleSheet("background-color: #ebf4ff");
+    viewport()->setStyleSheet("background-color:#ededed;background-image: url( :/drop.png);background-repeat:no-repeat;background-position:center center");
+    hideColumn(0);
+    hideColumn(1);
+    hideColumn(2);
+}
+
 
 }
 
@@ -58,8 +65,10 @@ void FSTableView::dragMoveEvent(QDragMoveEvent *event)
 
 void FSTableView::dragLeaveEvent(QDragLeaveEvent *event)
 {
-    setStyleSheet("background-color: white");
-
+    viewport()->setStyleSheet(QString());
+    showColumn(0);
+    showColumn(1);
+    showColumn(2);
 }
 
 void FSTableView::dropEvent(QDropEvent *event)
@@ -70,7 +79,7 @@ void FSTableView::dropEvent(QDropEvent *event)
 
     emit filesAdded(list);
 
-    setStyleSheet("background-color: white");
+
 }
 
 
