@@ -17,12 +17,10 @@ mRemTest = false;
             this,SLOT(dataReceived(QList<FileInfo>)));
 
     connect(mFbx->fileSystem(),SIGNAL(mkdirFinished()),this,SLOT(refreshCurrentIndex()));
-    connect(mFbx->fileSystem(),SIGNAL(removeFinished()),this,SLOT(refreshCurrentIndex()));
     connect(mFbx->fileSystem(),SIGNAL(renameFinished()),this,SLOT(refreshCurrentIndex()));
     connect(mFbx->fileSystem(),SIGNAL(uploadFinished(QString)),this,SLOT(refreshCurrentIndex()));
+
     connect(this,SIGNAL(itemChanged(QStandardItem*)),this,SLOT(itemToBeRenamed(QStandardItem*)));
-
-
     connect(mFbx,SIGNAL(error(QString,QString)),this,SLOT(refreshCurrentIndex()));
 }
 
@@ -78,12 +76,6 @@ void FSModel::dataReceived(const QList<FileInfo> &list)
 
     int c = rootItem->rowCount();
     rootItem->removeRows(0,c);
-
-
-    if (mRemTest) {
-     mRemTest = false;
-        return ;
-    }
 
     foreach (FileInfo i, list)
     {
@@ -160,15 +152,15 @@ void FSModel::mkdir(const QString &name, const QModelIndex &parent)
 
 void FSModel::remove(const QModelIndexList &indexes)
 {
+
     QStringList paths;
-    foreach (QModelIndex index, indexes) {
-        paths.append(index.data(PathRole).toString());
+    for (int i= indexes.count()-1; i>=0; i--)
+    {
+         paths.append(indexes[i].data(PathRole).toString());
+         removeRow(indexes[i].row(), indexes[i].parent());
+
     }
 
-    mCurrentIndex = indexes.first().parent();
-
-    qDebug()<<mCurrentIndex<<" "<<itemFromIndex(mCurrentIndex)->text();
-     mRemTest = true;
     mFbx->fileSystem()->requestRemove(paths);
 }
 
@@ -220,6 +212,7 @@ void FSModel::itemToBeRenamed(QStandardItem *item)
     mFbx->fileSystem()->requestRename(path,newName);
 
 }
+
 
 void FSModel::refresh(const QModelIndex &parent)
 {

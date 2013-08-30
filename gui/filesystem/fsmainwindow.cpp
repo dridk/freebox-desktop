@@ -185,21 +185,6 @@ void FSMainWindow::setRootIndex(const QModelIndex &index)
         mTreeView->setCurrentIndex(fid);
 
     }
-
-
-
-
-    qDebug()<<mModel->columnCount();
-    //    if (mModel->columnCount() >=3)
-    //    {
-
-    //        mTableView->horizontalHeader()->setSectionResizeMode(0,QHeaderView::Stretch);
-    //        mTableView->horizontalHeader()->setSectionResizeMode(1,QHeaderView::ResizeToContents);
-    //        mTableView->horizontalHeader()->setSectionResizeMode(2,QHeaderView::ResizeToContents);
-    //    }
-
-
-
 }
 
 void FSMainWindow::showTaskWidget(bool show)
