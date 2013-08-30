@@ -35,6 +35,7 @@ void FSPathToolBar::setCurrentIndex(const QModelIndex &index)
 
     }
 
+    if (actions().count() > 0)
     actions().last()->setDisabled(true);
 
 

@@ -155,23 +155,34 @@ void FSMainWindow::uploads(const QStringList &list)
 
 void FSMainWindow::setRootIndex(const QModelIndex &index)
 {
-    qDebug()<<sender()->metaObject()->className();
+
     if (sender()->metaObject()->className() == QString("FSTreeView") ) {
-        mTableView->setRootIndex(mFolderModel->mapToSource(index));
-        mHeaderWidget->setCurrentIndex(index);
+
+        QModelIndex fid = mFolderModel->index(index.row(),0,index.parent());
+        QModelIndex mid = mFolderModel->mapToSource(fid);
+
+        mTableView->setRootIndex(mid);
+        mHeaderWidget->setCurrentIndex(mid);
+        mTreeView->setCurrentIndex(fid);
     }
 
     if (sender()->metaObject()->className() == QString("FSTableView")){
-        mTableView->setRootIndex(index);
-        mTreeView->setCurrentIndex(mFolderModel->mapFromSource(index));
-         mHeaderWidget->setCurrentIndex(mFolderModel->mapFromSource(index));
+
+        QModelIndex mid = mModel->index(index.row(),0,index.parent());
+        QModelIndex fid = mFolderModel->mapFromSource(mid);
+
+        mTableView->setRootIndex(mid);
+        mHeaderWidget->setCurrentIndex(mid);
+        mTreeView->setCurrentIndex(fid);
     }
 
     if (sender()->metaObject()->className() == QString("FSPathToolBar"))
     {
-        mTableView->setRootIndex(mFolderModel->mapToSource(index));
-        mTreeView->setCurrentIndex(index);
-        mHeaderWidget->setCurrentIndex(index);
+        QModelIndex mid = mModel->index(index.row(),0,index.parent());
+        QModelIndex fid = mFolderModel->mapFromSource(mid);
+        mTableView->setRootIndex(mid);
+        mHeaderWidget->setCurrentIndex(mid);
+        mTreeView->setCurrentIndex(fid);
 
     }
 

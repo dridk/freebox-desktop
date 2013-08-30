@@ -31,7 +31,7 @@ public:
     static QString sizeHuman(int size);
     QByteArray currentPath(const QModelIndex& index);
 
-    Qt::ItemFlags flags(const QModelIndex &index) const;
+//    Qt::ItemFlags flags(const QModelIndex &index) const;
 
 
 signals:
@@ -58,7 +58,7 @@ private:
     MaFreeBox * mFbx;
     QModelIndex mCurrentIndex;
     bool mIsLoading;
-
+bool mRemTest;
     QMap<QNetworkReply*, QModelIndex> mReplyIndexes;
 };
 

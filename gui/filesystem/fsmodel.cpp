@@ -11,7 +11,7 @@ FSModel::FSModel(MaFreeBox *fbx, QObject *parent) :
     setHorizontalHeaderLabels(QStringList()<<"Nom"<<"Taille"<<"Date de modification");
     setColumnCount(3);
 
-
+mRemTest = false;
 
     connect(mFbx->fileSystem(),SIGNAL(listReceived(QList<FileInfo>)),
             this,SLOT(dataReceived(QList<FileInfo>)));
@@ -80,6 +80,11 @@ void FSModel::dataReceived(const QList<FileInfo> &list)
     rootItem->removeRows(0,c);
 
 
+    if (mRemTest) {
+     mRemTest = false;
+        return ;
+    }
+
     foreach (FileInfo i, list)
     {
         QList<QStandardItem*> lines;
@@ -136,7 +141,7 @@ void FSModel::dataReceived(const QList<FileInfo> &list)
     QModelIndex end = indexFromItem(rootItem->child(rootItem->rowCount()));
 
 
-    //    emit dataChanged(begin,end);
+   emit dataChanged(begin,end);
 
 
 
@@ -161,6 +166,9 @@ void FSModel::remove(const QModelIndexList &indexes)
     }
 
     mCurrentIndex = indexes.first().parent();
+
+    qDebug()<<mCurrentIndex<<" "<<itemFromIndex(mCurrentIndex)->text();
+     mRemTest = true;
     mFbx->fileSystem()->requestRemove(paths);
 }
 
@@ -242,11 +250,11 @@ QByteArray FSModel::currentPath(const QModelIndex &index)
     return index.data(PathRole).toString().toUtf8();
 }
 
-Qt::ItemFlags FSModel::flags(const QModelIndex &index) const
-{
+//Qt::ItemFlags FSModel::flags(const QModelIndex &index) const
+//{
 
-    return Qt::ItemIsSelectable|Qt::ItemIsEnabled;
-}
+//    return Qt::ItemIsSelectable|Qt::ItemIsEnabled;
+//}
 
 
 
