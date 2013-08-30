@@ -78,6 +78,8 @@ FSMainWindow::FSMainWindow(QWidget *parent) :
 
     connect(fbx(),SIGNAL(loginSuccess()),mModel,SLOT(init()));
     connect(mTreeView,SIGNAL(clicked(QModelIndex)),this,SLOT(setRootIndex(QModelIndex)));
+    connect(mTableView,SIGNAL(doubleClicked(QModelIndex)),this,SLOT(setRootIndex(QModelIndex)));
+
     connect(mHeaderWidget,SIGNAL(clicked(QModelIndex)),this,SLOT(setRootIndex(QModelIndex)));
     connect(mRefreshAction,SIGNAL(triggered()),this,SLOT(refresh()));
     connect(mMkdirAction,SIGNAL(triggered()),this,SLOT(mkdir()));

@@ -45,7 +45,7 @@ void FSPathToolBar::buttonClicked(QAction *action)
 {
 
     int total = actions().count();
-    int index = actions().indexOf(action);
+    int index = actions().indexOf(action) ;
 
     if (index == total - 1)
         emit clicked(mCurrentIndex);

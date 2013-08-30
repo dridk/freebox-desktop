@@ -46,8 +46,10 @@ FSTaskWidget::FSTaskWidget(MaFreeBox *fbx, QWidget *parent) :
     toolbar->setFloatable(false);
     toolbar->setMovable(false);
     toolbar->setToolButtonStyle(Qt::ToolButtonTextBesideIcon);
+    toolbar->setIconSize(QSize(16,16));
 
-    addToolBar(toolbar);
+    addToolBar(Qt::BottomToolBarArea,toolbar);
+
     QAction* clearTask = toolbar->addAction(QIcon(":broom.png"),"Effacer les terminés");
     QAction* remTask   = toolbar->addAction(QIcon(":cancel.png"),"Arreter");
 
