@@ -49,7 +49,7 @@ FSMainWindow::FSMainWindow(QWidget *parent) :
     //construction de la ToolBar
     mToolBar = addToolBar("tool");
     mMkdirAction   = mToolBar->addAction(QIcon(":folder.png"),"Nouveau dossier");
-    mUploadAction  = mToolBar->addAction(QIcon(":folder_add.png"),"Télécharger ici");
+    mUploadAction  = mToolBar->addAction(QIcon(":folder_add.png"),"Uploader ici");
     mRefreshAction = mToolBar->addAction(QIcon(":arrow_refresh.png"),"Rafraîchir");
     mTaskAction    = mToolBar->addAction(QIcon(":progressbar.png"),"");
 
