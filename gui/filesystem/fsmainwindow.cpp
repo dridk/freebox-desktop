@@ -43,6 +43,8 @@ FSMainWindow::FSMainWindow(QWidget *parent) :
 
 
     mSplitter->setHandleWidth(4);
+    mTreeView->setMaximumWidth(400);
+
 
     //construction de la ToolBar
     mToolBar = addToolBar("tool");
@@ -91,6 +93,8 @@ FSMainWindow::FSMainWindow(QWidget *parent) :
     resize(800,600);
     setTaskCount();
     //    setAttribute(Qt::WA_DeleteOnClose,true);
+
+    login();
 
 }
 

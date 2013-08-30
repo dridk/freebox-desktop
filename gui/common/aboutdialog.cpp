@@ -39,6 +39,7 @@ AboutDialog::AboutDialog(QWidget *parent) :
                              ));
 
 
+    setWindowTitle("A propos...");
 
 
 }
