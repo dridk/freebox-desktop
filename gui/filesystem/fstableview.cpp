@@ -43,12 +43,12 @@ void FSTableView::dragEnterEvent(QDragEnterEvent *event)
 {
     if (rootIndex().isValid()) {
 
-    event->acceptProposedAction();
-    viewport()->setStyleSheet("background-color:#ededed;background-image: url( :/drop.png);background-repeat:no-repeat;background-position:center center");
-    hideColumn(0);
-    hideColumn(1);
-    hideColumn(2);
-}
+        event->acceptProposedAction();
+        viewport()->setStyleSheet("background-color:#ededed;background-image: url( :/drop.png);background-repeat:no-repeat;background-position:center center");
+        hideColumn(0);
+        hideColumn(1);
+        hideColumn(2);
+    }
 
 
 }
@@ -88,7 +88,42 @@ void FSTableView::dropEvent(QDropEvent *event)
 
 }
 
+void FSTableView::remove()
+{
+    QMessageBox box;
+    box.setWindowTitle("Suppression");
+    box.setText("Etes-vous sûr de vouloir supprimer ce(s) fichier(s) ?");
+    box.setStandardButtons(QMessageBox::Yes|QMessageBox::No);
 
+    if (box.exec() == QMessageBox::Yes) {
+        qDebug()<<"Yes;";
+        QModelIndexList list = selectionModel()->selectedRows();
+        fsModel()->remove(list);
+    }
+}
+
+void FSTableView::mkdir()
+{
+    QInputDialog dialog;
+    dialog.setLabelText("Nom du nouveau dossier:");
+    dialog.setWindowTitle("Nouveau dossier");
+    dialog.setInputMode(QInputDialog::TextInput);
+
+    if (dialog.exec() == QDialog::Accepted) {
+        fsModel()->mkdir(dialog.textValue(), rootIndex());
+    }
+}
+
+
+
+void FSTableView::download()
+{
+    QFileDialog dialog;
+    dialog.setWindowTitle("Télécharger");
+    QString dirPath = dialog.getExistingDirectory(this);
+    if (!dirPath.isEmpty())
+        fsModel()->download(dirPath,currentIndex());
+}
 
 QMenu* FSTableView::createItemMenu()
 {
@@ -133,40 +168,25 @@ QMenu* FSTableView::createSelectionMenu()
     return menu;
 }
 
+void FSTableView::keyPressEvent(QKeyEvent *event)
+{
+
+    if (event->key() == Qt::Key_Delete)
+        remove();
+
+    QTableView::keyPressEvent(event);
+
+}
+
 
 void FSTableView::itemActionTriggered(QAction *action)
 {
-
     if (action->objectName() == QString("mkdir"))
-    {
-        QInputDialog dialog;
-        dialog.setLabelText("Nom du nouveau dossier:");
-        dialog.setWindowTitle("Nouveau dossier");
-        dialog.setInputMode(QInputDialog::TextInput);
+        mkdir();
 
-
-        if (dialog.exec() == QDialog::Accepted) {
-            fsModel()->mkdir(dialog.textValue(), rootIndex());
-        }
-    }
     //--------------------------------------------------------------------
     if (action->objectName() == QString("delete"))
-    {
-        qDebug()<<"receive from "<<sender()->objectName();
-        QMessageBox box;
-        box.setWindowTitle("Suppression");
-        box.setText("Etes-vous sûr de vouloir supprimer ce(s) fichier(s) ?");
-        box.setStandardButtons(QMessageBox::Yes|QMessageBox::No);
-
-
-        if (box.exec() == QMessageBox::Yes) {
-            qDebug()<<"Yes;";
-            QModelIndexList list = selectionModel()->selectedRows();
-            fsModel()->remove(list);
-
-        }
-
-    }
+        remove();
 
 
     //--------------------------------------------------------------------
@@ -184,24 +204,11 @@ void FSTableView::itemActionTriggered(QAction *action)
     //--------------------------------------------------------------------
 
     if (action->objectName() == QString("rename"))
-    {
-
         edit(currentIndex());
 
-    }
+
     //--------------------------------------------------------------------
 
     if (action->objectName() == QString("download"))
-    {
-
-        QFileDialog dialog;
-        dialog.setWindowTitle("Télécharger");
-        QString dirPath = dialog.getExistingDirectory(this);
-        if (!dirPath.isEmpty()) {
-
-
-            fsModel()->download(dirPath,currentIndex());
-
-        }
-    }
+        download();
 }

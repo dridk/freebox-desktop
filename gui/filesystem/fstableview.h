@@ -22,6 +22,12 @@ public:
     void dropEvent(QDropEvent *event);
 
 
+public slots:
+    void remove();
+    void mkdir();
+    void download();
+
+
 
 signals:
     void filesAdded(const QStringList& list);
@@ -29,6 +35,7 @@ protected:
     QMenu * createItemMenu();
     QMenu * createMenu();
     QMenu * createSelectionMenu();
+    void keyPressEvent(QKeyEvent *event);
 
     
 public slots:
