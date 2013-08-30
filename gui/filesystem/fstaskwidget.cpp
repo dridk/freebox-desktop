@@ -7,13 +7,13 @@ FSTaskWidget::FSTaskWidget(MaFreeBox *fbx, QWidget *parent) :
     QMainWindow(parent)
 {
     mFbx = fbx;
-    mActionModel   =  new FSActionTaskModel(mFbx);
+//    mActionModel   =  new FSActionTaskModel(mFbx);
     mDownloadModel = new FSDownloadTaskModel(mFbx);
     mUploadModel   = new FSUploadTaskModel(mFbx);
 
     mDownloadView  = new QListView;
     mUploadView    = new QListView;
-    mActionView    = new QListView;
+//    mActionView    = new QListView;
 
     mDelegate = new FSTaskDelegate;
     mTimer = new QTimer;
@@ -22,9 +22,9 @@ FSTaskWidget::FSTaskWidget(MaFreeBox *fbx, QWidget *parent) :
 
     //    mTimer->setInterval(1000);
 
-    mActionView->setAlternatingRowColors(true);
-    mActionView->setItemDelegate(mDelegate);
-    mActionView->setModel(mActionModel);
+//    mActionView->setAlternatingRowColors(true);
+//    mActionView->setItemDelegate(mDelegate);
+//    mActionView->setModel(mActionModel);
 
     mDownloadView->setAlternatingRowColors(true);
     mDownloadView->setItemDelegate(mDelegate);
@@ -53,18 +53,8 @@ FSTaskWidget::FSTaskWidget(MaFreeBox *fbx, QWidget *parent) :
     QAction* clearTask = toolbar->addAction(QIcon(":broom.png"),"Effacer les terminés");
     QAction* remTask   = toolbar->addAction(QIcon(":cancel.png"),"Arreter");
 
-    //    addAction(clearTask);
-    //    addAction(remTask);
-
-
-    //    layout()->addWidget(toolbar);
-    //    layout()->addWidget(mTabWidget);
-    //    layout()->setContentsMargins(0,0,0,0);
-    //    toolbar->setContentsMargins(0,0,0,0);
-    //    mTabWidget->setContentsMargins(0,0,0,0);
-    //    toolbar->setToolButtonStyle(Qt::ToolButtonTextBesideIcon);
-    //    toolbar->setIconSize(QSize(16,16));
-    connect(mDownloadModel,SIGNAL(countChanged()),this,SIGNAL(countChanged()));
+    connect(mDownloadModel,SIGNAL(countChanged()),this,SLOT(computeTasksCount()));
+    connect(mUploadModel,SIGNAL(countChanged()),this,SLOT(computeTasksCount()));
     connect(clearTask,SIGNAL(triggered()),this,SLOT(clearTasks()));
     connect(remTask,SIGNAL(triggered()),this,SLOT(removeSelectedTasks()));
 
@@ -74,7 +64,7 @@ FSTaskWidget::FSTaskWidget(MaFreeBox *fbx, QWidget *parent) :
     setWindowTitle("Gestionnaire de tâche");
     setCentralWidget(mTabWidget);
 
-    setWindowFlags ( Qt::CustomizeWindowHint | Qt::WindowTitleHint);
+//    setWindowFlags ( Qt::CustomizeWindowHint | Qt::WindowTitleHint);
 
 
 
@@ -127,6 +117,15 @@ void FSTaskWidget::removeSelectedTasks()
 
 
     }
+}
+
+void FSTaskWidget::computeTasksCount()
+{
+
+    int count = mDownloadModel->count() + mUploadModel->count();
+    qDebug()<<"COMPUTE COUNT..."<<count;
+
+    emit countChanged(count);
 }
 
 

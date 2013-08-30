@@ -61,6 +61,17 @@ void FSUploadTaskModel::removeTask(const QModelIndex &index)
         reply->abort();
 }
 
+int FSUploadTaskModel::count()
+{
+    int c = 0;
+    foreach (FSUploadItem item, mDatas.values()){
+        if (item.progress < 100)
+            c++;
+    }
+
+    return c;
+}
+
 void FSUploadTaskModel::uploadProgress(qint64 bytes, qint64 total)
 {
     QNetworkReply * reply = qobject_cast<QNetworkReply*>(sender());
@@ -105,6 +116,7 @@ void FSUploadTaskModel::uploadProgress(qint64 bytes, qint64 total)
             mDatas[reply].subTitle = QString("%1 terminé à %2")
                     .arg(FSModel::sizeHuman(total))
                     .arg(QDateTime::currentDateTime().toString());
+            emit countChanged();
         }
 
         int row = mDatas.keys().indexOf(reply);

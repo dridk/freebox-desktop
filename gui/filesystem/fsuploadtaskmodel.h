@@ -31,6 +31,8 @@ public:
     explicit FSUploadTaskModel(MaFreeBox * fbx, QObject *parent = 0);
     int rowCount(const QModelIndex &parent) const;
     QVariant data(const QModelIndex &index, int role) const;
+    virtual int count() ;
+
 public slots:
     void add(QNetworkReply * reply);
     void rem(QNetworkReply * reply);
@@ -39,8 +41,7 @@ public slots:
 protected slots:
     void uploadProgress(qint64,qint64);
 
-signals:
-    void countChanged();
+
 
 private:
     MaFreeBox * mFbx;

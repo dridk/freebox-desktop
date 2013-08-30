@@ -41,8 +41,7 @@ FSModel *FSTableView::fsModel()
 
 void FSTableView::dragEnterEvent(QDragEnterEvent *event)
 {
-    if (rootIndex().isValid()) {
-
+    if (rootIndex().isValid() && event->mimeData()->hasUrls()) {
         event->acceptProposedAction();
         viewport()->setStyleSheet("background-color:#ededed;background-image: url( :/drop.png);background-repeat:no-repeat;background-position:center center");
         hideColumn(0);
@@ -93,8 +92,10 @@ void FSTableView::remove()
     QMessageBox box;
     box.setWindowTitle("Suppression");
     box.setText("Etes-vous sûr de vouloir supprimer ce(s) fichier(s) ?");
+    box.setInformativeText("Les fichiers seront definitevement effacer de la freebox, sans possibilité de récuperation");
     box.setStandardButtons(QMessageBox::Yes|QMessageBox::No);
-
+    box.setDefaultButton(QMessageBox::No);
+    box.setIcon(QMessageBox::Warning);
     if (box.exec() == QMessageBox::Yes) {
         qDebug()<<"Yes;";
         QModelIndexList list = selectionModel()->selectedRows();
@@ -125,32 +126,30 @@ void FSTableView::download()
         fsModel()->download(dirPath,currentIndex());
 }
 
+void FSTableView::rename()
+{
+        edit(currentIndex());
+}
+
 QMenu* FSTableView::createItemMenu()
 {
     QMenu * menu = new QMenu;
-    menu->addAction(QIcon(":disk.png"),"Télécharger")->setObjectName("download");
+    menu->addAction(QIcon(":disk.png"),"Télécharger",this,SLOT(download()));
     menu->addSeparator();
-    menu->addAction(QIcon(":folder_edit.png"),"Renommer")->setObjectName("rename");
+    menu->addAction(QIcon(":folder_edit.png"),"Renommer",this,SLOT(rename()));
     menu->addSeparator();
-    menu->addAction(QIcon(":folder.png"),"Nouveau sous-dosser")->setObjectName("mkdir");
-    menu->addAction(QIcon(":folder_delete.png"),"Supprimer")->setObjectName("delete");
+    menu->addAction(QIcon(":folder.png"),"Nouveau sous-dosser",this,SLOT(mkdir()));
+    menu->addAction(QIcon(":folder_delete.png"),"Supprimer",this,SLOT(remove()));
     menu->addSeparator();
-    menu->addAction(QIcon(":page_copy.png"),"Copier")->setObjectName("copy");
-    menu->addAction(QIcon(":cut.png"),"Couper")->setObjectName("move");
-
-    connect(menu,SIGNAL(triggered(QAction*)),this,SLOT(itemActionTriggered(QAction*)));
-
+    menu->addAction(QIcon(":page_copy.png"),"Copier");
+    menu->addAction(QIcon(":cut.png"),"Couper");
     return menu;
 }
 
 QMenu* FSTableView::createMenu()
 {
     QMenu * menu = new QMenu;
-    menu->addAction(QIcon(":folder.png"),"Nouveau sous-dosser")->setObjectName("mkdir");
-    menu->addSeparator();
-    menu->addAction(QIcon(":folder_add.png"),"Uploader un fichier dans ce dossier")->setObjectName("upload");
-
-    connect(menu,SIGNAL(triggered(QAction*)),this,SLOT(itemActionTriggered(QAction*)));
+    menu->addAction(QIcon(":folder.png"),"Nouveau sous-dosser",this,SLOT(mkdir()));
 
     return menu;
 }
@@ -158,13 +157,10 @@ QMenu* FSTableView::createMenu()
 QMenu* FSTableView::createSelectionMenu()
 {
     QMenu * menu = new QMenu;
-    menu->addAction(QIcon(":folder_delete.png"),"Supprimer")->setObjectName("delete");
+    menu->addAction(QIcon(":folder_delete.png"),"Supprimer",this,SLOT(remove()));
     menu->addSeparator();
-    menu->addAction(QIcon(":page_copy.png"),"Copier")->setObjectName("copy");
-    menu->addAction(QIcon(":cut.png"),"Couper")->setObjectName("move");
-
-    connect(menu,SIGNAL(triggered(QAction*)),this,SLOT(itemActionTriggered(QAction*)));
-
+    menu->addAction(QIcon(":page_copy.png"),"Copier");
+    menu->addAction(QIcon(":cut.png"),"Couper");
     return menu;
 }
 
@@ -178,37 +174,3 @@ void FSTableView::keyPressEvent(QKeyEvent *event)
 
 }
 
-
-void FSTableView::itemActionTriggered(QAction *action)
-{
-    if (action->objectName() == QString("mkdir"))
-        mkdir();
-
-    //--------------------------------------------------------------------
-    if (action->objectName() == QString("delete"))
-        remove();
-
-
-    //--------------------------------------------------------------------
-    if (action->objectName() == QString("copy"))
-    {
-
-
-    }
-    //--------------------------------------------------------------------
-    if (action->objectName() == QString("past"))
-    {
-
-
-    }
-    //--------------------------------------------------------------------
-
-    if (action->objectName() == QString("rename"))
-        edit(currentIndex());
-
-
-    //--------------------------------------------------------------------
-
-    if (action->objectName() == QString("download"))
-        download();
-}

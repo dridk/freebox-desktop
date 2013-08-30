@@ -28,9 +28,10 @@ public:
 protected slots:
   void clearTasks();
  void removeSelectedTasks();
+ void computeTasksCount();
 
 signals:
-    void countChanged();
+    void countChanged(int count);
 
 private:
     QTimer * mTimer;

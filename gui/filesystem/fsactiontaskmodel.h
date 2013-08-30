@@ -17,6 +17,7 @@ public slots:
     void load();
     virtual void clearFinished(){}
     virtual void removeTask(const QModelIndex &index){}
+    virtual int count(){return 0;}
 
 protected slots:
     void dataReceived(const QList<FileTask>& list);

@@ -26,6 +26,7 @@ public slots:
     void remove();
     void mkdir();
     void download();
+    void rename();
 
 
 
@@ -39,7 +40,6 @@ protected:
 
     
 public slots:
-    void itemActionTriggered(QAction * action);
 
 private:
 

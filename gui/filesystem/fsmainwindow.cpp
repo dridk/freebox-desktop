@@ -53,7 +53,6 @@ FSMainWindow::FSMainWindow(QWidget *parent) :
     mRefreshAction = mToolBar->addAction(QIcon(":arrow_refresh.png"),"Rafraîchir");
     mTaskAction    = mToolBar->addAction(QIcon(":progressbar.png"),"");
 
-    mTaskAction->setCheckable(true);
 
     mToolBar->setIconSize(QSize(16,16));
     mToolBar->setToolButtonStyle(Qt::ToolButtonTextBesideIcon);
@@ -83,18 +82,18 @@ FSMainWindow::FSMainWindow(QWidget *parent) :
     connect(mTreeView,SIGNAL(clicked(QModelIndex)),this,SLOT(setRootIndex(QModelIndex)));
     connect(mTableView,SIGNAL(doubleClicked(QModelIndex)),this,SLOT(setRootIndex(QModelIndex)));
     connect(mTableView,SIGNAL(filesAdded(QStringList)),this,SLOT(uploads(QStringList)));
-
     connect(mHeaderWidget,SIGNAL(clicked(QModelIndex)),this,SLOT(setRootIndex(QModelIndex)));
     connect(mRefreshAction,SIGNAL(triggered()),this,SLOT(refresh()));
     connect(mMkdirAction,SIGNAL(triggered()),this,SLOT(mkdir()));
     connect(mUploadAction,SIGNAL(triggered()),this,SLOT(upload()));
-    connect(mTaskAction,SIGNAL(triggered(bool)),this,SLOT(showTaskWidget(bool)));
-    connect(mTaskWidget,SIGNAL(countChanged()),this,SLOT(setTaskCount()));
+    connect(mTaskAction,SIGNAL(triggered()),mTaskWidget,SLOT(show()));
+    connect(mTaskWidget,SIGNAL(countChanged(int)),this,SLOT(setTaskCount(int)));
     resize(800,600);
-    setTaskCount();
+    setTaskCount(0);
     //    setAttribute(Qt::WA_DeleteOnClose,true);
 
     login();
+
 
 }
 
@@ -190,14 +189,12 @@ void FSMainWindow::setRootIndex(const QModelIndex &index)
 void FSMainWindow::showTaskWidget(bool show)
 {
     mTaskWidget->setVisible(show);
-    mTaskWidget->start();
+
 }
 
-void FSMainWindow::setTaskCount()
+void FSMainWindow::setTaskCount(int count)
 {
 
-    int count = mTaskWidget->count();
-    QFont font = mTaskAction->font();
     if (count == 0)
         mTaskAction->setText("Aucune tâche(s)");
     else

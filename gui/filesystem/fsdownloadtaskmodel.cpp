@@ -40,9 +40,15 @@ QVariant FSDownloadTaskModel::data(const QModelIndex &index, int role) const
     return QVariant();
 }
 
-int FSDownloadTaskModel::count() const
+int FSDownloadTaskModel::count()
 {
-    return rowCount();
+    int count = 0;
+    foreach (FSDownloadItem item, mDatas.values()){
+        if (item.progress < 100)
+            count++;
+    }
+
+    return count;
 }
 
 const FSDownloadItem &FSDownloadTaskModel::item(const QModelIndex &index)
@@ -153,6 +159,7 @@ void FSDownloadTaskModel::downloadProgress(qint64 bytes, qint64 total)
             mDatas[reply].subTitle = QString("%1 terminé à %2")
                     .arg(FSModel::sizeHuman(total))
                     .arg(QDateTime::currentDateTime().toString());
+             emit countChanged();
         }
 
         int row = mDatas.keys().indexOf(reply);

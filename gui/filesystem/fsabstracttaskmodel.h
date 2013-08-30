@@ -16,11 +16,16 @@ public:
         MimeIconRole
     };
     explicit FSAbstractTaskModel(QObject *parent = 0);
-    
+    virtual int count() = 0;
 
-   public slots:
+public slots:
     virtual void clearFinished() = 0;
     virtual void removeTask(const QModelIndex& index) = 0;
+
+signals:
+    void countChanged();
+
+
 
 
     

@@ -28,9 +28,9 @@ public slots:
 
 
 protected slots:
-    void setRootIndex(const QModelIndex& index);
+    void setRootIndex(const QModelIndex& index = QModelIndex());
     void showTaskWidget(bool show);
-    void setTaskCount();
+    void setTaskCount(int count = 0);
 
 
     
@@ -49,6 +49,8 @@ private:
     QAction * mUploadAction;
     QAction * mRefreshAction;
     QAction * mTaskAction;
+
+    //statusBar
 
 
 };
