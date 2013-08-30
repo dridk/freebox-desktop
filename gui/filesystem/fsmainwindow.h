@@ -24,6 +24,7 @@ public slots:
     void refresh();
     void mkdir();
     void upload();
+    void uploads(const QStringList& list);
 
 
 protected slots:

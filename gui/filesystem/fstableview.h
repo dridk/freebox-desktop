@@ -18,10 +18,13 @@ public:
 
     void dragEnterEvent(QDragEnterEvent *event);
     void dragMoveEvent(QDragMoveEvent *event);
+    void dragLeaveEvent(QDragLeaveEvent *event);
     void dropEvent(QDropEvent *event);
 
 
 
+signals:
+    void filesAdded(const QStringList& list);
 protected:
     QMenu * createItemMenu();
     QMenu * createMenu();

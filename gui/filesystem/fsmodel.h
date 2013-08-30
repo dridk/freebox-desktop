@@ -26,13 +26,12 @@ public:
     bool canFetchMore(const QModelIndex &parent) const;
     bool hasChildren(const QModelIndex &parent) const;
 
-    bool dropMimeData(const QMimeData *data, Qt::DropAction action, int row, int column, const QModelIndex &parent);
 
 
     static QString sizeHuman(int size);
     QByteArray currentPath(const QModelIndex& index);
 
-
+    Qt::ItemFlags flags(const QModelIndex &index) const;
 
 
 signals:

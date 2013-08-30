@@ -55,7 +55,8 @@ FSMainWindow::FSMainWindow(QWidget *parent) :
 
     mToolBar->setIconSize(QSize(16,16));
     mToolBar->setToolButtonStyle(Qt::ToolButtonTextBesideIcon);
-
+    mToolBar->setFloatable(false);
+    mToolBar->setMovable(false);
 
 
 
@@ -79,17 +80,17 @@ FSMainWindow::FSMainWindow(QWidget *parent) :
     connect(fbx(),SIGNAL(loginSuccess()),mModel,SLOT(init()));
     connect(mTreeView,SIGNAL(clicked(QModelIndex)),this,SLOT(setRootIndex(QModelIndex)));
     connect(mTableView,SIGNAL(doubleClicked(QModelIndex)),this,SLOT(setRootIndex(QModelIndex)));
+    connect(mTableView,SIGNAL(filesAdded(QStringList)),this,SLOT(uploads(QStringList)));
 
     connect(mHeaderWidget,SIGNAL(clicked(QModelIndex)),this,SLOT(setRootIndex(QModelIndex)));
     connect(mRefreshAction,SIGNAL(triggered()),this,SLOT(refresh()));
     connect(mMkdirAction,SIGNAL(triggered()),this,SLOT(mkdir()));
     connect(mUploadAction,SIGNAL(triggered()),this,SLOT(upload()));
     connect(mTaskAction,SIGNAL(triggered(bool)),this,SLOT(showTaskWidget(bool)));
-
     connect(mTaskWidget,SIGNAL(countChanged()),this,SLOT(setTaskCount()));
     resize(800,600);
     setTaskCount();
-//    setAttribute(Qt::WA_DeleteOnClose,true);
+    //    setAttribute(Qt::WA_DeleteOnClose,true);
 
 }
 
@@ -131,27 +132,46 @@ void FSMainWindow::upload()
     QFileDialog dialog;
     dialog.setWindowTitle("Uploader");
     QString filename = dialog.getOpenFileName(this,"Uploader");
-
+    qDebug()<<filename;
     mModel->upload(filename, mTableView->rootIndex());
 
+
+}
+
+void FSMainWindow::uploads(const QStringList &list)
+{
+
+    foreach (QString filename, list) {
+
+        mModel->upload(filename, mTableView->rootIndex());
+
+    }
 
 }
 
 void FSMainWindow::setRootIndex(const QModelIndex &index)
 {
     qDebug()<<sender()->metaObject()->className();
-    if (sender()->metaObject()->className() == QString("FSTreeView") )
+    if (sender()->metaObject()->className() == QString("FSTreeView") ) {
         mTableView->setRootIndex(mFolderModel->mapToSource(index));
+        mHeaderWidget->setCurrentIndex(index);
+    }
 
-    if (sender()->metaObject()->className() == QString("FSTableView"))
+    if (sender()->metaObject()->className() == QString("FSTableView")){
         mTableView->setRootIndex(index);
+        mTreeView->setCurrentIndex(mFolderModel->mapFromSource(index));
+         mHeaderWidget->setCurrentIndex(mFolderModel->mapFromSource(index));
+    }
 
     if (sender()->metaObject()->className() == QString("FSPathToolBar"))
     {
         mTableView->setRootIndex(mFolderModel->mapToSource(index));
         mTreeView->setCurrentIndex(index);
+        mHeaderWidget->setCurrentIndex(index);
+
     }
-    mHeaderWidget->setCurrentIndex(index);
+
+
 
 
     qDebug()<<mModel->columnCount();
@@ -181,7 +201,7 @@ void FSMainWindow::setTaskCount()
     if (count == 0)
         mTaskAction->setText("Aucune tâche(s)");
     else
-    mTaskAction->setText(QString("%3 en cours").arg(count));
+        mTaskAction->setText(QString("%3 en cours").arg(count));
 
 }
 

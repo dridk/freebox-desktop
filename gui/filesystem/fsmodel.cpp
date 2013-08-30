@@ -57,11 +57,6 @@ bool FSModel::hasChildren(const QModelIndex &parent) const
         return QStandardItemModel::hasChildren(parent);
 }
 
-bool FSModel::dropMimeData(const QMimeData *data, Qt::DropAction action, int row, int column, const QModelIndex &parent)
-{
-    qDebug()<<"drop";
-    return true;
-}
 
 void FSModel::init()
 {
@@ -80,6 +75,7 @@ void FSModel::dataReceived(const QList<FileInfo> &list)
         rootItem = itemFromIndex(mCurrentIndex);
 
     qDebug()<<"CLEAR";
+
     int c = rootItem->rowCount();
     rootItem->removeRows(0,c);
 
@@ -127,7 +123,7 @@ void FSModel::dataReceived(const QList<FileInfo> &list)
         firstItem->setData(i.link, IsLinkRole);
         firstItem->setData(i.hidden, IsHiddenRole);
         //        firstItem->setEditable(false);
-//        firstItem->setDropEnabled(true);
+        //        firstItem->setDropEnabled(true);
 
         lines.append(firstItem);
         lines.append(secondItem);
@@ -138,7 +134,10 @@ void FSModel::dataReceived(const QList<FileInfo> &list)
 
     QModelIndex begin  = indexFromItem(rootItem->child(0));
     QModelIndex end = indexFromItem(rootItem->child(rootItem->rowCount()));
-    emit dataChanged(begin,end);
+
+
+    //    emit dataChanged(begin,end);
+
 
 
 
@@ -241,6 +240,12 @@ QString FSModel::sizeHuman(int size)
 QByteArray FSModel::currentPath(const QModelIndex &index)
 {
     return index.data(PathRole).toString().toUtf8();
+}
+
+Qt::ItemFlags FSModel::flags(const QModelIndex &index) const
+{
+
+    return Qt::ItemIsSelectable|Qt::ItemIsEnabled;
 }
 
 

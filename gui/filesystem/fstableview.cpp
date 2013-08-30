@@ -42,17 +42,35 @@ FSModel *FSTableView::fsModel()
 void FSTableView::dragEnterEvent(QDragEnterEvent *event)
 {
     event->acceptProposedAction();
+    setStyleSheet("background-color: #ebf4ff");
+
 }
 
 void FSTableView::dragMoveEvent(QDragMoveEvent *event)
 {
     event->acceptProposedAction();
+
+
+
+
+
+}
+
+void FSTableView::dragLeaveEvent(QDragLeaveEvent *event)
+{
+    setStyleSheet("background-color: white");
+
 }
 
 void FSTableView::dropEvent(QDropEvent *event)
 {
-    qDebug()<<"Drop";
-    qDebug()<<event->mimeData()->urls();
+    QStringList list;
+    foreach (QUrl url, event->mimeData()->urls())
+        list.append(url.path());
+
+    emit filesAdded(list);
+
+    setStyleSheet("background-color: white");
 }
 
 
