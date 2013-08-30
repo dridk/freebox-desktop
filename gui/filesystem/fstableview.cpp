@@ -75,9 +75,15 @@ void FSTableView::dropEvent(QDropEvent *event)
 {
     QStringList list;
     foreach (QUrl url, event->mimeData()->urls())
-        list.append(url.path());
+        list.append(url.toLocalFile());
 
+    qDebug()<<list;
     emit filesAdded(list);
+
+    viewport()->setStyleSheet(QString());
+    showColumn(0);
+    showColumn(1);
+    showColumn(2);
 
 
 }
