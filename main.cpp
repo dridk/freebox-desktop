@@ -7,6 +7,7 @@ int main(int argc, char *argv[])
     QCoreApplication::setOrganizationName("labsquare");
     QCoreApplication::setOrganizationDomain("labsquare.org");
     QCoreApplication::setApplicationName("Freebox");
+    QCoreApplication::setApplicationVersion("beta 1");
 
 
     FSMainWindow w ;

@@ -14,7 +14,10 @@ signals:
 public slots:
 
 private:
-    QLabel * mLabel;
+    QLabel * mPixLabel;
+    QLabel * mTextLabel;
+    QPushButton * mCreditsButton;
+    QPushButton * mLicenceButton;
     
 };
 
