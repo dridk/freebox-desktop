@@ -1,20 +1,20 @@
-#include "fstaskmodel.h"
+#include "fsactiontaskmodel.h"
 #include <QDebug>
-FSTaskModel::FSTaskModel(MaFreeBox *fbx, QObject *parent) :
-    QAbstractListModel(parent)
+FSActionTaskModel::FSActionTaskModel(MaFreeBox *fbx, QObject *parent) :
+    FSAbstractTaskModel(parent)
 {
     mFbx = fbx;
     connect(mFbx->fileSystem(),SIGNAL(taskListReceived(QList<FileTask>)),
             this,SLOT(dataReceived(QList<FileTask>)));
 }
 
-int FSTaskModel::rowCount(const QModelIndex &parent) const
+int FSActionTaskModel::rowCount(const QModelIndex &parent) const
 {
     return mDatas.count();
 }
 
 
-QVariant FSTaskModel::data(const QModelIndex &index, int role) const
+QVariant FSActionTaskModel::data(const QModelIndex &index, int role) const
 {
 
     if (role == Qt::DisplayRole)
@@ -24,14 +24,14 @@ QVariant FSTaskModel::data(const QModelIndex &index, int role) const
 }
 
 
-void FSTaskModel::load()
+void FSActionTaskModel::load()
 {
     qDebug()<<"load";
     mFbx->fileSystem()->requestTaskList();
 
 }
 
-void FSTaskModel::dataReceived(const QList<FileTask> &list)
+void FSActionTaskModel::dataReceived(const QList<FileTask> &list)
 {
 
     beginResetModel();

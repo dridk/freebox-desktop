@@ -5,6 +5,8 @@
 #include <QNetworkReply>
 #include "mafreebox.h"
 #include "fsmodel.h"  // pour utilise sizeHuman....
+#include "fsabstracttaskmodel.h"
+
 class FSDownloadItem {
 public:
     FSDownloadItem () {
@@ -13,24 +15,20 @@ public:
         progress = 0;
 
     }
-
     QNetworkReply * reply ;
     QString title;
     QString subTitle;
     double progress;
     double bytes;
     QString mimeIconPath;
-    QString actionIconPath;
     QTime time;
-
-
 };
 
-class FSDownloadModel : public QAbstractListModel
+class FSDownloadTaskModel : public FSAbstractTaskModel
 {
     Q_OBJECT
 public:
-    explicit FSDownloadModel(MaFreeBox * fbx, QObject *parent = 0);
+    explicit FSDownloadTaskModel(MaFreeBox * fbx, QObject *parent = 0);
     int rowCount(const QModelIndex &parent = QModelIndex()) const;
     QVariant data(const QModelIndex &index, int role) const;
     int count() const;
@@ -40,6 +38,8 @@ public:
 public slots:
     void add(QNetworkReply* reply);
     void rem(QNetworkReply* reply);
+    virtual void clearFinished();
+    virtual void removeTask(const QModelIndex &index);
 
 protected slots:
     void downloadProgress(qint64 bytes,qint64 total);

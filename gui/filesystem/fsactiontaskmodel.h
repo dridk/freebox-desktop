@@ -3,17 +3,20 @@
 
 #include <QAbstractListModel>
 #include "filesystem.h"
-class FSTaskModel : public QAbstractListModel
+#include "fsabstracttaskmodel.h"
+class FSActionTaskModel : public FSAbstractTaskModel
 {
     Q_OBJECT
 public:
-    explicit FSTaskModel(MaFreeBox * fbx, QObject *parent = 0);
+    explicit FSActionTaskModel(MaFreeBox * fbx, QObject *parent = 0);
     
     int rowCount(const QModelIndex &parent) const;
     QVariant data(const QModelIndex &index, int role) const;
 
 public slots:
     void load();
+    virtual void clearFinished(){}
+    virtual void removeTask(const QModelIndex &index){}
 
 protected slots:
     void dataReceived(const QList<FileTask>& list);

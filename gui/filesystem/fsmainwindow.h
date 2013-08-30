@@ -43,7 +43,7 @@ private:
     QSortFilterProxyModel * mFolderModel;
     FSModel * mModel;
     FSTaskWidget * mTaskWidget;
-
+    QDockWidget * mTaskDockWidget;
     QAction * mMkdirAction;
     QAction * mUploadAction;
     QAction * mRefreshAction;

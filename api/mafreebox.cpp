@@ -369,7 +369,12 @@ void MaFreeBox::sendError(const QString &message, const QString &code)
 void MaFreeBox::errorReceived(QNetworkReply::NetworkError /*errCode*/)
 {
     QNetworkReply * reply = qobject_cast<QNetworkReply*>(sender());
-    qDebug()<<"ERROR "<< reply->errorString();
+    qDebug()<<"ERROR "<< reply->error()<<" "<<reply->errorString();
+
+    // pas la peine d'afficher une erreur qd l'utilisateur arrete un DL / UL
+    if (reply->error() == QNetworkReply::OperationCanceledError)
+        return ;
+
     if (reply)
     {
         QJsonDocument doc = QJsonDocument::fromJson(reply->readAll());

@@ -4,6 +4,7 @@
 #include <QCommonStyle>
 #include <QDebug>
 #include <QFontMetrics>
+#include "fsabstracttaskmodel.h"
 FSTaskDelegate::FSTaskDelegate(QObject *parent) :
     QStyledItemDelegate(parent)
 {
@@ -12,11 +13,11 @@ FSTaskDelegate::FSTaskDelegate(QObject *parent) :
 void FSTaskDelegate::paint(QPainter *painter, const QStyleOptionViewItem &option, const QModelIndex &index) const
 {
 
-    QString title         = index.data(Qt::DisplayRole).toString();
-    QString subTitle      = index.data(Qt::WhatsThisRole).toString();
-    int progress          = index.data(Qt::UserRole).toInt();
-    QString mimeIconPath  = index.data(Qt::DecorationRole).toString();
-    QString actionIconPath= index.data(Qt::StatusTipRole).toString();
+    QString title         = index.data(FSAbstractTaskModel::TitleRole).toString();
+    QString subTitle      = index.data(FSAbstractTaskModel::SubTitleRole).toString();
+    int progress          = index.data(FSAbstractTaskModel::ProgressRole).toInt();
+    QString mimeIconPath  = index.data(FSAbstractTaskModel::MimeIconRole).toString();
+//    QString actionIconPath= index.data(FSAbstractTaskModel::TitleRole).toString();
 
 
     if (option.state & QStyle::State_Selected)
@@ -68,15 +69,15 @@ void FSTaskDelegate::paint(QPainter *painter, const QStyleOptionViewItem &option
                       subTitle);
 
 
-   QPixmap rightPixmap(actionIconPath);
+//   QPixmap rightPixmap(actionIconPath);
 //    if (mClicked.contains(index))
 //        painter->setOpacity(0.4);
 //    else
 //        painter->setOpacity(1);
 
 
-    painter->drawPixmap(option.rect.right() -20,  option.rect.center().y()-8,
-                        rightPixmap);
+//    painter->drawPixmap(option.rect.right() -20,  option.rect.center().y()-8,
+//                        rightPixmap);
 
 
 }

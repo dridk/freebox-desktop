@@ -17,7 +17,7 @@ FileSystem::~FileSystem()
 
 QFile *FileSystem::downloadFile(QNetworkReply *reply)
 {
-   return mDownloads.value(reply,NULL);
+    return mDownloads.value(reply,NULL);
 }
 
 QFile *FileSystem::uploadFile(QNetworkReply *reply)
@@ -501,9 +501,11 @@ void FileSystem::requestUploadFinished()
     QNetworkReply * reply  = qobject_cast<QNetworkReply*>(sender());
     QJsonDocument doc = QJsonDocument::fromJson(reply->readAll());
 
-    if (fbx()->parseResult(doc))
+    if (fbx()->parseResult(doc) && mUploads.contains(reply)) {
+        mUploads[reply]->close();
         emit uploadFinished(reply->objectName());
-
+        emit uploadEnded(reply);
+    }
 
     reply->deleteLater();
 
@@ -548,9 +550,10 @@ void FileSystem::requestStartUpload()
         multiPart->setParent(uploadReply);
         uploadReply->setObjectName(fileName); // save fileName to get it back from response
 
+        mUploads[uploadReply] = file;
         connect(uploadReply,SIGNAL(finished()),this,SLOT(requestUploadFinished()));
         connect(uploadReply,SIGNAL(error(QNetworkReply::NetworkError)),fbx(),SLOT(errorReceived(QNetworkReply::NetworkError)));
-
+        emit uploadStarted(uploadReply);
 
     }
     reply->deleteLater();

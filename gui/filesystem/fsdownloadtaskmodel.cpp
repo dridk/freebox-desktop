@@ -1,7 +1,7 @@
-#include "fsdownloadmodel.h"
+#include "fsdownloadtaskmodel.h"
 #include <QMimeDatabase>
-FSDownloadModel::FSDownloadModel(MaFreeBox *fbx, QObject *parent):
-    QAbstractListModel(parent)
+FSDownloadTaskModel::FSDownloadTaskModel(MaFreeBox *fbx, QObject *parent):
+    FSAbstractTaskModel(parent)
 {
     mFbx = fbx;
     connect(mFbx->fileSystem(),SIGNAL(downloadStarted(QNetworkReply*)),
@@ -10,66 +10,53 @@ FSDownloadModel::FSDownloadModel(MaFreeBox *fbx, QObject *parent):
 //    connect(mFbx->fileSystem(),SIGNAL(downloadEnded(QNetworkReply*)),
 //            this,SLOT(rem(QNetworkReply*)));
 
-    //    FSDownloadItem item;
-    //    item.title = "Fichier.exe";
-    //    item.subTitle = "30% a truc muche";
-    //    item.mimeIconPath = ":mime/video_x_matroska.png";
-    //    item.progress = 30;
-    //    item.actionIconPath = ":cancel.png";
-
-    //    QNetworkReply* a;
-    //    QNetworkReply* b;
-    //    mDatas.insert(a, item);
-    //    mDatas.insert(b, item);
-
 }
 
-int FSDownloadModel::rowCount(const QModelIndex &parent) const
+int FSDownloadTaskModel::rowCount(const QModelIndex &parent) const
 {
     return mDatas.count();
 }
 
-QVariant FSDownloadModel::data(const QModelIndex &index, int role) const
+QVariant FSDownloadTaskModel::data(const QModelIndex &index, int role) const
 {
     if (!index.isValid())
         return QVariant();
 
-    if (role == Qt::DisplayRole)
+    if (role == Qt::DisplayRole || role ==TitleRole)
         return mDatas.values().at(index.row()).title;
 
-    if (role == Qt::WhatsThisRole)
+    if (role == Qt::WhatsThisRole || role ==SubTitleRole)
         return mDatas.values().at(index.row()).subTitle;
 
-    if (role == Qt::UserRole)
+    if (role == ProgressRole || role ==Qt::UserRole)
         return mDatas.values().at(index.row()).progress;
 
-    if (role == Qt::DecorationRole)
+    if (role == Qt::DecorationRole || role ==MimeIconRole)
         return mDatas.values().at(index.row()).mimeIconPath;
 
-    if (role == Qt::StatusTipRole)
-        return mDatas.values().at(index.row()).actionIconPath;
-
+//    if (role == Qt::StatusTipRole)
+//        return mDatas.values().at(index.row()).actionIconPath;
 
     return QVariant();
 }
 
-int FSDownloadModel::count() const
+int FSDownloadTaskModel::count() const
 {
     return rowCount();
 }
 
-const FSDownloadItem &FSDownloadModel::item(const QModelIndex &index)
+const FSDownloadItem &FSDownloadTaskModel::item(const QModelIndex &index)
 {
     return mDatas.values()[index.row()];
 }
 
-Qt::ItemFlags FSDownloadModel::flags(const QModelIndex &index) const
+Qt::ItemFlags FSDownloadTaskModel::flags(const QModelIndex &index) const
 {
 
     return Qt::ItemIsSelectable|Qt::ItemIsEnabled;
 }
 
-void FSDownloadModel::add(QNetworkReply *reply)
+void FSDownloadTaskModel::add(QNetworkReply *reply)
 {
     beginInsertRows(QModelIndex(),0,0);
     FSDownloadItem item;
@@ -83,17 +70,14 @@ void FSDownloadModel::add(QNetworkReply *reply)
     QString icon = mime.iconName().replace("-","_").replace("/","_");
     item.mimeIconPath = QString(":mime/%1.png").arg(icon);
     item.title = decodedName;
-    qDebug()<<item.mimeIconPath;
 
     mDatas.insert(reply, item);
-    connect(reply,SIGNAL(downloadProgress(qint64,qint64)),
-            this,SLOT(downloadProgress(qint64,qint64)));
+    connect(reply,SIGNAL(downloadProgress(qint64,qint64)),this,SLOT(downloadProgress(qint64,qint64)));
     endInsertRows();
     emit countChanged();
-
 }
 
-void FSDownloadModel::rem(QNetworkReply *reply)
+void FSDownloadTaskModel::rem(QNetworkReply *reply)
 {
     if (mDatas.contains(reply))
     {
@@ -106,14 +90,38 @@ void FSDownloadModel::rem(QNetworkReply *reply)
 
 }
 
-void FSDownloadModel::downloadProgress(qint64 bytes, qint64 total)
+void FSDownloadTaskModel::clearFinished()
 {
+    foreach ( QNetworkReply * reply, mDatas.keys())
+    {
+        if (mDatas.contains(reply))
+        {
+            if (mDatas[reply].progress == 100)
+             rem(reply);
+        }
+    }
+}
 
+void FSDownloadTaskModel::removeTask(const QModelIndex &index)
+{
+    QNetworkReply* reply = mDatas.values().at(index.row()).reply;
+    rem(reply);
+    if (reply)
+        reply->abort();
+
+
+
+}
+void FSDownloadTaskModel::downloadProgress(qint64 bytes, qint64 total)
+{
     QNetworkReply * reply = qobject_cast<QNetworkReply*>(sender());
     if (reply && mDatas.contains(reply))
     {
         // calcul de la progress Bar
         mDatas[reply].progress = double(bytes) / double(total) * 100;
+
+        qDebug()<<"progress..."<<mDatas[reply].progress;
+
 
         if (mDatas[reply].progress < 100)
         {
@@ -136,7 +144,6 @@ void FSDownloadModel::downloadProgress(qint64 bytes, qint64 total)
                 .arg(FSModel::sizeHuman(speed))
                 .arg(remainTime.toString("hh:mm"));
 
-
         }
 
         else
@@ -150,12 +157,5 @@ void FSDownloadModel::downloadProgress(qint64 bytes, qint64 total)
         if (row > -1)
             emit dataChanged(index(row),index(row));
 
-
-
-
-
     }
-
-
-
 }

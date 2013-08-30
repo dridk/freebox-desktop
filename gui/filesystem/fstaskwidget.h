@@ -5,12 +5,16 @@
 #include <QListView>
 #include <QTimer>
 #include <QTabWidget>
+#include <QtWidgets>
+#include <QMainWindow>
 #include "mafreebox.h"
-#include "fstaskmodel.h"
 #include "fstaskdelegate.h"
-#include "fsdownloadmodel.h"
 
-class FSTaskWidget : public QWidget
+#include "fsactiontaskmodel.h"
+#include "fsdownloadtaskmodel.h"
+#include "fsuploadtaskmodel.h"
+
+class FSTaskWidget : public QMainWindow
 {
     Q_OBJECT
 public:
@@ -21,14 +25,21 @@ public:
     void stop();
     int count();
 
+protected slots:
+  void clearTasks();
+ void removeSelectedTasks();
+
 signals:
     void countChanged();
 
 private:
     QTimer * mTimer;
-    QListView * mView;
-    FSTaskModel * mModel;
-    FSDownloadModel * mDownloadModel;
+    QListView * mActionView;
+    QListView * mDownloadView;
+    QListView * mUploadView;
+    FSActionTaskModel * mActionModel;
+    FSDownloadTaskModel * mDownloadModel;
+    FSUploadTaskModel * mUploadModel;
     FSTaskDelegate * mDelegate;
     MaFreeBox * mFbx;
     QTabWidget * mTabWidget;

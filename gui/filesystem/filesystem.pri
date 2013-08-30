@@ -12,11 +12,13 @@ HEADERS += \
     gui/filesystem/fstreeview.h \
     gui/filesystem/fstableview.h \
     gui/filesystem/fsmenu.h \
-    gui/filesystem/fstaskmodel.h \
     gui/filesystem/fstaskwidget.h \
     gui/filesystem/fstaskdelegate.h \
-    gui/filesystem/fsdownloadmodel.h \
-    gui/filesystem/fstaskbutton.h
+    gui/filesystem/fstaskbutton.h \
+    gui/filesystem/fsabstracttaskmodel.h \
+    gui/filesystem/fsuploadtaskmodel.h \
+    gui/filesystem/fsdownloadtaskmodel.h \
+    gui/filesystem/fsactiontaskmodel.h
 
 SOURCES += \
     gui/filesystem/fsmainwindow.cpp \
@@ -25,11 +27,13 @@ SOURCES += \
     gui/filesystem/fstreeview.cpp \
     gui/filesystem/fstableview.cpp \
     gui/filesystem/fsmenu.cpp \
-    gui/filesystem/fstaskmodel.cpp \
     gui/filesystem/fstaskwidget.cpp \
     gui/filesystem/fstaskdelegate.cpp \
-    gui/filesystem/fsdownloadmodel.cpp \
-    gui/filesystem/fstaskbutton.cpp
+    gui/filesystem/fstaskbutton.cpp \
+    gui/filesystem/fsabstracttaskmodel.cpp \
+    gui/filesystem/fsdownloadtaskmodel.cpp \
+    gui/filesystem/fsactiontaskmodel.cpp \
+    gui/filesystem/fsuploadtaskmodel.cpp
 
 
 

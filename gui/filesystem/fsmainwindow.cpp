@@ -16,7 +16,7 @@ FSMainWindow::FSMainWindow(QWidget *parent) :
     mModel = new FSModel(fbx());
     mFolderModel = new QSortFilterProxyModel;
     mTaskWidget = new FSTaskWidget(fbx());
-
+    mTaskDockWidget = new QDockWidget;
     mFolderModel->setFilterKeyColumn(0);
     mFolderModel->setFilterRole(FSModel::IsDirRole);
     mFolderModel->setFilterFixedString("true");
@@ -49,14 +49,14 @@ FSMainWindow::FSMainWindow(QWidget *parent) :
     mMkdirAction   = mToolBar->addAction(QIcon(":folder.png"),"Nouveau dossier");
     mUploadAction  = mToolBar->addAction(QIcon(":folder_add.png"),"Télécharger ici");
     mRefreshAction = mToolBar->addAction(QIcon(":arrow_refresh.png"),"Rafraîchir");
-    mTaskAction    = mToolBar->addAction(QIcon(""),"Tâche en cours");
+    mTaskAction    = mToolBar->addAction(QIcon(":progressbar.png"),"");
 
     mTaskAction->setCheckable(true);
 
     mToolBar->setIconSize(QSize(16,16));
     mToolBar->setToolButtonStyle(Qt::ToolButtonTextBesideIcon);
 
-    mToolBar->addWidget(new FSTaskButton);
+
 
 
     //construction de l'ensemble
@@ -72,6 +72,7 @@ FSMainWindow::FSMainWindow(QWidget *parent) :
     mSplitter->addWidget(centerWidget);
     setCentralWidget(mSplitter);
 
+
     //connection
 
 
@@ -84,8 +85,9 @@ FSMainWindow::FSMainWindow(QWidget *parent) :
     connect(mTaskAction,SIGNAL(triggered(bool)),this,SLOT(showTaskWidget(bool)));
 
     connect(mTaskWidget,SIGNAL(countChanged()),this,SLOT(setTaskCount()));
-
     resize(800,600);
+    setTaskCount();
+//    setAttribute(Qt::WA_DeleteOnClose,true);
 
 }
 
@@ -98,6 +100,7 @@ FSMainWindow::~FSMainWindow()
     delete mToolBar;
     delete mModel;
     delete mFolderModel;
+    delete mTaskWidget;
 
 }
 
@@ -173,8 +176,9 @@ void FSMainWindow::setTaskCount()
 
     int count = mTaskWidget->count();
     QFont font = mTaskAction->font();
-    font.setBold(count > 0);
-    mTaskAction->setFont(font);
+    if (count == 0)
+        mTaskAction->setText("Aucune tâche(s)");
+    else
     mTaskAction->setText(QString("%3 en cours").arg(count));
 
 }

@@ -18,5 +18,7 @@
         <file>loading.gif</file>
         <file>github.png</file>
         <file>about.png</file>
+        <file>broom.png</file>
+        <file>progressbar.png</file>
     </qresource>
 </RCC>
