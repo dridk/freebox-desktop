@@ -8,7 +8,7 @@ class FSActionTaskModel : public FSAbstractTaskModel
 {
     Q_OBJECT
 public:
-    explicit FSActionTaskModel(MaFreeBox * fbx, QObject *parent = 0);
+    explicit FSActionTaskModel(FbxAPI * fbx, QObject *parent = 0);
     
     int rowCount(const QModelIndex &parent) const;
     QVariant data(const QModelIndex &index, int role) const;
@@ -26,7 +26,7 @@ protected slots:
 
 private:
     QList<FileTask> mDatas;
-    MaFreeBox * mFbx;
+    FbxAPI * mFbx;
 
 
     

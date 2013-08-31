@@ -2,12 +2,12 @@
 #define DOWNLOAD_H
 
 #include <QObject>
-#include "mafreebox.h"
+#include "fbxapi.h"
 class Download : public QObject
 {
     Q_OBJECT
 public:
-    explicit Download(MaFreeBox *parent = 0);
+    explicit Download(FbxAPI *parent = 0);
     
 signals:
     

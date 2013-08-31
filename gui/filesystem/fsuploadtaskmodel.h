@@ -4,7 +4,7 @@
 #include <QAbstractListModel>
 #include <QNetworkReply>
 #include "fsabstracttaskmodel.h"
-#include "mafreebox.h"
+#include "fbxapi.h"
 
 class FSUploadItem {
 public:
@@ -28,7 +28,7 @@ class FSUploadTaskModel : public FSAbstractTaskModel
 {
     Q_OBJECT
 public:
-    explicit FSUploadTaskModel(MaFreeBox * fbx, QObject *parent = 0);
+    explicit FSUploadTaskModel(FbxAPI * fbx, QObject *parent = 0);
     int rowCount(const QModelIndex &parent) const;
     QVariant data(const QModelIndex &index, int role) const;
     virtual int count() ;
@@ -44,7 +44,7 @@ protected slots:
 
 
 private:
-    MaFreeBox * mFbx;
+    FbxAPI * mFbx;
     QHash<QNetworkReply*, FSUploadItem> mDatas;
     
 };

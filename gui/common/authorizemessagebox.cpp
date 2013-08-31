@@ -1,6 +1,6 @@
 #include "authorizemessagebox.h"
 
-AuthorizeMessageBox::AuthorizeMessageBox(MaFreeBox *freebox, QWidget *parent):
+AuthorizeMessageBox::AuthorizeMessageBox(FbxAPI *freebox, QWidget *parent):
     QMessageBox(parent), mFbx(freebox)
 {
     mTimer = new QTimer(this);
@@ -8,7 +8,7 @@ AuthorizeMessageBox::AuthorizeMessageBox(MaFreeBox *freebox, QWidget *parent):
     setText("Authorisation en cours");
     setStandardButtons(QMessageBox::Cancel);
     connect(mTimer,SIGNAL(timeout()),this,SLOT(getStatus()));
-    connect(mFbx,SIGNAL(authorizeStatusChanged(MaFreeBox::AuthStatus)), this,SLOT(showMessage(MaFreeBox::AuthStatus)));
+    connect(mFbx,SIGNAL(authorizeStatusChanged(FbxAPI::AuthStatus)), this,SLOT(showMessage(FbxAPI::AuthStatus)));
 
 
 
@@ -33,26 +33,26 @@ void AuthorizeMessageBox::getStatus()
 
 }
 
-void AuthorizeMessageBox::showMessage(const MaFreeBox::AuthStatus& status)
+void AuthorizeMessageBox::showMessage(const FbxAPI::AuthStatus& status)
 {
 
     qDebug()<<"show message "  <<status;
 
-    if (status == MaFreeBox::PendingStatus)
+    if (status == FbxAPI::PendingStatus)
     {
         setText("Veuillez authoriser l'application sur votre Freebox server");
     }
-    if (status == MaFreeBox::TimeOutStatus)
+    if (status == FbxAPI::TimeOutStatus)
     {
         setText("temps ecoulé");
         reject();
     }
-    if (status == MaFreeBox::GrantedStatus)
+    if (status == FbxAPI::GrantedStatus)
     {
         setText("Application authorisé avec succes");
         accept();
     }
-    if (status == MaFreeBox::DeniedStatus)
+    if (status == FbxAPI::DeniedStatus)
     {
         setText("Application non authorisé");
         reject();

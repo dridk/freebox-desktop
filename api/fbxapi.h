@@ -14,7 +14,7 @@ struct ApiInfo
     QString deviceType;
 
 };
-class MaFreeBox : public QNetworkAccessManager
+class FbxAPI : public QNetworkAccessManager
 {
     Q_OBJECT
 public:
@@ -27,8 +27,8 @@ public:
         DeniedStatus  = 4
     };
 
-    explicit MaFreeBox(QObject *parent = 0);
-    ~MaFreeBox();
+    explicit FbxAPI(QObject *parent = 0);
+    ~FbxAPI();
 
     //set
     void setHostName(const QString& host, int port = 80) ;
@@ -72,7 +72,7 @@ public:
 signals:
     void error(const QString& message, const QString& errorCode);
     void authorizeReceived(const QString& applicationToken, int trackId);
-    void authorizeStatusChanged(const MaFreeBox::AuthStatus& status);
+    void authorizeStatusChanged(const FbxAPI::AuthStatus& status);
 
     void apiInfoChanged();
     void challengeChanged();

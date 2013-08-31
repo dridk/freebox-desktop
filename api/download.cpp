@@ -1,6 +1,6 @@
 #include "download.h"
 
-Download::Download(MaFreeBox *parent) :
+Download::Download(FbxAPI *parent) :
     QObject(parent)
 {
 }

@@ -3,7 +3,7 @@
 
 #include <QAbstractListModel>
 #include <QNetworkReply>
-#include "mafreebox.h"
+#include "fbxapi.h"
 #include "fsmodel.h"  // pour utilise sizeHuman....
 #include "fsabstracttaskmodel.h"
 
@@ -28,7 +28,7 @@ class FSDownloadTaskModel : public FSAbstractTaskModel
 {
     Q_OBJECT
 public:
-    explicit FSDownloadTaskModel(MaFreeBox * fbx, QObject *parent = 0);
+    explicit FSDownloadTaskModel(FbxAPI * fbx, QObject *parent = 0);
     int rowCount(const QModelIndex &parent = QModelIndex()) const;
     QVariant data(const QModelIndex &index, int role) const;
     const FSDownloadItem& item(const QModelIndex& index);
@@ -48,7 +48,7 @@ protected slots:
 
 
 private:
-    MaFreeBox * mFbx;
+    FbxAPI * mFbx;
     QHash<QNetworkReply*, FSDownloadItem> mDatas;
     QMimeDatabase mMimeDb;
 };

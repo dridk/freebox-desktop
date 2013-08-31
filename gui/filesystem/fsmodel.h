@@ -2,7 +2,7 @@
 #define STDMODEL_H
 
 #include <QStandardItemModel>
-#include "mafreebox.h"
+#include "fbxapi.h"
 class FSModel : public QStandardItemModel
 {
     Q_OBJECT
@@ -21,7 +21,7 @@ public:
     };
 
 
-    explicit FSModel(MaFreeBox * fbx, QObject *parent = 0);
+    explicit FSModel(FbxAPI * fbx, QObject *parent = 0);
     void fetchMore(const QModelIndex &parent);
     bool canFetchMore(const QModelIndex &parent) const;
     bool hasChildren(const QModelIndex &parent) const;
@@ -53,7 +53,7 @@ protected slots:
 
 
 private:
-    MaFreeBox * mFbx;
+    FbxAPI * mFbx;
     QModelIndex mCurrentIndex;
     bool mIsLoading;
     bool mRemTest;

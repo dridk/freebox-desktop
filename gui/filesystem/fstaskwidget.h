@@ -7,7 +7,7 @@
 #include <QTabWidget>
 #include <QtWidgets>
 #include <QMainWindow>
-#include "mafreebox.h"
+#include "fbxapi.h"
 #include "fstaskdelegate.h"
 
 #include "fsdownloadtaskmodel.h"
@@ -17,7 +17,7 @@ class FSTaskWidget : public QMainWindow
 {
     Q_OBJECT
 public:
-    explicit FSTaskWidget(MaFreeBox * fbx, QWidget *parent = 0);
+    explicit FSTaskWidget(FbxAPI * fbx, QWidget *parent = 0);
 
     int count();
 
@@ -37,7 +37,7 @@ private:
     FSDownloadTaskModel * mDownloadModel;
     FSUploadTaskModel * mUploadModel;
     FSTaskDelegate * mDelegate;
-    MaFreeBox * mFbx;
+    FbxAPI * mFbx;
     QTabWidget * mTabWidget;
     int updateDelay;
 

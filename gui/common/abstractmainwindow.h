@@ -2,7 +2,7 @@
 #define ABSTRACTMAINWINDOW_H
 
 #include <QMainWindow>
-#include "mafreebox.h"
+#include "fbxapi.h"
 #include "authorizemessagebox.h"
 #include "aboutdialog.h"
 class AbstractMainWindow : public QMainWindow
@@ -12,7 +12,7 @@ public:
     explicit AbstractMainWindow(QWidget *parent = 0);
     ~AbstractMainWindow();
 
-    MaFreeBox * fbx() {
+    FbxAPI * fbx() {
         return mFbx;
     }
 public slots:
@@ -26,7 +26,7 @@ protected slots:
     void openGithub();
 
 private:
-    MaFreeBox * mFbx;
+    FbxAPI * mFbx;
 };
 
 #endif // ABSTRACTMAINWINDOW_H

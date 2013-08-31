@@ -1,6 +1,6 @@
 #include "fsdownloadtaskmodel.h"
 #include <QMimeDatabase>
-FSDownloadTaskModel::FSDownloadTaskModel(MaFreeBox *fbx, QObject *parent):
+FSDownloadTaskModel::FSDownloadTaskModel(FbxAPI *fbx, QObject *parent):
     FSAbstractTaskModel(parent)
 {
     mFbx = fbx;

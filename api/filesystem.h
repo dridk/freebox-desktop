@@ -2,11 +2,11 @@
 #define FILESYSTEM_H
 
 #include <QObject>
-#include "mafreebox.h"
+#include "fbxapi.h"
 #include <QFile>
 #include <QMimeDatabase>
 
-class MaFreeBox;
+class FbxAPI;
 class FileSystem;
 class FileTask;
 struct FileUpload;
@@ -86,7 +86,7 @@ public:
 
     Q_ENUMS(ConflictMode)
 
-    explicit FileSystem(MaFreeBox *parent = 0);
+    explicit FileSystem(FbxAPI *parent = 0);
     ~FileSystem();
 
     QFile * downloadFile(QNetworkReply * reply);
@@ -187,8 +187,8 @@ protected slots:
     void requestUpdateTaskFinished();
 
 
-    MaFreeBox * fbx() {
-        return qobject_cast<MaFreeBox*>(parent());
+    FbxAPI * fbx() {
+        return qobject_cast<FbxAPI*>(parent());
     }
     
 

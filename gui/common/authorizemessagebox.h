@@ -3,23 +3,23 @@
 
 #include <QMessageBox>
 #include <QTimer>
-#include "mafreebox.h"
+#include "fbxapi.h"
 class AuthorizeMessageBox : public QMessageBox
 {
     Q_OBJECT
 public:
-    explicit AuthorizeMessageBox(MaFreeBox * freebox,  QWidget *parent = 0);
+    explicit AuthorizeMessageBox(FbxAPI * freebox,  QWidget *parent = 0);
     void setTrackId(int id);
 
 
 
 public slots:
      void getStatus();
-    void showMessage(const MaFreeBox::AuthStatus& status);
+    void showMessage(const FbxAPI::AuthStatus& status);
 
 private:
 
-    MaFreeBox * mFbx;
+    FbxAPI * mFbx;
     QTimer * mTimer;
     int mTrackId;
 

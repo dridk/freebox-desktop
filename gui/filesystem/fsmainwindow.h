@@ -3,7 +3,7 @@
 
 #include <QMainWindow>
 #include <QtWidgets>
-#include "mafreebox.h"
+#include "fbxapi.h"
 #include "fspathtoolbar.h"
 #include "fstableview.h"
 #include "fstreeview.h"

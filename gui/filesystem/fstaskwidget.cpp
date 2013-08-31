@@ -3,7 +3,7 @@
 #include <QHeaderView>
 #include <QToolBar>
 #include <QAction>
-FSTaskWidget::FSTaskWidget(MaFreeBox *fbx, QWidget *parent) :
+FSTaskWidget::FSTaskWidget(FbxAPI *fbx, QWidget *parent) :
     QMainWindow(parent)
 {
     mFbx = fbx;

@@ -1,6 +1,6 @@
 #include "filesystem.h"
 #include <QIcon>
-FileSystem::FileSystem(MaFreeBox *parent) :
+FileSystem::FileSystem(FbxAPI *parent) :
     QObject(parent)
 {
 

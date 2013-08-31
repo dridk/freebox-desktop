@@ -1,6 +1,6 @@
 #include "fsuploadtaskmodel.h"
 #include "fsmodel.h"
-FSUploadTaskModel::FSUploadTaskModel(MaFreeBox *fbx, QObject *parent) :
+FSUploadTaskModel::FSUploadTaskModel(FbxAPI *fbx, QObject *parent) :
     FSAbstractTaskModel(parent)
 {
     mFbx = fbx;

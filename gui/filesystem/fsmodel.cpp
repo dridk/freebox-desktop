@@ -4,7 +4,7 @@
 #include <QMimeDatabase>
 #include <QResource>
 
-FSModel::FSModel(MaFreeBox *fbx, QObject *parent) :
+FSModel::FSModel(FbxAPI *fbx, QObject *parent) :
     QStandardItemModel(parent)
 {
     mFbx = fbx;

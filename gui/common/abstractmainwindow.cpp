@@ -2,10 +2,11 @@
 #include <QApplication>
 #include <QDesktopServices>
 #include <QtWidgets>
+#include <QHostInfo>
 AbstractMainWindow::AbstractMainWindow(QWidget *parent) :
     QMainWindow(parent)
 {
-    mFbx = new MaFreeBox;
+    mFbx = new FbxAPI;
 
     //construction du window Menu
     QMenu * fileMenu  = new QMenu("Fichier",this);
@@ -46,8 +47,8 @@ void AbstractMainWindow::login()
 
 void AbstractMainWindow::authorize()
 {
-    QString appId = "org.labsquare" + qApp->applicationName();
-    fbx()->requestAuthorize(appId, qApp->applicationName(), qApp->applicationVersion(), "Desktop");
+    QString appId = qApp->organizationDomain() + qApp->applicationName();
+    fbx()->requestAuthorize(appId, qApp->applicationName(), qApp->applicationVersion(), QHostInfo::localDomainName());
 }
 
 void AbstractMainWindow::showError()

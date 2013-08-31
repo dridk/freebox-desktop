@@ -1,4 +1,4 @@
-#include "mafreebox.h"
+#include "fbxapi.h"
 #include <QDebug>
 #include <QJsonDocument>
 #include <QSettings>
@@ -7,7 +7,7 @@
 
 
 
-MaFreeBox::MaFreeBox(QObject *parent) :
+FbxAPI::FbxAPI(QObject *parent) :
     QNetworkAccessManager(parent)
 {
     mHostName = "mafreebox.freebox.fr";
@@ -23,104 +23,104 @@ MaFreeBox::MaFreeBox(QObject *parent) :
 
 }
 
-MaFreeBox::~MaFreeBox()
+FbxAPI::~FbxAPI()
 {
     delete mFileSystem;
 }
 
-void MaFreeBox::setHostName(const QString &host, int port)
+void FbxAPI::setHostName(const QString &host, int port)
 {
     mHostName = host;
     mPort     = port;
 }
 
-void MaFreeBox::setApplicationToken(const QString &token)
+void FbxAPI::setApplicationToken(const QString &token)
 {
     mApplicationToken = token;
 }
 
-void MaFreeBox::setApplicationId(const QString &id)
+void FbxAPI::setApplicationId(const QString &id)
 {
     mApplicationId = id;
     loadApplicationToken();
 }
 
-bool MaFreeBox::saveApplicationToken()
+bool FbxAPI::saveApplicationToken()
 {
     QSettings settings;
     settings.setValue(mApplicationId, mApplicationToken.toUtf8());
     return settings.contains(mApplicationId);
 }
 
-bool MaFreeBox::loadApplicationToken()
+bool FbxAPI::loadApplicationToken()
 {
     QSettings settings;
     mApplicationToken = settings.value(mApplicationId).toByteArray();
     return settings.contains(mApplicationId);
 }
 
-void MaFreeBox::setBaseUrl(const QString &base)
+void FbxAPI::setBaseUrl(const QString &base)
 {
     mApiInfo.baseUrl = base;
 }
 
-const QString &MaFreeBox::hostName() const
+const QString &FbxAPI::hostName() const
 {
     return mHostName;
 }
 
-int MaFreeBox::port() const
+int FbxAPI::port() const
 {
     return mPort;
 }
 
-const QString &MaFreeBox::applicationToken() const
+const QString &FbxAPI::applicationToken() const
 {
     return mApplicationToken;
 }
 
-const QString &MaFreeBox::sessionToken() const
+const QString &FbxAPI::sessionToken() const
 {
     return mSessionToken;
 }
 
-const QString &MaFreeBox::baseUrl() const
+const QString &FbxAPI::baseUrl() const
 {
     return mApiInfo.baseUrl;
 }
 
-const QString &MaFreeBox::challenge() const
+const QString &FbxAPI::challenge() const
 {
     return mChallenge;
 }
 
-const QString &MaFreeBox::deviceName() const
+const QString &FbxAPI::deviceName() const
 {
     return mApiInfo.deviceName;
 }
 
-const QString &MaFreeBox::deviceType() const
+const QString &FbxAPI::deviceType() const
 {
     return mApiInfo.deviceType;
 }
 
-const QString &MaFreeBox::errorString() const
+const QString &FbxAPI::errorString() const
 {
     return mErrorString;
 }
 
-const QString &MaFreeBox::errorCode() const
+const QString &FbxAPI::errorCode() const
 {
     return mErrorCode;
 }
 
-const QStringList &MaFreeBox::permissions() const
+const QStringList &FbxAPI::permissions() const
 {
     return mPermissions;
 }
 
 
-void MaFreeBox::requestApiInfo()
+void FbxAPI::requestApiInfo()
 {
     // doesn't follow API url syntax
     QNetworkRequest request ;
@@ -136,7 +136,7 @@ void MaFreeBox::requestApiInfo()
 
 }
 
-void MaFreeBox::requestAuthorize(const QString &appId, const QString &appName, const QString &appVersion, const QString &deviceName)
+void FbxAPI::requestAuthorize(const QString &appId, const QString &appName, const QString &appVersion, const QString &deviceName)
 {
 
 
@@ -156,7 +156,7 @@ void MaFreeBox::requestAuthorize(const QString &appId, const QString &appName, c
 
 }
 
-void MaFreeBox::requestAuthorizeStatus(int trackId)
+void FbxAPI::requestAuthorizeStatus(int trackId)
 {
     QNetworkReply * reply = get(myCreateRequest(QString("login/authorize/%1").arg(trackId)));
     connect(reply,SIGNAL(finished()),this,SLOT(requestAuthorizeStatusFinished()));
@@ -165,7 +165,7 @@ void MaFreeBox::requestAuthorizeStatus(int trackId)
 
 }
 
-void MaFreeBox::requestLogin()
+void FbxAPI::requestLogin()
 {
     qDebug()<<"request Login";
     QNetworkReply * reply = get(myCreateRequest("login"));
@@ -175,7 +175,7 @@ void MaFreeBox::requestLogin()
 
 }
 
-void MaFreeBox::requestSession()
+void FbxAPI::requestSession()
 {
     QJsonObject json;
     json.insert("app_id", mApplicationId);
@@ -197,7 +197,7 @@ void MaFreeBox::requestSession()
 
 
 }
-void MaFreeBox::requestApiInfoFinished()
+void FbxAPI::requestApiInfoFinished()
 {
     QNetworkReply * reply = qobject_cast<QNetworkReply*>(sender());
     QJsonDocument doc = QJsonDocument::fromJson(reply->readAll());
@@ -212,7 +212,7 @@ void MaFreeBox::requestApiInfoFinished()
 
 }
 
-void MaFreeBox::requestAuthorizeFinished()
+void FbxAPI::requestAuthorizeFinished()
 {
     QNetworkReply * reply = qobject_cast<QNetworkReply*>(sender());
     QJsonDocument doc =  QJsonDocument::fromJson(reply->readAll());
@@ -225,7 +225,7 @@ void MaFreeBox::requestAuthorizeFinished()
     }
 }
 
-void MaFreeBox::requestAuthorizeStatusFinished()
+void FbxAPI::requestAuthorizeStatusFinished()
 {
     QNetworkReply * reply = qobject_cast<QNetworkReply*>(sender());
     QJsonDocument doc = QJsonDocument::fromJson(reply->readAll());
@@ -264,7 +264,7 @@ void MaFreeBox::requestAuthorizeStatusFinished()
 
 }
 
-void MaFreeBox::requestLoginFinished()
+void FbxAPI::requestLoginFinished()
 {
     QNetworkReply * reply = qobject_cast<QNetworkReply*>(sender());
     QJsonDocument doc = QJsonDocument::fromJson(reply->readAll());
@@ -276,7 +276,7 @@ void MaFreeBox::requestLoginFinished()
 
 }
 
-void MaFreeBox::requestSessionFinished()
+void FbxAPI::requestSessionFinished()
 {
     QNetworkReply * reply = qobject_cast<QNetworkReply*>(sender());
     QJsonDocument doc = QJsonDocument::fromJson(reply->readAll());
@@ -291,7 +291,7 @@ void MaFreeBox::requestSessionFinished()
         emit loginSuccess();
     }
 }
-QString MaFreeBox::hmacSha1(QByteArray key, QByteArray baseString)
+QString FbxAPI::hmacSha1(QByteArray key, QByteArray baseString)
 {
     int blockSize = 64; // HMAC-SHA-1 block size, defined in SHA-1 standard
     if (key.length() > blockSize) { // if key is longer than block size (64), reduce key length with SHA-1 compression
@@ -317,7 +317,7 @@ QString MaFreeBox::hmacSha1(QByteArray key, QByteArray baseString)
     return hashed.toHex();
 }
 
-QNetworkRequest MaFreeBox:: myCreateRequest(const QString &uri) const
+QNetworkRequest FbxAPI:: myCreateRequest(const QString &uri) const
 {
     //convertion du string 1.0 en v1. Soit "v" + integer. Ca suppose que 1.1 => v1
     int version = qRound(mApiInfo.version.toDouble());
@@ -337,7 +337,7 @@ QNetworkRequest MaFreeBox:: myCreateRequest(const QString &uri) const
     return request;
 }
 
-bool MaFreeBox::parseResult(const QJsonDocument &doc)
+bool FbxAPI::parseResult(const QJsonDocument &doc)
 {
 
     if (!doc.object().value("success").toBool()){
@@ -358,7 +358,7 @@ bool MaFreeBox::parseResult(const QJsonDocument &doc)
 
 }
 
-void MaFreeBox::sendError(const QString &message, const QString &code)
+void FbxAPI::sendError(const QString &message, const QString &code)
 {
     mErrorCode = code;
     mErrorString = message;
@@ -366,7 +366,7 @@ void MaFreeBox::sendError(const QString &message, const QString &code)
 
 }
 
-void MaFreeBox::errorReceived(QNetworkReply::NetworkError /*errCode*/)
+void FbxAPI::errorReceived(QNetworkReply::NetworkError /*errCode*/)
 {
     QNetworkReply * reply = qobject_cast<QNetworkReply*>(sender());
     qDebug()<<"ERROR "<< reply->error()<<" "<<reply->errorString();

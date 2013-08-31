@@ -7,12 +7,12 @@
 INCLUDEPATH += $$PWD
 
 HEADERS += \
-    api/mafreebox.h \
     api/filesystem.h \
-    api/download.h
+    api/download.h \
+    api/fbxapi.h
 
 SOURCES += \
-    api/mafreebox.cpp \
     api/filesystem.cpp \
-    api/download.cpp
+    api/download.cpp \
+    api/fbxapi.cpp
 
