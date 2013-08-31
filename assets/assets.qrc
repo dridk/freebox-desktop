@@ -26,5 +26,6 @@
         <file>help.png</file>
         <file>qt.png</file>
         <file>drop.png</file>
+        <file>auth.gif</file>
     </qresource>
 </RCC>

@@ -1,15 +1,36 @@
 #include "authorizemessagebox.h"
-
+#include <QVBoxLayout>
 AuthorizeMessageBox::AuthorizeMessageBox(FbxAPI *freebox, QWidget *parent):
-    QMessageBox(parent), mFbx(freebox)
+    QDialog(parent), mFbx(freebox)
 {
+    mTextLabel = new QLabel;
+    mGifLabel  = new QLabel;
+    mCancelButton = new QPushButton("Annuler");
     mTimer = new QTimer(this);
+    mTextLabel->setWordWrap(true);
+    mTextLabel->setAlignment(Qt::AlignCenter);
+    mGifLabel->setMovie(new QMovie(":auth.gif"));
+
+    mGifLabel->setFrameStyle(QFrame::Box|QFrame::Sunken);
+    mGifLabel->movie()->start();
+    mGifLabel->movie()->stop();
+
+
     setWindowTitle("Authorisation");
     setText("Authorisation en cours");
-    setStandardButtons(QMessageBox::Cancel);
+
     connect(mTimer,SIGNAL(timeout()),this,SLOT(getStatus()));
     connect(mFbx,SIGNAL(authorizeStatusChanged(FbxAPI::AuthStatus)), this,SLOT(showMessage(FbxAPI::AuthStatus)));
+    connect(mCancelButton,SIGNAL(clicked()),this,SLOT(close()));
+    QVBoxLayout * layout = new QVBoxLayout;
+    setLayout(layout);
 
+    layout->addWidget(mGifLabel);
+    layout->addWidget(mTextLabel);
+    layout->addStretch();
+    layout->addWidget(mCancelButton);
+
+    setFixedWidth(300);
 
 
     mTimer->setInterval(1000);
@@ -23,6 +44,13 @@ AuthorizeMessageBox::AuthorizeMessageBox(FbxAPI *freebox, QWidget *parent):
 void AuthorizeMessageBox::setTrackId(int id)
 {
     mTrackId = id;
+}
+
+void AuthorizeMessageBox::setText(const QString &message)
+{
+
+    mTextLabel->setText(message);
+
 }
 
 
@@ -41,6 +69,7 @@ void AuthorizeMessageBox::showMessage(const FbxAPI::AuthStatus& status)
     if (status == FbxAPI::PendingStatus)
     {
         setText("Veuillez authoriser l'application sur votre Freebox server");
+        mGifLabel->movie()->start();
     }
     if (status == FbxAPI::TimeOutStatus)
     {
