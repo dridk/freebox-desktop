@@ -78,7 +78,7 @@ FSMainWindow::FSMainWindow(QWidget *parent) :
     //connection
 
 
-    connect(fbx(),SIGNAL(loginSuccess()),mModel,SLOT(init()));
+    connect(fbx(),SIGNAL(loginSuccess()),this,SLOT(init()));
     connect(mTreeView,SIGNAL(clicked(QModelIndex)),this,SLOT(setRootIndex(QModelIndex)));
     connect(mTableView,SIGNAL(doubleClicked(QModelIndex)),this,SLOT(setRootIndex(QModelIndex)));
     connect(mTableView,SIGNAL(filesAdded(QStringList)),this,SLOT(uploads(QStringList)));
@@ -152,6 +152,14 @@ void FSMainWindow::uploads(const QStringList &list)
 
 }
 
+void FSMainWindow::init()
+{
+    mModel->init();
+    mTableView->setRootIndex(QModelIndex());
+    mHeaderWidget->setCurrentIndex(QModelIndex());
+    mTreeView->setCurrentIndex(QModelIndex());
+}
+
 void FSMainWindow::setRootIndex(const QModelIndex &index)
 {
 
@@ -184,6 +192,8 @@ void FSMainWindow::setRootIndex(const QModelIndex &index)
         mTreeView->setCurrentIndex(fid);
 
     }
+
+
 }
 
 void FSMainWindow::showTaskWidget(bool show)

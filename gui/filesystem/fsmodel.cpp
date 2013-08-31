@@ -11,7 +11,7 @@ FSModel::FSModel(MaFreeBox *fbx, QObject *parent) :
     setHorizontalHeaderLabels(QStringList()<<"Nom"<<"Taille"<<"Date de modification");
     setColumnCount(3);
 
-mRemTest = false;
+    mRemTest = false;
 
     connect(mFbx->fileSystem(),SIGNAL(listReceived(QList<FileInfo>)),
             this,SLOT(dataReceived(QList<FileInfo>)));
@@ -72,15 +72,12 @@ void FSModel::dataReceived(const QList<FileInfo> &list)
     else
         rootItem = itemFromIndex(mCurrentIndex);
 
-    qDebug()<<"CLEAR";
-
     int c = rootItem->rowCount();
     rootItem->removeRows(0,c);
 
     foreach (FileInfo i, list)
     {
         QList<QStandardItem*> lines;
-
 
         QStandardItem * firstItem  = new QStandardItem;
         firstItem->setText(i.name);
@@ -129,11 +126,11 @@ void FSModel::dataReceived(const QList<FileInfo> &list)
 
     }
 
-    QModelIndex begin  = indexFromItem(rootItem->child(0));
-    QModelIndex end = indexFromItem(rootItem->child(rootItem->rowCount()));
+//    QModelIndex begin  = indexFromItem(rootItem->child(0));
+//    QModelIndex end = indexFromItem(rootItem->child(rootItem->rowCount()));
 
 
-   emit dataChanged(begin,end);
+//    emit dataChanged(begin,end);
 
 
 
@@ -156,8 +153,8 @@ void FSModel::remove(const QModelIndexList &indexes)
     QStringList paths;
     for (int i= indexes.count()-1; i>=0; i--)
     {
-         paths.append(indexes[i].data(PathRole).toString());
-         removeRow(indexes[i].row(), indexes[i].parent());
+        paths.append(indexes[i].data(PathRole).toString());
+        removeRow(indexes[i].row(), indexes[i].parent());
 
     }
 

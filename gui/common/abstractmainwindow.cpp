@@ -38,6 +38,7 @@ AbstractMainWindow::~AbstractMainWindow()
 
 void AbstractMainWindow::login()
 {
+
     qDebug()<<qApp->applicationName();
     fbx()->setApplicationId("org.labsquare" + qApp->applicationName());
     fbx()->requestLogin();

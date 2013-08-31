@@ -31,10 +31,9 @@ AboutDialog::AboutDialog(QWidget *parent) :
 
 
     mTextLabel->setAlignment(Qt::AlignCenter);
-    mTextLabel->setText(QString("%1\n\nversion: %2\nbuild: %3")
+    mTextLabel->setText(QString("%1\n\nversion: %2\nbuild: %3\n Crée par Sacha Schutz")
                         .arg(qApp->applicationName(),
                              qApp->applicationVersion(),
-                             "crée par Sacha Schutz"
                              "f0cdc42116"
                              ));
 
