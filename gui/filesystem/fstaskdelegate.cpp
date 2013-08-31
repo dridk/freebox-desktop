@@ -22,6 +22,7 @@ void FSTaskDelegate::paint(QPainter *painter, const QStyleOptionViewItem &option
 
     if (option.state & QStyle::State_Selected)
     {
+        painter->setPen(Qt::NoPen);
         painter->setBrush(QBrush(QColor("#316AC5")));
         painter->drawRect(option.rect);
     }
@@ -31,7 +32,7 @@ void FSTaskDelegate::paint(QPainter *painter, const QStyleOptionViewItem &option
 
     QPixmap icon (mimeIconPath);
 
-    painter->drawPixmap(5, option.rect.center().y()-icon.height()/2, icon);
+    painter->drawPixmap(5, option.rect.center().y()-icon.height()/2, icon.scaled(32,32));
 
     QRect progressRect = option.rect;
     progressRect.setX(40);
@@ -53,7 +54,7 @@ void FSTaskDelegate::paint(QPainter *painter, const QStyleOptionViewItem &option
 
     qApp->style()->drawControl(QStyle::CE_ProgressBar,
                                &progressBarOption, painter);
-    }
+
 
     QFontMetrics metrics(painter->font());
 
@@ -67,6 +68,19 @@ void FSTaskDelegate::paint(QPainter *painter, const QStyleOptionViewItem &option
     painter->setFont(QFont(painter->font().family(),8));
     painter->drawText(progressRect.bottomLeft()+QPoint(5,5+metrics.height()),
                       subTitle);
+    }
+
+    else
+    {
+        QFontMetrics metrics(painter->font());
+
+        painter->setFont(QFont(painter->font().family(),10));
+        painter->drawText(progressRect.topLeft(),title);
+        painter->setFont(QFont(painter->font().family(),8));
+        painter->drawText(progressRect.topLeft()+QPoint(0,metrics.height()),subTitle);
+
+    }
+
 
 
 //   QPixmap rightPixmap(actionIconPath);
