@@ -30,6 +30,8 @@ AbstractMainWindow::AbstractMainWindow(QWidget *parent) :
     connect(aboutAction,SIGNAL(triggered()),this,SLOT(showAboutDialog()));
     connect(aboutQtAction,SIGNAL(triggered()),qApp, SLOT(aboutQt()));
 
+
+
 }
 
 AbstractMainWindow::~AbstractMainWindow()

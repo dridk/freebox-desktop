@@ -175,6 +175,8 @@ void FSMainWindow::setRootIndex(const QModelIndex &index)
 
     if (sender()->metaObject()->className() == QString("FSTableView")){
 
+        if (!index.data(FSModel::IsDirRole).toBool())
+            return;
         QModelIndex mid = mModel->index(index.row(),0,index.parent());
         QModelIndex fid = mFolderModel->mapFromSource(mid);
 
