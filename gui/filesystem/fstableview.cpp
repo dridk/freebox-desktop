@@ -64,6 +64,7 @@ void FSTableView::dragMoveEvent(QDragMoveEvent *event)
 
 void FSTableView::dragLeaveEvent(QDragLeaveEvent *event)
 {
+    Q_UNUSED(event);
     viewport()->setStyleSheet(QString());
     showColumn(0);
     showColumn(1);

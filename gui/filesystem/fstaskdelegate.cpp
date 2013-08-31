@@ -82,8 +82,9 @@ void FSTaskDelegate::paint(QPainter *painter, const QStyleOptionViewItem &option
 
 }
 
-QSize FSTaskDelegate::sizeHint(const QStyleOptionViewItem &option, const QModelIndex &index) const
+QSize FSTaskDelegate::sizeHint(const QStyleOptionViewItem &, const QModelIndex &) const
 {
+
     //    qDebug()<<"sizeHint"<<QStyledItemDelegate::sizeHint(option,index);
     return QSize(0, 65);
 }

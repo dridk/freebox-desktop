@@ -176,10 +176,7 @@ void FSModel::upload(const QString &filename, const QModelIndex &parent)
 
 }
 
-void FSModel::upload(const QStringList &list, const QModelIndex &parent)
-{
-    mCurrentIndex = parent;
-}
+
 
 void FSModel::download(const QString &destination, const QModelIndex &index)
 {

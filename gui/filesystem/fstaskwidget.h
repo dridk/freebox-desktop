@@ -10,7 +10,6 @@
 #include "mafreebox.h"
 #include "fstaskdelegate.h"
 
-#include "fsactiontaskmodel.h"
 #include "fsdownloadtaskmodel.h"
 #include "fsuploadtaskmodel.h"
 
@@ -20,9 +19,6 @@ class FSTaskWidget : public QMainWindow
 public:
     explicit FSTaskWidget(MaFreeBox * fbx, QWidget *parent = 0);
 
-    void setUpdateDelay(int ms);
-    void start();
-    void stop();
     int count();
 
 protected slots:
@@ -38,7 +34,6 @@ private:
     QListView * mActionView;
     QListView * mDownloadView;
     QListView * mUploadView;
-    FSActionTaskModel * mActionModel;
     FSDownloadTaskModel * mDownloadModel;
     FSUploadTaskModel * mUploadModel;
     FSTaskDelegate * mDelegate;

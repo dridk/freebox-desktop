@@ -9,6 +9,7 @@ FSUploadTaskModel::FSUploadTaskModel(MaFreeBox *fbx, QObject *parent) :
 
 int FSUploadTaskModel::rowCount(const QModelIndex &parent) const
 {
+    Q_UNUSED(parent);
     return mDatas.count();
 }
 void FSUploadTaskModel::add(QNetworkReply *reply)

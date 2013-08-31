@@ -14,6 +14,7 @@ FSDownloadTaskModel::FSDownloadTaskModel(MaFreeBox *fbx, QObject *parent):
 
 int FSDownloadTaskModel::rowCount(const QModelIndex &parent) const
 {
+    Q_UNUSED(parent);
     return mDatas.count();
 }
 
@@ -58,7 +59,7 @@ const FSDownloadItem &FSDownloadTaskModel::item(const QModelIndex &index)
 
 Qt::ItemFlags FSDownloadTaskModel::flags(const QModelIndex &index) const
 {
-
+    Q_UNUSED(index);
     return Qt::ItemIsSelectable|Qt::ItemIsEnabled;
 }
 

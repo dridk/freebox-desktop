@@ -70,20 +70,6 @@ FSTaskWidget::FSTaskWidget(MaFreeBox *fbx, QWidget *parent) :
 
 }
 
-void FSTaskWidget::setUpdateDelay(int ms)
-{
-    //    mTimer->setInterval(ms);
-}
-
-void FSTaskWidget::start()
-{
-    //    mTimer->start();
-}
-
-void FSTaskWidget::stop()
-{
-    //    mTimer->stop();
-}
 
 int FSTaskWidget::count()
 {
