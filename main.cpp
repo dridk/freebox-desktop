@@ -1,6 +1,7 @@
 #include <QApplication>
 #include "fsmainwindow.h"
 #include "fstableview.h"
+#include "dlmainwindow.h"
 int main(int argc, char *argv[])
 {
     QApplication a(argc, argv);
@@ -10,12 +11,10 @@ int main(int argc, char *argv[])
     QCoreApplication::setApplicationVersion("beta");
 
 
-    FSMainWindow w ;
+    DLMainWindow w ;
     w.show();
 
 
-//    FSTableView view;
-//    view.show();
     
     return a.exec();
 }
