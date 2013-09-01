@@ -145,10 +145,10 @@ void Download::requestListFinished()
             task.txBytes = item.toObject().value("tx_bytes").toDouble();
             task.downloadDir = item.toObject().value("download_dir").toString();
             task.archivePassword = item.toObject().value("archive_password").toString();
-            task.eta = item.toObject().value("eta").toDouble();
+            task.eta = QDateTime::fromTime_t(item.toObject().value("eta").toDouble());
             task.status = item.toObject().value("status").toString();
             task.ioPriority = item.toObject().value("io_priority").toString();
-            task.size = item.toObject().value("size").toVariant().toInt();
+            task.size = item.toObject().value("size").toDouble();
             task.type = item.toObject().value("type").toString();
             task.error = item.toObject().value("error").toString();
             task.queuePos = item.toObject().value("queue_pos").toVariant().toInt();
@@ -160,6 +160,9 @@ void Download::requestListFinished()
             task.rxRate = item.toObject().value("rx_rate").toDouble();
             task.txPct = item.toObject().value("tx_pct").toDouble();
 
+
+            qDebug()<<"SIZE "<< item.toObject().value("size");
+            qDebug()<<"SIZEtask"<<task.size;
             list.append(task);
 
         }

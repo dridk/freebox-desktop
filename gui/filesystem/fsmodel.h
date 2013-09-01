@@ -28,7 +28,7 @@ public:
 
 
 
-    static QString sizeHuman(int size);
+    static QString sizeHuman(double size);
     QByteArray currentPath(const QModelIndex& index);
 
     //    Qt::ItemFlags flags(const QModelIndex &index) const;

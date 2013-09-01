@@ -16,7 +16,7 @@ public:
     QString type; // need enum
     QString name;
     QString status;// need enum
-    int size;
+    double size;
     int queuePos;
     QString ioPriority;// need enum
     double txBytes;
@@ -27,7 +27,7 @@ public:
    double rxPct;
     QString error;
     QDateTime createdTs;
-    int eta;
+    QDateTime eta;
     QString downloadDir;
     int stopRatio;
     QString archivePassword;

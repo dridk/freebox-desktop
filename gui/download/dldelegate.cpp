@@ -10,23 +10,11 @@ DLDelegate::DLDelegate(QObject *parent) :
 void DLDelegate::paint(QPainter *painter, const QStyleOptionViewItem &option, const QModelIndex &index) const
 {
 
-    if (index.column() == 0 ||index.column() == 8 )
-        return QStyledItemDelegate::paint(painter,option,index);
 
 
-    if (index.column() == 2)
+
+    if (index.column() ==4)
     {
-     QFont font;
-     font.setBold(true);
-     painter->setFont(font);
-     painter->drawText(option.rect,index.data().toString());
-
-
-    }
-
-    if (index.column() == 3)
-    {
-
         QStyleOptionProgressBar progressBarOption;
         progressBarOption.rect = option.rect;
         progressBarOption.minimum = 0;
@@ -39,7 +27,12 @@ void DLDelegate::paint(QPainter *painter, const QStyleOptionViewItem &option, co
         qApp->style()->drawControl(QStyle::CE_ProgressBar,
                                    &progressBarOption, painter);
 
+    }
 
+    else
+    {
+
+     QStyledItemDelegate::paint(painter,option,index);
     }
         //    painter->setPen(QPen(Qt::black));
         //    painter->setBrush(QBrush(Qt::red));

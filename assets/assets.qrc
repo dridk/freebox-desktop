@@ -51,5 +51,8 @@
         <file>upload_for_cloud.png</file>
         <file>world_add.png</file>
         <file>bin_recycle.png</file>
+        <file alias="high">bullet_green.png</file>
+        <file alias="low">bullet_red.png</file>
+        <file alias="normal">bullet_yellow.png</file>
     </qresource>
 </RCC>

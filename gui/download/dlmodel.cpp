@@ -1,5 +1,6 @@
 #include "dlmodel.h"
-
+#include <QIcon>
+#include "fsmodel.h" // pour le humanSize...A mettre dans une autre class
 DLModel::DLModel(FbxAPI *fbx, QObject *parent):
     QAbstractTableModel(parent)
 {
@@ -33,31 +34,63 @@ QVariant DLModel::data(const QModelIndex &index, int role) const
         {
 
         case 0 : return task.id; break;
-        case 1 : return task.status; break;
+            //        case 1 : return task.status; break;
         case 2 : return task.name; break;
-        case 3 : return task.size; break;
+        case 3 : return FSModel::sizeHuman(task.size); break;
         case 4 : return task.rxPct; break;
-        case 5 : return task.eta; break;
-        case 6 : return task.rxRate; break;
-        case 7 : return task.txRate; break;
-        case 8 : return QVariantList()<<task.rxBytes<<task.txBytes<<task.stopRatio; break;
+        case 5 : return task.ioPriority; break;
+        case 6 : return task.eta.toString("hh 'heures' mm 'mins'"); break;
+        case 7 : return FSModel::sizeHuman(task.rxRate)+"/s"; break;
+        case 8 : return FSModel::sizeHuman(task.txRate)+"/s"; break;
         case 9 : return task.createdTs.toString(); break;
 
 
         }
+    }
 
+    if (role == Qt::DecorationRole )
+    {
+        DownloadTask task = mDatas.at(index.row());
 
+        switch (index.column())
+        {
+        case 1 :  return QIcon(":update.png");
+        case 5 :  return QIcon(":"+task.ioPriority);
+
+        }
 
 
     }
+
+
 
     return QVariant();
 }
 
 QVariant DLModel::headerData(int section, Qt::Orientation orientation, int role) const
 {
-    return QVariant();
+    if (orientation == Qt::Horizontal && role == Qt::DisplayRole){
+        switch (section)
+        {
+        case 0: return "#"; break;
+        case 1: return ""; break;
+        case 2: return "Nom"; break;
+        case 3: return "Taille"; break;
+        case 4: return "Progression"; break;
+        case 5: return "Priorité"; break;
+        case 6: return "Temps restant"; break;
+        case 7: return "Réception"; break;
+        case 8: return "Emission"; break;
 
+
+
+
+        }
+
+
+
+    }
+    return QVariant();
 }
 
 void DLModel::setData(const QList<DownloadTask> &data)
@@ -73,8 +106,8 @@ void DLModel::setData(const QList<DownloadTask> &data)
     }
 
     else {
-     mDatas = data;
-     emit dataChanged(index(0,0), index(data.count()-1, columnCount()-1));
+        mDatas = data;
+        emit dataChanged(index(0,0), index(data.count()-1, columnCount()-1));
 
     }
 

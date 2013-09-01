@@ -212,7 +212,7 @@ void FSModel::refresh(const QModelIndex &parent)
 {
     fetchMore(parent);
 }
-QString FSModel::sizeHuman(int size)
+QString FSModel::sizeHuman(double size)
 {
     float num = size;
     QStringList list;
