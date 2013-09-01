@@ -5,7 +5,7 @@ DLMainWindow::DLMainWindow(QWidget *parent) :
 {
 
 
-    mModel = new DLModel;
+    mModel = new DLModel(fbx());
     mView  = new DLTableView;
     mCategoryWidget = new DLCategoryWidget;
     mDetailWidget = new DLDetailWidget;
@@ -74,5 +74,10 @@ DLMainWindow::DLMainWindow(QWidget *parent) :
 
     addToolBar(toolBar);
     addToolBar(addBar);
+
+
+    QAction * test = toolBar->addAction("test");
+
+    connect(test,SIGNAL(triggered()),mModel,SLOT(start()));
 
 }

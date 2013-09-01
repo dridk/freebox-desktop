@@ -5,11 +5,12 @@
 #include <QFrame>
 #include "fbxapi.h"
 
+class FbxAPI;
 class Download;
-class DownloadItem;
+class DownloadTask;
 class DownloadStats;
 
-class DownloadItem{
+class DownloadTask{
 public:
     int id;
     QString type; // need enum
@@ -18,12 +19,12 @@ public:
     int size;
     int queuePos;
     QString ioPriority;// need enum
-    int txBytes;
-    int rxBytes;
-    int txRate;
-    int rxRate;
-    int txPct;
-    int rxPct;
+    double txBytes;
+    double rxBytes;
+    double txRate;
+    double rxRate;
+    double txPct;
+   double rxPct;
     QString error;
     QDateTime createdTs;
     int eta;
@@ -63,6 +64,7 @@ class Download : public QObject
     Q_OBJECT
 public:
     explicit Download(FbxAPI *parent = 0);
+public slots:
     void requestList();
     void requestDownload(int id);
     void requestRemove(int id);
@@ -82,8 +84,8 @@ public:
 
 
 signals:
-    void listReceived(const QList<DownloadItem>& list);
-    void downloadReceived(const DownloadItem& item);
+    void listReceived(const QList<DownloadTask>& list);
+    void downloadReceived(const DownloadTask& item);
     void removeFinished();
     void eraseFinished();
     void updateFinished();

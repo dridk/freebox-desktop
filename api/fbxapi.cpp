@@ -19,6 +19,7 @@ FbxAPI::FbxAPI(QObject *parent) :
 
     // == alloc module
     mFileSystem = new FileSystem(this);
+    mDownload = new Download(this);
 
 
 }

@@ -4,7 +4,9 @@
 #include <QObject>
 #include <QtNetwork>
 #include "filesystem.h"
+#include "download.h"
 class FileSystem;
+class Download;
 struct ApiInfo;
 struct ApiInfo
 {
@@ -66,6 +68,7 @@ public:
 
     //get Module
     FileSystem * fileSystem() {return mFileSystem;}
+    Download * download() {return mDownload;}
 
 
 
@@ -106,6 +109,8 @@ private:
 
     //Modules
    FileSystem * mFileSystem;
+   Download * mDownload;
+
     
 };
 
