@@ -13,6 +13,7 @@ DLModel::DLModel(FbxAPI *fbx, QObject *parent):
 
     mDatas.append(DownloadTask());
 
+
 }
 
 int DLModel::rowCount(const QModelIndex &parent) const
@@ -27,7 +28,7 @@ int DLModel::columnCount(const QModelIndex &parent) const
 
 QVariant DLModel::data(const QModelIndex &index, int role) const
 {
-    if (role == Qt::DisplayRole)
+    if (role == Qt::DisplayRole || role == Qt::EditRole)
     {
         DownloadTask task = mDatas.at(index.row());
         switch (index.column())
@@ -112,7 +113,7 @@ void DLModel::setData(const QList<DownloadTask> &data)
     }
 
 
-
+    emit updated();
 
 
 

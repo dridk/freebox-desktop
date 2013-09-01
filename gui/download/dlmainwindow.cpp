@@ -4,26 +4,12 @@ DLMainWindow::DLMainWindow(QWidget *parent) :
     AbstractMainWindow(parent)
 {
 
-
-    mModel = new DLModel(fbx());
-    mView  = new DLTableView;
+    mView  = new DLTableView(fbx());
     mCategoryWidget = new DLCategoryWidget;
     mDetailWidget = new DLDetailWidget;
-    mDelegate = new DLDelegate;
-    mView->setModel(mModel);
-    mView->setItemDelegate(mDelegate);
-    mView->verticalHeader()->setDefaultSectionSize(20);
-    mView->setColumnWidth(2, 300);
-    mView->setColumnWidth(4, 200);
 
-    mView->setSelectionBehavior(QAbstractItemView::SelectRows);
-    mView->horizontalHeader()->setSectionResizeMode(QHeaderView::Interactive);
 
-    mView->horizontalHeader()->setSectionResizeMode(0,QHeaderView::ResizeToContents);
-    mView->horizontalHeader()->setSectionResizeMode(1,QHeaderView::ResizeToContents);
-    mView->horizontalHeader()->setSectionResizeMode(2,QHeaderView::Interactive);
-        mView->horizontalHeader()->setSectionResizeMode(9,QHeaderView::Stretch);
-    mView->setAlternatingRowColors(true);
+
 
     QDockWidget * mLeftDock = new QDockWidget;
     mLeftDock->setWidget(mCategoryWidget);
@@ -89,8 +75,6 @@ DLMainWindow::DLMainWindow(QWidget *parent) :
     addToolBar(addBar);
 
 
-    QAction * test = toolBar->addAction("START AUTO REFRESH");
-
-    connect(test,SIGNAL(triggered()),mModel,SLOT(start()));
+    setWindowTitle("Freebox Desktop Download");
 
 }

@@ -2,16 +2,32 @@
 #define DLTABLEVIEW_H
 
 #include <QTableView>
-
+#include <QContextMenuEvent>
+#include <QMenu>
+#include "fbxapi.h"
+#include "dlmodel.h"
+#include "dldelegate.h"
+#include "dlpropertywidget.h"
 class DLTableView : public QTableView
 {
     Q_OBJECT
 public:
-    explicit DLTableView(QWidget *parent = 0);
+    explicit DLTableView(FbxAPI * fbx,QWidget *parent = 0);
     
-signals:
-    
+
+    void contextMenuEvent(QContextMenuEvent *);
 public slots:
+    void showPropertyDialog();
+
+protected slots:
+    void setPropertyDialog();
+
+signals:
+
+private:
+    DLModel * mModel;
+    DLDelegate * mDelegate;
+    DLPropertyWidget * mPropertyWidget;
     
 };
 

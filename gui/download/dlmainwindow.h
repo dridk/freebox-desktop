@@ -18,11 +18,10 @@ signals:
 public slots:
 
 private:
-    DLModel * mModel;
     DLTableView * mView;
     DLCategoryWidget * mCategoryWidget;
     DLDetailWidget * mDetailWidget;
-    DLDelegate * mDelegate;
+
     
 };
 
