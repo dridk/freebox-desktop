@@ -76,7 +76,7 @@ DLMainWindow::DLMainWindow(QWidget *parent) :
     addToolBar(addBar);
 
 
-    QAction * test = toolBar->addAction("test");
+    QAction * test = toolBar->addAction("START AUTO REFRESH");
 
     connect(test,SIGNAL(triggered()),mModel,SLOT(start()));
 
