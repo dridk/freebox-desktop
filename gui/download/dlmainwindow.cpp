@@ -9,7 +9,9 @@ DLMainWindow::DLMainWindow(QWidget *parent) :
     mView  = new DLTableView;
     mCategoryWidget = new DLCategoryWidget;
     mDetailWidget = new DLDetailWidget;
+    mDelegate = new DLDelegate;
     mView->setModel(mModel);
+    mView->setItemDelegate(mDelegate);
 
 
     QDockWidget * mLeftDock = new QDockWidget;

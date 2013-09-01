@@ -5,6 +5,7 @@
 #include "dltableview.h"
 #include "dlcategorywidget.h"
 #include "dldetailwidget.h"
+#include "dldelegate.h"
 
 class DLMainWindow : public AbstractMainWindow
 {
@@ -21,6 +22,7 @@ private:
     DLTableView * mView;
     DLCategoryWidget * mCategoryWidget;
     DLDetailWidget * mDetailWidget;
+    DLDelegate * mDelegate;
     
 };
 

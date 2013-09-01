@@ -10,6 +10,8 @@ DLModel::DLModel(FbxAPI *fbx, QObject *parent):
     mTimer->setInterval(1000);
     connect(mTimer,SIGNAL(timeout()),mFbx->download(),SLOT(requestList()));
 
+    mDatas.append(DownloadTask());
+
 }
 
 int DLModel::rowCount(const QModelIndex &parent) const
@@ -19,7 +21,7 @@ int DLModel::rowCount(const QModelIndex &parent) const
 
 int DLModel::columnCount(const QModelIndex &parent) const
 {
-    return 9;
+    return 10;
 }
 
 QVariant DLModel::data(const QModelIndex &index, int role) const
@@ -31,14 +33,15 @@ QVariant DLModel::data(const QModelIndex &index, int role) const
         {
 
         case 0 : return task.id; break;
-        case 1 : return task.name; break;
-        case 2 : return task.rxPct; break;
-        case 3 : return task.status; break;
-        case 4 : return task.eta; break;
-        case 5 : return "reception"; break;
-        case 6 : return "emission"; break;
-        case 7 : return "resume 3"; break;
-        case 8 : return task.createdTs.toString(); break;
+        case 1 : return task.status; break;
+        case 2 : return task.name; break;
+        case 3 : return task.size; break;
+        case 4 : return task.rxPct; break;
+        case 5 : return task.eta; break;
+        case 6 : return task.rxRate; break;
+        case 7 : return task.txRate; break;
+        case 8 : return QVariantList()<<task.rxBytes<<task.txBytes<<task.stopRatio; break;
+        case 9 : return task.createdTs.toString(); break;
 
 
         }
