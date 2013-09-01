@@ -17,7 +17,7 @@ public slots:
 private:
     QListWidget * mCateogryView;
     QListWidget * mRssView;
-    
+
 };
 
 #endif // DLCATEGORYWIDGET_H

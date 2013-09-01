@@ -1,31 +1,55 @@
 <RCC>
     <qresource prefix="/">
-        <file>logo.png</file>
+        <file>about.png</file>
+        <file>accept.png</file>
+        <file>add.png</file>
         <file>arrow_refresh.png</file>
-        <file>folder.png</file>
-        <file>folder_add.png</file>
-        <file>page_copy.png</file>
-        <file>share.png</file>
-        <file>folder_edit.png</file>
-        <file>folder_delete.png</file>
-        <file>disk.png</file>
-        <file>cut.png</file>
-        <file>compress.png</file>
-        <file>drive-harddisk.png</file>
+        <file>arrow_up.png</file>
+        <file>assets.qrc</file>
+        <file>auth.gif</file>
+        <file>broom.png</file>
         <file>cancel.png</file>
+        <file>cog_add.png</file>
+        <file>compress.png</file>
+        <file>connect.png</file>
+        <file>control_pause_blue.png</file>
+        <file>control_play_blue.png</file>
+        <file>control_stop_blue.png</file>
+        <file>cut.png</file>
+        <file>disk.png</file>
+        <file>download.png</file>
+        <file>drive-harddisk.png</file>
+        <file>drop.png</file>
+        <file>email_authentication.png</file>
+        <file>fbx_add_link.png</file>
+        <file>file_extension_torrent.png</file>
+        <file>folder_add.png</file>
+        <file>folder_delete.png</file>
+        <file>folder_edit.png</file>
+        <file>folder_go.png</file>
+        <file>folder.png</file>
+        <file>github.png</file>
+        <file>help.png</file>
         <file>inbox_download.png</file>
         <file>inbox_upload.png</file>
         <file>loading.gif</file>
-        <file>github.png</file>
-        <file>about.png</file>
-        <file>broom.png</file>
+        <file>lock_open.png</file>
+        <file>logo.png</file>
+        <file>mime.qrc</file>
+        <file>page_add.png</file>
+        <file>page_copy.png</file>
         <file>progressbar.png</file>
-        <file>connect.png</file>
-        <file>server_connect.png</file>
-        <file>email_authentication.png</file>
-        <file>help.png</file>
         <file>qt.png</file>
-        <file>drop.png</file>
-        <file>auth.gif</file>
+        <file>rss_add.png</file>
+        <file>rss_go.png</file>
+        <file>rss_valid.png</file>
+        <file>rss.png</file>
+        <file>server_connect.png</file>
+        <file>setting_tools.png</file>
+        <file>share.png</file>
+        <file>update.png</file>
+        <file>upload_for_cloud.png</file>
+        <file>world_add.png</file>
+        <file>bin_recycle.png</file>
     </qresource>
 </RCC>

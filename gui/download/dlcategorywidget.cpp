@@ -20,14 +20,14 @@ DLCategoryWidget::DLCategoryWidget(QWidget *parent) :
     titleItem->setFont(font);
 //    titleItem->setSizeHint(QSize(0,40));
     mCateogryView->addItem(titleItem);
-    mCateogryView->addItem("    Tous");
-    mCateogryView->addItem("    En cours");
-    mCateogryView->addItem("    Partagés");
-    mCateogryView->addItem("    Terminés");
+    mCateogryView->addItem(new QListWidgetItem(QIcon(""),"Tous"));
+    mCateogryView->addItem(new QListWidgetItem(QIcon(":arrow_up.png"),"En cours"));
+    mCateogryView->addItem(new QListWidgetItem(QIcon(":share.png"),"Partagés"));
+    mCateogryView->addItem(new QListWidgetItem(QIcon(":accept")," Terminés"));
 
     QListWidgetItem * rssItem = new QListWidgetItem(QIcon(),"Flux RSS");
     rssItem->setFlags(Qt::NoItemFlags);
     rssItem->setFont(font);
     mCateogryView->addItem(rssItem);
-    mCateogryView->addItem("    RSS");
+    mCateogryView->addItem(new QListWidgetItem(QIcon(":rss.png")," RSS"));
 }
