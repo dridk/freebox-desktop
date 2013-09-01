@@ -62,9 +62,21 @@ void DLModel::setData(const QList<DownloadTask> &data)
     if (data.isEmpty())
         return;
 
-   beginResetModel();
-   mDatas = data;
-   endResetModel();
+    if (data.count() != mDatas.count())
+    {
+        beginResetModel();
+        mDatas = data;
+        endResetModel();
+    }
+
+    else {
+     mDatas = data;
+     emit dataChanged(index(0,0), index(data.count()-1, columnCount()-1));
+
+    }
+
+
+
 
 
 
