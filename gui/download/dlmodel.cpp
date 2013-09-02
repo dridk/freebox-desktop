@@ -55,7 +55,7 @@ QVariant DLModel::data(const QModelIndex &index, int role) const
 
         switch (index.column())
         {
-        case 1 :  return QIcon(":update.png");
+        case 1 :  return QIcon(":"+task.status);
         case 5 :  return QIcon(":"+task.ioPriority);
 
         }

@@ -54,5 +54,10 @@
         <file alias="high">bullet_green.png</file>
         <file alias="low">bullet_red.png</file>
         <file alias="normal">bullet_yellow.png</file>
+        <file>fbx_down.png</file>
+        <file alias="downloading">fbx_download.png</file>
+        <file alias="seeding">fbx_share.png</file>
+        <file>fbx_up.png</file>
+        <file alias="done">fbx_valid.png</file>
     </qresource>
 </RCC>

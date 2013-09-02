@@ -14,9 +14,13 @@ signals:
     
 public slots:
 
+signals:
+    void statusClicked(const QString& status);
+protected slots:
+    void itemClicked(const QModelIndex& index);
+
 private:
-    QListWidget * mCateogryView;
-    QListWidget * mRssView;
+    QTreeWidget * mCateogryView;
 
 };
 

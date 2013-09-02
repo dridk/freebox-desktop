@@ -74,6 +74,7 @@ DLMainWindow::DLMainWindow(QWidget *parent) :
     addToolBar(toolBar);
     addToolBar(addBar);
 
+    connect(mCategoryWidget,SIGNAL(statusClicked(QString)), mView, SLOT(setStatusFilter(QString)));
 
     setWindowTitle("Freebox Desktop Download");
 
