@@ -32,9 +32,9 @@ DLMainWindow::DLMainWindow(QWidget *parent) :
     newDLButton->setText("Nouveau téléchargement");
     newDLButton->setToolButtonStyle(Qt::ToolButtonTextBesideIcon);
     newDLButton->setMenu(new QMenu);
-    newDLButton->menu()->addAction(QIcon(":world_add.png"),"Téléchargement depuis une URL");
-    newDLButton->menu()->addAction(QIcon(":page_add.png"),"Téléchargement depuis un fichier");
-    newDLButton->menu()->addAction(QIcon(":cog_add.png"),"Téléchargement avancé");
+    newDLButton->menu()->addAction(QIcon(":world_add.png"),"Téléchargement depuis une URL",this,SLOT(addUrl()));
+    newDLButton->menu()->addAction(QIcon(":page_add.png"),"Téléchargement depuis un fichier",this,SLOT(addFile()));
+    newDLButton->menu()->addAction(QIcon(":cog_add.png"),"Téléchargement avancé",this,SLOT(addAdvancedUrl()));
     newDLButton->setPopupMode(QToolButton::InstantPopup);
 
     toolBar->addWidget(newDLButton);
@@ -78,4 +78,21 @@ DLMainWindow::DLMainWindow(QWidget *parent) :
 
     setWindowTitle("Freebox Desktop Download");
 
+}
+
+void DLMainWindow::addUrl()
+{
+    DLAddDialog dialog(fbx(),this);
+
+    dialog.exec();
+
+
+}
+
+void DLMainWindow::addFile()
+{
+}
+
+void DLMainWindow::addAdvancedUrl()
+{
 }

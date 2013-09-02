@@ -12,7 +12,8 @@ HEADERS += \
     gui/download/dlcategorywidget.h \
     gui/download/dldetailwidget.h \
     gui/download/dldelegate.h \
-    gui/download/dlpropertywidget.h
+    gui/download/dlpropertywidget.h \
+    gui/download/dladddialog.h
 
 
 SOURCES += \
@@ -22,7 +23,8 @@ SOURCES += \
     gui/download/dlcategorywidget.cpp \
     gui/download/dldetailwidget.cpp \
     gui/download/dldelegate.cpp \
-    gui/download/dlpropertywidget.cpp
+    gui/download/dlpropertywidget.cpp \
+    gui/download/dladddialog.cpp
 
 
 

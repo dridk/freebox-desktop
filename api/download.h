@@ -72,7 +72,7 @@ public slots:
     void requestUpdate(int id, const QString& p, const QString& s );
     void requestLog(int id);
     void requestStats();
-    void requestAdd(const QString& url, const QString& destination, bool recursive=true,
+    void requestAdd(const QString& url, const QString& destination = QString(),
                     const QString& username = QString(),
                     const QString& password = QString(),
                     const QString archivePassword = QString());

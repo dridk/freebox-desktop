@@ -73,25 +73,34 @@ void Download::requestStats()
 
 }
 
-void Download::requestAdd(const QString &url, const QString &destination, bool recursive, const QString &username, const QString &password, const QString archivePassword)
+void Download::requestAdd(const QString &url, const QString &destination, const QString &username, const QString &password, const QString archivePassword)
 {
 
-    QJsonObject json;
-    json.insert("download_url",url);
-    if (!destination.isEmpty())
-        json.insert("download_dir",destination);
-    json.insert("recursive",recursive);
+    QStringList dataList;
+    QString encodedUrl =QUrl::toPercentEncoding(url);
+    dataList.append("download_url="+encodedUrl);
+
+
+//    dataList.append(QString("download_dir=L0Rpc3F1ZSBkdXIvVMOpbMOpY2hhcmdlbWVudHMv"));
+
     if (!username.isEmpty())
-        json.insert("username",username);
+    dataList.append(QString("username=").arg(username));
+
     if (!password.isEmpty())
-        json.insert("password",password);
+    dataList.append(QString("password=").arg(password));
+
     if (!archivePassword.isEmpty())
-        json.insert("archive_password",archivePassword);
+    dataList.append(QString("archive_password=").arg(archivePassword));
 
-    QJsonDocument doc(json);
 
-    QNetworkReply * reply = fbx()->post(fbx()->myCreateRequest(QString("downloads/add")),
-                                        doc.toJson());
+    QByteArray data = dataList.join("&").toUtf8();
+
+    qDebug()<<data;
+
+    QNetworkRequest request =fbx()->myCreateRequest(QString("downloads/add"));
+    request.setHeader(QNetworkRequest::ContentTypeHeader,QVariant("application/x-www-form-urlencoded"));
+
+    QNetworkReply * reply = fbx()->post(request,data);
     connect(reply,SIGNAL(finished()),this,SLOT(requestAddFinished()));
     connect(reply,SIGNAL(error(QNetworkReply::NetworkError)),fbx(),SLOT(errorReceived(QNetworkReply::NetworkError)));
 
@@ -160,9 +169,6 @@ void Download::requestListFinished()
             task.rxRate = item.toObject().value("rx_rate").toDouble();
             task.txPct = item.toObject().value("tx_pct").toDouble();
 
-
-            qDebug()<<"SIZE "<< item.toObject().value("size");
-            qDebug()<<"SIZEtask"<<task.size;
             list.append(task);
 
         }
@@ -202,6 +208,13 @@ void Download::requestStatsFinished()
 
 void Download::requestAddFinished()
 {
+    QNetworkReply * reply  = qobject_cast<QNetworkReply*>(sender());
+    QJsonDocument doc = QJsonDocument::fromJson(reply->readAll());
+    if(fbx()->parseResult(doc))
+    {
+        emit addFinished();
+
+    }
 }
 
 void Download::requestAddListFinished()

@@ -6,7 +6,7 @@
 #include "dlcategorywidget.h"
 #include "dldetailwidget.h"
 #include "dldelegate.h"
-
+#include "dladddialog.h"
 class DLMainWindow : public AbstractMainWindow
 {
     Q_OBJECT
@@ -16,6 +16,9 @@ public:
 signals:
     
 public slots:
+    void addUrl();
+    void addFile();
+    void addAdvancedUrl();
 
 private:
     DLTableView * mView;
