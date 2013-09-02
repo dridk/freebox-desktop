@@ -188,10 +188,24 @@ void Download::requestDownloadFinished()
 
 void Download::requestRemoveFinished()
 {
+    QNetworkReply * reply  = qobject_cast<QNetworkReply*>(sender());
+    QJsonDocument doc = QJsonDocument::fromJson(reply->readAll());
+    if(fbx()->parseResult(doc))
+    {
+        emit removeFinished();
+
+    }
 }
 
 void Download::requestEraseFinished()
 {
+    QNetworkReply * reply  = qobject_cast<QNetworkReply*>(sender());
+    QJsonDocument doc = QJsonDocument::fromJson(reply->readAll());
+    if(fbx()->parseResult(doc))
+    {
+        emit eraseFinished();
+
+    }
 }
 
 void Download::requestUpdateFinished()
