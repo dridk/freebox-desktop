@@ -7,7 +7,7 @@ DLMainWindow::DLMainWindow(QWidget *parent) :
     mView  = new DLTableView(fbx());
     mCategoryWidget = new DLCategoryWidget;
     mDetailWidget = new DLDetailWidget;
-
+    mDirectUrlEdit =  new QLineEdit;
 
 
 
@@ -67,15 +67,15 @@ DLMainWindow::DLMainWindow(QWidget *parent) :
     rssButton->setPopupMode(QToolButton::InstantPopup);
     toolBar->addWidget(rssButton);
     addBar->addWidget(new QLabel("Ajout direct:"));
-    addBar->addWidget(new QLineEdit);
-    addBar->addAction(QIcon(":add.png"),"+");
+    addBar->addWidget(mDirectUrlEdit);
+    addBar->addAction(QIcon(":add.png"),"+",this,SLOT(addDirectUrl()));
     addBar->setMovable(true);
 
     addToolBar(toolBar);
     addToolBar(addBar);
 
     connect(mCategoryWidget,SIGNAL(statusClicked(QString)), mView, SLOT(setStatusFilter(QString)));
-
+    connect(mDirectUrlEdit,SIGNAL(returnPressed()),this,SLOT(addDirectUrl()));
     setWindowTitle("Freebox Desktop Download");
 
 }
@@ -95,4 +95,11 @@ void DLMainWindow::addFile()
 
 void DLMainWindow::addAdvancedUrl()
 {
+}
+
+void DLMainWindow::addDirectUrl()
+{
+   fbx()->download()->requestAdd(mDirectUrlEdit->text());
+    mDirectUrlEdit->clear();
+
 }

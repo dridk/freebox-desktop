@@ -5,6 +5,7 @@
 DLTableView::DLTableView(FbxAPI *fbx, QWidget *parent) :
     QTableView(parent)
 {
+    mFbx = fbx;
     mModel = new DLModel(fbx);
     mFilterModel = new QSortFilterProxyModel;
     mDelegate = new DLDelegate;
@@ -44,13 +45,13 @@ void DLTableView::contextMenuEvent(QContextMenuEvent * event)
     QFont font;font.setBold(true);
     menu.addAction(QIcon(),"Propriétés",this,SLOT(showPropertyDialog()))->setFont(font);
     menu.addSeparator();
-    menu.addAction(QIcon(),"Reprendre");
-    menu.addAction(QIcon(),"Réessayer");
-    menu.addAction(QIcon(),"Pause");
+    menu.addAction(QIcon(),"Reprendre",this,SLOT(setCurrentRestart()));
+    menu.addAction(QIcon(),"Réessayer",this,SLOT(setCurrentRetry()));
+    menu.addAction(QIcon(),"Pause",this,SLOT(setCurrentPause()));
     QAction * supprAction = menu.addAction(QIcon(),"Supprimer");
     QMenu supprMenu;
-    supprMenu.addAction(QIcon(),"En conservant les fichiers");
-    supprMenu.addAction(QIcon(),"En effacant les fichiers");
+    supprMenu.addAction(QIcon(),"En conservant les fichiers",this,SLOT(setCurrentRemove()));
+    supprMenu.addAction(QIcon(),"En effacant les fichiers",this,SLOT(setCurrentErase()));
     supprAction->setMenu(&supprMenu);
     menu.addAction(supprAction);
     menu.addSeparator();
@@ -66,6 +67,11 @@ void DLTableView::contextMenuEvent(QContextMenuEvent * event)
     a->setCheckable(true);
     b->setCheckable(true);
     c->setCheckable(true);
+
+    connect(a,SIGNAL(triggered()),this,SLOT(setCurrentPriorityHigh()));
+    connect(b,SIGNAL(triggered()),this,SLOT(setCurrentPriorityNormal()));
+    connect(c,SIGNAL(triggered()),this,SLOT(setCurrentPriorityLow()));
+
 
     QModelIndex firstIndex = selectionModel()->selectedRows(5).first();
     qDebug()<<firstIndex.data().toString();
@@ -113,3 +119,107 @@ void DLTableView::setPropertyDialog()
 
 
 }
+
+void DLTableView::setCurrentPause()
+{
+    if (currentIndex().isValid())
+    {
+        QModelIndex mIndex = mFilterModel->mapToSource(currentIndex());
+        int id = mModel->index(mIndex.row(),0).data().toInt();
+        QString priority = mModel->index(mIndex.row(),5).data().toString();
+        mFbx->download()->requestUpdate(id,priority,"stopped");
+    }
+}
+
+void DLTableView::setCurrentRestart()
+{
+    if (currentIndex().isValid())
+    {
+        QModelIndex mIndex = mFilterModel->mapToSource(currentIndex());
+        int id = mModel->index(mIndex.row(),0).data().toInt();
+        QString priority = mModel->index(mIndex.row(),5).data().toString();
+        mFbx->download()->requestUpdate(id,priority,"downloading");
+    }
+}
+
+void DLTableView::setCurrentRetry()
+{
+    if (currentIndex().isValid())
+    {
+        QModelIndex mIndex = mFilterModel->mapToSource(currentIndex());
+        int id = mModel->index(mIndex.row(),0).data().toInt();
+        QString priority = mModel->index(mIndex.row(),5).data().toString();
+        mFbx->download()->requestUpdate(id,priority,"retry");
+    }
+}
+
+void DLTableView::setCurrentRemove()
+{
+    if (currentIndex().isValid())
+    {
+        QMessageBox box;
+        box.setWindowTitle("Suppression");
+        box.setText("Voulez-vous supprimer cette tâche (en conservant le fichier)");
+        box.setIcon(QMessageBox::Question);
+        box.setStandardButtons(QMessageBox::Yes|QMessageBox::No);
+        if (box.exec() == QMessageBox::Yes) {
+            QModelIndex mIndex = mFilterModel->mapToSource(currentIndex());
+            int id = mModel->index(mIndex.row(),0).data().toInt();
+            mFbx->download()->requestErase(id);
+        }
+    }
+}
+
+void DLTableView::setCurrentErase()
+{
+    if (currentIndex().isValid())
+    {
+
+        QMessageBox box;
+        box.setWindowTitle("Suppression");
+        box.setText("Voulez-vous supprimer cette tâche (en effaçant les fichiers)");
+        box.setIcon(QMessageBox::Question);
+        box.setStandardButtons(QMessageBox::Yes|QMessageBox::No);
+        if (box.exec() == QMessageBox::Yes) {
+            QModelIndex mIndex = mFilterModel->mapToSource(currentIndex());
+            int id = mModel->index(mIndex.row(),0).data().toInt();
+            mFbx->download()->requestErase(id);
+        }
+    }
+
+}
+
+void DLTableView::setCurrentPriorityLow()
+{
+    if (currentIndex().isValid())
+    {
+        QModelIndex mIndex = mFilterModel->mapToSource(currentIndex());
+        int id = mModel->index(mIndex.row(),0).data().toInt();
+        QString status = mModel->index(mIndex.row(),10).data().toString();
+        mFbx->download()->requestUpdate(id,"low",status);
+    }
+}
+
+void DLTableView::setCurrentPriorityNormal()
+{
+    if (currentIndex().isValid())
+    {
+        QModelIndex mIndex = mFilterModel->mapToSource(currentIndex());
+        int id = mModel->index(mIndex.row(),0).data().toInt();
+        QString status = mModel->index(mIndex.row(),10).data().toString();
+        mFbx->download()->requestUpdate(id,"normal",status);
+    }
+}
+
+void DLTableView::setCurrentPriorityHigh()
+{
+    if (currentIndex().isValid())
+    {
+        QModelIndex mIndex = mFilterModel->mapToSource(currentIndex());
+        int id = mModel->index(mIndex.row(),0).data().toInt();
+        QString status = mModel->index(mIndex.row(),10).data().toString();
+        mFbx->download()->requestUpdate(id,"high",status);
+    }
+}
+
+

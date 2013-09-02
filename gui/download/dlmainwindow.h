@@ -19,11 +19,13 @@ public slots:
     void addUrl();
     void addFile();
     void addAdvancedUrl();
+    void addDirectUrl();
 
 private:
     DLTableView * mView;
     DLCategoryWidget * mCategoryWidget;
     DLDetailWidget * mDetailWidget;
+    QLineEdit * mDirectUrlEdit;
 
     
 };

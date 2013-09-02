@@ -25,6 +25,16 @@ public slots:
 protected slots:
     void setPropertyDialog();
 
+    void setCurrentPause();
+    void setCurrentRestart();
+    void setCurrentRetry();
+    void setCurrentRemove();
+    void setCurrentErase();
+    void setCurrentPriorityLow();
+    void setCurrentPriorityNormal();
+    void setCurrentPriorityHigh();
+
+
 signals:
 
 private:
@@ -32,6 +42,7 @@ private:
     DLDelegate * mDelegate;
     DLPropertyWidget * mPropertyWidget;
     QSortFilterProxyModel * mFilterModel;
+    FbxAPI * mFbx;
 };
 
 #endif // DLTABLEVIEW_H
