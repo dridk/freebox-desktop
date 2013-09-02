@@ -6,17 +6,20 @@ DLTableView::DLTableView(FbxAPI *fbx, QWidget *parent) :
     QTableView(parent)
 {
     mModel = new DLModel(fbx);
+    mFilterModel = new QSortFilterProxyModel;
     mDelegate = new DLDelegate;
     mPropertyWidget = new DLPropertyWidget;
     mPropertyWidget->setModel(mModel);
+    mFilterModel->setSourceModel(mModel);
     setContextMenuPolicy(Qt::DefaultContextMenu);
-    setModel(mModel);
+    setModel(mFilterModel);
     setItemDelegate(mDelegate);
     verticalHeader()->setDefaultSectionSize(20);
     setColumnWidth(2, 300);
     setColumnWidth(4, 200);
     hideColumn(10);
 
+    mFilterModel->setFilterKeyColumn(10);
     setSelectionBehavior(QAbstractItemView::SelectRows);
     horizontalHeader()->setSectionResizeMode(QHeaderView::Interactive);
 
@@ -91,11 +94,16 @@ void DLTableView::showPropertyDialog()
 
     qDebug()<<"set data";
     mPropertyWidget->setModel(mModel);
-    mPropertyWidget->setCurrentIndex(currentIndex());
+    mPropertyWidget->setCurrentIndex(mFilterModel->mapToSource(currentIndex()));
     mPropertyWidget->show();
 
 
 
+}
+
+void DLTableView::setStatusFilter(const QString &status)
+{
+    mFilterModel->setFilterFixedString(status);
 }
 
 void DLTableView::setPropertyDialog()

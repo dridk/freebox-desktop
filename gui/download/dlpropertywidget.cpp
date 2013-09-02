@@ -1,5 +1,5 @@
 #include "dlpropertywidget.h"
-#include "fsmodel.h"
+#include "tools.h"
 #include "dlmodel.h"
 DLPropertyWidget::DLPropertyWidget(QWidget *parent) :
     QDialog(parent)
@@ -22,6 +22,7 @@ DLPropertyWidget::DLPropertyWidget(QWidget *parent) :
     mToolButton->setStandardButtons(QDialogButtonBox::Ok);
 
     mNameLabel->setWordWrap(true);
+    mDownloadDirLabel->setWordWrap(true);
 
     layout->addRow("Nom:", mNameLabel);
     layout->addRow("Statut:", mStatusLabel);
@@ -55,7 +56,7 @@ void DLPropertyWidget::setCurrentIndex(const QModelIndex &index)
     DLModel * dlModel = qobject_cast<DLModel*>(mMapper->model());
      DownloadTask task = dlModel->downloadTask(index.row());
 
-    mDownloadDirLabel->setText(task.downloadDir);
+    mDownloadDirLabel->setText(Tools::pathFrom64(task.downloadDir));
 
     mMapper->addMapping(mNameLabel,2,"text");
     mMapper->addMapping(this,2,"windowTitle");

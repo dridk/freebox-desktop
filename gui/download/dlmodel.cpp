@@ -1,6 +1,6 @@
 #include "dlmodel.h"
 #include <QIcon>
-#include "fsmodel.h" // pour le humanSize...A mettre dans une autre class
+#include "tools.h" // pour le humanSize...A mettre dans une autre class
 DLModel::DLModel(FbxAPI *fbx, QObject *parent):
     QAbstractTableModel(parent)
 {
@@ -37,12 +37,12 @@ QVariant DLModel::data(const QModelIndex &index, int role) const
         case 0 : return task.id; break;
             //        case 1 : return task.status; break;
         case 2 : return task.name; break;
-        case 3 : return FSModel::sizeHuman(task.size); break;
+        case 3 : return Tools::humanSize(task.size); break;
         case 4 : return task.rxPct; break;
         case 5 : return task.ioPriority; break;
         case 6 : return task.eta.toString("hh 'heures' mm 'mins'"); break;
-        case 7 : return FSModel::sizeHuman(task.rxRate)+"/s"; break;
-        case 8 : return FSModel::sizeHuman(task.txRate)+"/s"; break;
+        case 7 : return Tools::humanSize(task.rxRate)+"/s"; break;
+        case 8 : return Tools::humanSize(task.txRate)+"/s"; break;
         case 9 : return task.createdTs.toString(); break;
         case 10 : return task.status; break;
 

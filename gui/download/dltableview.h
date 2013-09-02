@@ -4,6 +4,8 @@
 #include <QTableView>
 #include <QContextMenuEvent>
 #include <QMenu>
+#include <QSortFilterProxyModel>
+
 #include "fbxapi.h"
 #include "dlmodel.h"
 #include "dldelegate.h"
@@ -18,6 +20,7 @@ public:
     void contextMenuEvent(QContextMenuEvent *);
 public slots:
     void showPropertyDialog();
+    void setStatusFilter(const QString& status);
 
 protected slots:
     void setPropertyDialog();
@@ -28,7 +31,7 @@ private:
     DLModel * mModel;
     DLDelegate * mDelegate;
     DLPropertyWidget * mPropertyWidget;
-    
+    QSortFilterProxyModel * mFilterModel;
 };
 
 #endif // DLTABLEVIEW_H

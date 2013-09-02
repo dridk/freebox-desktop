@@ -5,6 +5,7 @@
 #include <QtWidgets>
 #include <QDialogButtonBox>
 #include <QDataWidgetMapper>
+
 #include "download.h"
 class DLPropertyWidget : public QDialog
 {

@@ -5,6 +5,7 @@
 #include "fbxapi.h"
 #include "download.h"
 #include <QTimer>
+
 class DLModel : public QAbstractTableModel
 {
     Q_OBJECT
