@@ -15,6 +15,7 @@ DLTableView::DLTableView(FbxAPI *fbx, QWidget *parent) :
     verticalHeader()->setDefaultSectionSize(20);
     setColumnWidth(2, 300);
     setColumnWidth(4, 200);
+    hideColumn(10);
 
     setSelectionBehavior(QAbstractItemView::SelectRows);
     horizontalHeader()->setSectionResizeMode(QHeaderView::Interactive);

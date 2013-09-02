@@ -23,7 +23,7 @@ int DLModel::rowCount(const QModelIndex &parent) const
 
 int DLModel::columnCount(const QModelIndex &parent) const
 {
-    return 10;
+    return 11;
 }
 
 QVariant DLModel::data(const QModelIndex &index, int role) const
@@ -44,7 +44,7 @@ QVariant DLModel::data(const QModelIndex &index, int role) const
         case 7 : return FSModel::sizeHuman(task.rxRate)+"/s"; break;
         case 8 : return FSModel::sizeHuman(task.txRate)+"/s"; break;
         case 9 : return task.createdTs.toString(); break;
-
+        case 10 : return task.status; break;
 
         }
     }
@@ -82,7 +82,8 @@ QVariant DLModel::headerData(int section, Qt::Orientation orientation, int role)
         case 6: return "Temps restant"; break;
         case 7: return "Réception"; break;
         case 8: return "Emission"; break;
-
+        case 9: return "Date d'ajout"; break;
+        case 10: return "Status"; break;
 
 
 
@@ -92,6 +93,11 @@ QVariant DLModel::headerData(int section, Qt::Orientation orientation, int role)
 
     }
     return QVariant();
+}
+
+const DownloadTask &DLModel::downloadTask(int row)
+{
+    return mDatas[row];
 }
 
 void DLModel::setData(const QList<DownloadTask> &data)

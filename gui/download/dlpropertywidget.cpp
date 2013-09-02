@@ -1,5 +1,6 @@
 #include "dlpropertywidget.h"
 #include "fsmodel.h"
+#include "dlmodel.h"
 DLPropertyWidget::DLPropertyWidget(QWidget *parent) :
     QDialog(parent)
 {
@@ -51,16 +52,22 @@ void DLPropertyWidget::setCurrentIndex(const QModelIndex &index)
 
     qDebug()<<"set current..";
 
+    DLModel * dlModel = qobject_cast<DLModel*>(mMapper->model());
+     DownloadTask task = dlModel->downloadTask(index.row());
+
+    mDownloadDirLabel->setText(task.downloadDir);
+
     mMapper->addMapping(mNameLabel,2,"text");
     mMapper->addMapping(this,2,"windowTitle");
 
     mMapper->addMapping(mSizeLabel,3,"text");
- mMapper->addMapping(mIoPriorityLabel,5,"text");
+    mMapper->addMapping(mIoPriorityLabel,5,"text");
 
     mMapper->addMapping(mRxRateLabel,7,"text");
     mMapper->addMapping(mTxRateLabel,8,"text");
 
     mMapper->addMapping(mCreatedTsLabel,9,"text");
+    mMapper->addMapping(mStatusLabel,10,"text");
 
     mMapper->setCurrentIndex(index.row());
 
