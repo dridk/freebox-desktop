@@ -59,5 +59,7 @@
         <file alias="seeding">fbx_share.png</file>
         <file>fbx_up.png</file>
         <file alias="done">fbx_valid.png</file>
+        <file>bullet_red32.png</file>
+        <file>bullet_green32.png</file>
     </qresource>
 </RCC>

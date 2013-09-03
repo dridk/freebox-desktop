@@ -29,7 +29,11 @@ AbstractMainWindow::AbstractMainWindow(QWidget *parent) :
     connect(githubAction,SIGNAL(triggered()),this,SLOT(openGithub()));
     connect(aboutAction,SIGNAL(triggered()),this,SLOT(showAboutDialog()));
     connect(aboutQtAction,SIGNAL(triggered()),qApp, SLOT(aboutQt()));
+    connect(fbx(),SIGNAL(loginSuccess()),this,SLOT(loginSuccess()));
 
+    mStatusLabel = new QLabel;
+    mStatusLabel->setPixmap(QPixmap(":low"));
+    statusBar()->addPermanentWidget(mStatusLabel);
 
 
 }
@@ -90,4 +94,10 @@ void AbstractMainWindow::openGithub()
 
     QDesktopServices::openUrl(QUrl("https://github.com/dridk/mafreebox/issues?state=open"));
 
+}
+
+void AbstractMainWindow::loginSuccess()
+{
+    mStatusLabel->setPixmap(QPixmap(":high"));
+    statusBar()->showMessage("Vous êtes connecté(e)s sur "+fbx()->hostName());
 }

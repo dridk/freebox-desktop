@@ -2,6 +2,7 @@
 #define ABSTRACTMAINWINDOW_H
 
 #include <QMainWindow>
+#include <QtWidgets>
 #include "fbxapi.h"
 #include "authorizemessagebox.h"
 #include "aboutdialog.h"
@@ -24,9 +25,11 @@ protected slots:
     void authorizeReceived(const QString& token ,int trackId);
     void showAboutDialog();
     void openGithub();
+    void loginSuccess();
 
 private:
     FbxAPI * mFbx;
+    QLabel * mStatusLabel;
 };
 
 #endif // ABSTRACTMAINWINDOW_H
