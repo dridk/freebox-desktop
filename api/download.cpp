@@ -80,17 +80,14 @@ void Download::requestAdd(const QString &url, const QString &destination, const 
     QString encodedUrl =QUrl::toPercentEncoding(url);
     dataList.append("download_url="+encodedUrl);
 
-
-//    dataList.append(QString("download_dir=L0Rpc3F1ZSBkdXIvVMOpbMOpY2hhcmdlbWVudHMv"));
-
     if (!username.isEmpty())
-    dataList.append(QString("username=").arg(username));
+        dataList.append(QString("username=").arg(username));
 
     if (!password.isEmpty())
-    dataList.append(QString("password=").arg(password));
+        dataList.append(QString("password=").arg(password));
 
     if (!archivePassword.isEmpty())
-    dataList.append(QString("archive_password=").arg(archivePassword));
+        dataList.append(QString("archive_password=").arg(archivePassword));
 
 
     QByteArray data = dataList.join("&").toUtf8();
@@ -109,24 +106,37 @@ void Download::requestAdd(const QString &url, const QString &destination, const 
 
 }
 
-void Download::requestAddList(const QStringList &url, const QString &destination, bool recursive, const QString &username, const QString &password, const QString archivePassword)
+void Download::requestAddList(const QStringList &urls, const QString &destination, bool recursive, const QString &username, const QString &password, const QString archivePassword)
 {
-    QJsonObject json;
-    json.insert("download_url_list",url.join("\n"));
-    if (!destination.isEmpty())
-        json.insert("download_dir",destination);
-    json.insert("recursive",recursive);
+
+    QStringList dataList;
+    QStringList encodedUrl;
+    foreach (QString url, urls )
+        encodedUrl.append(QUrl::toPercentEncoding(url));
+
+    dataList.append("download_url="+encodedUrl.join("%0A"));
+
+    if (recursive)
+        dataList.append(QString("recursive=").arg(recursive));
+
     if (!username.isEmpty())
-        json.insert("username",username);
+        dataList.append(QString("username=").arg(username));
+
     if (!password.isEmpty())
-        json.insert("password",password);
+        dataList.append(QString("password=").arg(password));
+
     if (!archivePassword.isEmpty())
-        json.insert("archive_password",archivePassword);
+        dataList.append(QString("archive_password=").arg(archivePassword));
 
-    QJsonDocument doc(json);
+    QByteArray data = dataList.join("&").toUtf8();
 
-    QNetworkReply * reply = fbx()->post(fbx()->myCreateRequest(QString("downloads/add")),
-                                        doc.toJson());
+
+    qDebug()<<"ADD "<<data;
+
+    QNetworkRequest request =fbx()->myCreateRequest(QString("downloads/add"));
+    request.setHeader(QNetworkRequest::ContentTypeHeader,QVariant("application/x-www-form-urlencoded"));
+
+    QNetworkReply * reply = fbx()->post(request,data);
     connect(reply,SIGNAL(finished()),this,SLOT(requestAddListFinished()));
     connect(reply,SIGNAL(error(QNetworkReply::NetworkError)),fbx(),SLOT(errorReceived(QNetworkReply::NetworkError)));
 

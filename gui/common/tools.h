@@ -8,7 +8,7 @@ public:
 
     static QString humanSize(double size);
     static QString pathFrom64(const QString& base64);
-
+    static QString pathTo64(const QString& path);
 };
 
 #endif // TOOLS_H

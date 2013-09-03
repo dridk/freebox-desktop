@@ -30,7 +30,49 @@ DLTableView::DLTableView(FbxAPI *fbx, QWidget *parent) :
     horizontalHeader()->setSectionResizeMode(9,QHeaderView::Stretch);
     setAlternatingRowColors(true);
 
-    connect(fbx,SIGNAL(loginSuccess()),mModel,SLOT(start()));
+//    connect(fbx,SIGNAL(loginSuccess()),mModel,SLOT(start()));
+
+    setAcceptDrops(true);
+
+
+}
+
+void DLTableView::dragEnterEvent(QDragEnterEvent *event)
+{
+    bool accept = false;
+    if (event->mimeData()->hasUrls()) {
+        foreach ( QUrl url, event->mimeData()->urls())
+        {
+            QFileInfo info(url.toString());
+            if (info.suffix() == "torrent") {
+                mDropUrls.append(url.toString());
+                accept  = true;
+
+            }
+        }
+    }
+
+    if (accept)
+        qDebug()<<"enter";
+    event->acceptProposedAction();
+
+
+}
+
+void DLTableView::dragMoveEvent(QDragMoveEvent * event)
+{
+    qDebug()<<"move";
+    event->acceptProposedAction();
+}
+
+void DLTableView::dragLeaveEvent(QDragLeaveEvent *event)
+{
+
+}
+
+void DLTableView::dropEvent(QDropEvent *event)
+{
+
 
 
 }

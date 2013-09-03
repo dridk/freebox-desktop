@@ -25,6 +25,11 @@ QString Tools::humanSize(double size)
 QString Tools::pathFrom64(const QString &base64)
 {
 
-   return QString(QByteArray::fromBase64(base64.toUtf8()));
+    return QString(QByteArray::fromBase64(base64.toUtf8()));
 
+}
+
+QString Tools::pathTo64(const QString &path)
+{
+    return QString(path.toUtf8().toBase64());
 }

@@ -61,5 +61,6 @@
         <file alias="done">fbx_valid.png</file>
         <file>bullet_red32.png</file>
         <file>bullet_green32.png</file>
+        <file>diagonal-noise.png</file>
     </qresource>
 </RCC>

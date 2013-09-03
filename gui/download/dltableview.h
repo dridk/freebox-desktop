@@ -16,11 +16,17 @@ class DLTableView : public QTableView
 public:
     explicit DLTableView(FbxAPI * fbx,QWidget *parent = 0);
     
+    virtual void dragEnterEvent(QDragEnterEvent *event);
+    virtual void dragMoveEvent(QDragMoveEvent * event);
+    virtual void dragLeaveEvent(QDragLeaveEvent *event);
+    virtual void dropEvent(QDropEvent *event);
 
-    void contextMenuEvent(QContextMenuEvent *);
+    virtual void contextMenuEvent(QContextMenuEvent *);
 public slots:
     void showPropertyDialog();
     void setStatusFilter(const QString& status);
+
+
 
 protected slots:
     void setPropertyDialog();
@@ -43,6 +49,7 @@ private:
     DLPropertyWidget * mPropertyWidget;
     QSortFilterProxyModel * mFilterModel;
     FbxAPI * mFbx;
+    QStringList mDropUrls;
 };
 
 #endif // DLTABLEVIEW_H

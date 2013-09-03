@@ -1,6 +1,8 @@
 #include "dladddialog.h"
 #include <QGroupBox>
-
+#include <QDialogButtonBox>
+#include "fsdirview.h"
+#include "tools.h"
 DLAddDialog::DLAddDialog(FbxAPI *api, QWidget *parent):
     QDialog(parent)
 {
@@ -13,7 +15,7 @@ DLAddDialog::DLAddDialog(FbxAPI *api, QWidget *parent):
     QPushButton * destButton = new QPushButton("Modifier");
 
 
-//    mUrlEdit->setValidator(new QRegExpValidator(QRegExp("^http://|ftp://|https://|magnet:.*")));
+    //    mUrlEdit->setValidator(new QRegExpValidator(QRegExp("^http://|ftp://|https://|magnet:.*")));
 
     // group Box 1
     firstBox->setTitle("Télécharger depuis une URL");
@@ -42,6 +44,7 @@ DLAddDialog::DLAddDialog(FbxAPI *api, QWidget *parent):
     mainLayout->addStretch();
     mainLayout->addWidget(mButtonBox);
 
+
     setWindowTitle(firstBox->title());
 
 
@@ -57,9 +60,21 @@ DLAddDialog::DLAddDialog(FbxAPI *api, QWidget *parent):
 void DLAddDialog::getDestination()
 {
 
+    QDialog dialog(this);
+    QVBoxLayout *  layout  = new QVBoxLayout(&dialog);
+    dialog.setLayout(layout);
+    FSDirView view(mFbx);
+    QDialogButtonBox buttonBox;
+    buttonBox.setStandardButtons(QDialogButtonBox::Ok|QDialogButtonBox::Close);
+    connect(&buttonBox,SIGNAL(accepted()),&dialog,SLOT(accept()));
+    connect(&buttonBox,SIGNAL(rejected()),&dialog,SLOT(reject()));
 
+    view.init();
+    layout->addWidget(&view);
+    layout->addWidget(&buttonBox);
 
-
+    if (dialog.exec() == QDialog::Accepted)
+        mDestinationEdit->setText(Tools::pathFrom64(view.currentPath()));
 }
 
 void DLAddDialog::add()
@@ -67,9 +82,14 @@ void DLAddDialog::add()
     if (mUrlEdit->text().isEmpty())
         return;
 
+    if (mDestinationEdit->text().isEmpty())
+        mFbx->download()->requestAdd(mUrlEdit->text());
 
-  mFbx->download()->requestAdd(mUrlEdit->text());
-  accept();
+    else
+        mFbx->download()->requestAdd(mUrlEdit->text(), Tools::pathTo64(mDestinationEdit->text()));
+
+
+    accept();
 
 }
 

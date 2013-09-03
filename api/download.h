@@ -77,7 +77,8 @@ public slots:
                     const QString& password = QString(),
                     const QString archivePassword = QString());
 
-    void requestAddList(const QStringList& url, const QString& destination, bool recursive=true,
+    void requestAddList(const QStringList& urls, const QString& destination=QString(),
+                    bool recursive=false,
                     const QString& username = QString(),
                     const QString& password = QString(),
                     const QString archivePassword = QString());

@@ -19,6 +19,7 @@ HEADERS += \
     gui/filesystem/fsuploadtaskmodel.h \
     gui/filesystem/fsdownloadtaskmodel.h \
 #    gui/filesystem/fsactiontaskmodel.h
+    gui/filesystem/fsdirview.h
 
 SOURCES += \
     gui/filesystem/fsmainwindow.cpp \
@@ -33,7 +34,8 @@ SOURCES += \
     gui/filesystem/fsabstracttaskmodel.cpp \
     gui/filesystem/fsdownloadtaskmodel.cpp \
 #    gui/filesystem/fsactiontaskmodel.cpp \
-    gui/filesystem/fsuploadtaskmodel.cpp
+    gui/filesystem/fsuploadtaskmodel.cpp \
+    gui/filesystem/fsdirview.cpp
 
 
 
