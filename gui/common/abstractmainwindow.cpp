@@ -54,7 +54,7 @@ void AbstractMainWindow::login()
 void AbstractMainWindow::authorize()
 {
     QString appId = qApp->organizationDomain() + qApp->applicationName();
-    fbx()->requestAuthorize(appId, qApp->applicationName(), qApp->applicationVersion(), QHostInfo::localDomainName());
+    fbx()->requestAuthorize(appId, qApp->applicationName(), qApp->applicationVersion(), QHostInfo::localHostName());
 }
 
 void AbstractMainWindow::showError()

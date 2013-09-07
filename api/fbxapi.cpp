@@ -16,6 +16,8 @@ FbxAPI::FbxAPI(QObject *parent) :
     mApiInfo.version = "1.0";
     mApiInfo.baseUrl = "/api/";
     mRequestLoginAttempt = 0;
+    mApiInfo.deviceName = QHostInfo::localHostName();
+
 
     // == alloc module
     mFileSystem = new FileSystem(this);
@@ -140,8 +142,6 @@ void FbxAPI::requestApiInfo()
 void FbxAPI::requestAuthorize(const QString &appId, const QString &appName, const QString &appVersion, const QString &deviceName)
 {
 
-
-
     QJsonObject json;
     json.insert("app_id", appId);
     json.insert("app_name",appName);
@@ -152,7 +152,6 @@ void FbxAPI::requestAuthorize(const QString &appId, const QString &appName, cons
     QNetworkReply * reply = post(request,QJsonDocument(json).toJson());
     connect(reply,SIGNAL(finished()),this,SLOT(requestAuthorizeFinished()));
     connect(reply,SIGNAL(error(QNetworkReply::NetworkError)),this,SLOT(errorReceived(QNetworkReply::NetworkError)));
-
 
 
 }
