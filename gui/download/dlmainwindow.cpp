@@ -76,7 +76,10 @@ DLMainWindow::DLMainWindow(QWidget *parent) :
 
     connect(mCategoryWidget,SIGNAL(statusClicked(QString)), mView, SLOT(setStatusFilter(QString)));
     connect(mDirectUrlEdit,SIGNAL(returnPressed()),this,SLOT(addDirectUrl()));
-    setWindowTitle("Freebox Desktop Download");
+
+
+    setWindowTitle("Téléchargement");
+    setWindowIcon(QIcon(":main_dl.png"));
 
 }
 

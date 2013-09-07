@@ -62,5 +62,12 @@
         <file>bullet_red32.png</file>
         <file>bullet_green32.png</file>
         <file>diagonal-noise.png</file>
+        <file>main_ct.png</file>
+        <file>main_dl.png</file>
+        <file>main_fs.png</file>
+        <file>main_hp.png</file>
+        <file>main_nt.png</file>
+        <file>main_pc.png</file>
+        <file>main_st.png</file>
     </qresource>
 </RCC>

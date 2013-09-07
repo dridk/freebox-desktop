@@ -2,6 +2,7 @@
 #include "fsmainwindow.h"
 #include "fstableview.h"
 #include "dlmainwindow.h"
+#include "launcherwidget.h"
 int main(int argc, char *argv[])
 {
     QApplication a(argc, argv);
@@ -11,7 +12,7 @@ int main(int argc, char *argv[])
     QCoreApplication::setApplicationVersion("beta");
 
 
-    DLMainWindow w ;
+    LauncherWidget w ;
     w.show();
 
 
