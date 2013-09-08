@@ -52,8 +52,6 @@ public:
     int rxRate;
     int txRate;
     // pas encore fait le throtting...
-
-
 };
 
 

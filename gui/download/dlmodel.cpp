@@ -11,7 +11,7 @@ DLModel::DLModel(FbxAPI *fbx, QObject *parent):
     mTimer->setInterval(1000);
     connect(mTimer,SIGNAL(timeout()),mFbx->download(),SLOT(requestList()));
 
-    mDatas.append(DownloadTask());
+//    mDatas.append(DownloadTask());
 
 
 }

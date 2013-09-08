@@ -50,6 +50,8 @@ DLCategoryWidget::DLCategoryWidget(QWidget *parent) :
     mCateogryView->setRootIsDecorated(false);
     torrentRootItem->setSizeHint(0, QSize(0,30));
 
+   mCateogryView->header()->hide();
+
     connect(mCateogryView,SIGNAL(clicked(QModelIndex)),this,SLOT(itemClicked(QModelIndex)));
 
 
