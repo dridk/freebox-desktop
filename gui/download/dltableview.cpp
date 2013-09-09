@@ -155,6 +155,14 @@ void DLTableView::setStatusFilter(const QString &status)
     mFilterModel->setFilterFixedString(status);
 }
 
+void DLTableView::setAutoUpdate(bool enable)
+{
+    if (enable)
+        mModel->start();
+    else
+        mModel->stop();
+}
+
 void DLTableView::setPropertyDialog()
 {
 

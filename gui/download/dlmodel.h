@@ -22,6 +22,7 @@ signals:
 
 public slots:
     void start(){mTimer->start();}
+    void stop() {mTimer->stop();}
 protected slots:
     void setData(const QList<DownloadTask>& data);
 private:

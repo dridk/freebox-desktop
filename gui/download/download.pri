@@ -13,7 +13,11 @@ HEADERS += \
     gui/download/dldetailwidget.h \
     gui/download/dldelegate.h \
     gui/download/dlpropertywidget.h \
-    gui/download/dladddialog.h
+    gui/download/dladddialog.h \
+    gui/download/dlconfigdialog.h \
+    gui/download/dlfeedconfigwidget.h \
+    gui/download/dlbtconfigwidget.h \
+    gui/download/dlgeneralconfigwidget.h
 
 
 SOURCES += \
@@ -24,7 +28,11 @@ SOURCES += \
     gui/download/dldetailwidget.cpp \
     gui/download/dldelegate.cpp \
     gui/download/dlpropertywidget.cpp \
-    gui/download/dladddialog.cpp
+    gui/download/dladddialog.cpp \
+    gui/download/dlconfigdialog.cpp \
+    gui/download/dlfeedconfigwidget.cpp \
+    gui/download/dlbtconfigwidget.cpp \
+    gui/download/dlgeneralconfigwidget.cpp
 
 
 

@@ -12,7 +12,7 @@ int main(int argc, char *argv[])
     QCoreApplication::setApplicationVersion("beta");
 
 
-    LauncherWidget w ;
+    DLMainWindow w ;
     w.show();
 
 

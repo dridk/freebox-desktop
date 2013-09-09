@@ -7,6 +7,7 @@
 #include "dldetailwidget.h"
 #include "dldelegate.h"
 #include "dladddialog.h"
+#include "dlconfigdialog.h"
 class DLMainWindow : public AbstractMainWindow
 {
     Q_OBJECT
@@ -20,6 +21,7 @@ public slots:
     void addFile();
     void addAdvancedUrl();
     void addDirectUrl();
+    void showConfigDialog();
 
 private:
     DLTableView * mView;

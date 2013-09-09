@@ -143,6 +143,13 @@ void Download::requestAddList(const QStringList &urls, const QString &destinatio
 
 }
 
+void Download::requestConfig()
+{
+    QNetworkReply * reply = fbx()->get(fbx()->myCreateRequest(QString("downloads/config/")));
+    connect(reply,SIGNAL(finished()),this,SLOT(requestConfigFinished()));
+    connect(reply,SIGNAL(error(QNetworkReply::NetworkError)),fbx(),SLOT(errorReceived(QNetworkReply::NetworkError)));
+}
+
 
 //======================== SLOT FINISHED ==============================
 
@@ -243,4 +250,76 @@ void Download::requestAddFinished()
 
 void Download::requestAddListFinished()
 {
+}
+
+void Download::requestConfigFinished()
+{
+    QNetworkReply * reply  = qobject_cast<QNetworkReply*>(sender());
+    QJsonDocument doc = QJsonDocument::fromJson(reply->readAll());
+    if(fbx()->parseResult(doc))
+    {
+        QJsonValue item = doc.object().value("result");
+
+        qDebug()<<"CONFIGURATION "<<doc.toJson();
+
+        DownloadConfiguration cfg;
+
+        cfg.useWatchDir = item.toObject().value("use_watch_dir").toBool();
+        cfg.watchDir    = item.toObject().value("watch_dir").toString();
+        cfg.downloadDir = item.toObject().value("download_dir").toString();
+        cfg.maxDownloadingTasks = item.toObject().value("max_downloading_tasks").toVariant().toInt();
+
+
+        cfg.feed.maxItems = item.toObject().value("feed").toObject().value("max_items").toDouble();
+        cfg.feed.fetchInterval = item.toObject().value("feed").toObject().value("fetch_interval").toDouble();
+
+        cfg.news.user = item.toObject().value("news").toObject().value("user").toString();
+        cfg.news.eraseTmp = item.toObject().value("news").toObject().value("erase_tmp").toBool();
+        cfg.news.port = item.toObject().value("news").toObject().value("port").toDouble();
+        cfg.news.nthreads = item.toObject().value("news").toObject().value("nthreads").toDouble();
+        cfg.news.autoRepair = item.toObject().value("news").toObject().value("auto_repair").toBool();
+        cfg.news.ssl = item.toObject().value("news").toObject().value("ssl").toBool();
+        cfg.news.autoExtract = item.toObject().value("news").toObject().value("ssl").toBool();
+        cfg.news.lazyPar2 = item.toObject().value("news").toObject().value("lazy_par2").toBool();
+        cfg.news.server = item.toObject().value("news").toObject().value("server").toString();
+
+        cfg.bt.maxPeers  = item.toObject().value("bt").toObject().value("max_peers").toDouble();
+        cfg.bt.stopRatio = item.toObject().value("bt").toObject().value("stop_ratio").toDouble();
+        cfg.bt.cryptoSupport = DlBtConfig::typeFromString(item.toObject().value("bt").toObject().value("crypto_support").toString());
+        cfg.bt.announceTimeout = item.toObject().value("bt").toObject().value("stop_ratio").toDouble();
+        cfg.bt.enableDht = item.toObject().value("bt").toObject().value("enable_dht").toBool();
+        cfg.bt.enablePex = item.toObject().value("bt").toObject().value("enable_pex").toBool();
+
+
+        cfg.throttling.normal.rxRate = item.toObject().value("announce_timeout").toDouble();
+
+
+        cfg.throttling.normal.txRate = item.toObject().value("throttling")
+                .toObject().value("normal")
+                .toObject().value("tx_rate").toDouble();
+
+        cfg.throttling.slow.rxRate = item.toObject().value("throttling")
+                .toObject().value("slow")
+                .toObject().value("rx_rate").toDouble();
+
+        cfg.throttling.slow.rxRate = item.toObject().value("throttling")
+                .toObject().value("slow")
+                .toObject().value("tx_rate").toDouble();
+
+
+        cfg.throttling.mode = DlThrottlingConfig::modeFromString(item.toObject().value("throttling")
+                .toObject().value("mode").toString());
+
+
+        foreach(QJsonValue sc, item.toObject().value("throttling")
+                        .toObject().value("schedule").toArray())
+        {
+
+            cfg.throttling.schedule.append(DlThrottlingConfig::typeFromString(sc.toString()));
+
+        }
+
+        emit configReceived(cfg);
+
+    }
 }

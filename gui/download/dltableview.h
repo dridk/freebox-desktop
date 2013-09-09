@@ -20,11 +20,11 @@ public:
     virtual void dragMoveEvent(QDragMoveEvent * event);
     virtual void dragLeaveEvent(QDragLeaveEvent *event);
     virtual void dropEvent(QDropEvent *event);
-
     virtual void contextMenuEvent(QContextMenuEvent *);
 public slots:
     void showPropertyDialog();
     void setStatusFilter(const QString& status);
+    void setAutoUpdate(bool enable);
 
 
 

@@ -40,7 +40,7 @@ DLMainWindow::DLMainWindow(QWidget *parent) :
     toolBar->addWidget(newDLButton);
 
     //2nd action
-    toolBar->addAction(QIcon(":setting_tools.png"),"Paramètres");
+    toolBar->addAction(QIcon(":setting_tools.png"),"Paramètres",this,SLOT(showConfigDialog()));
 
     //3th action
     QToolButton * manageButton = new QToolButton;
@@ -98,6 +98,8 @@ void DLMainWindow::addFile()
 
 void DLMainWindow::addAdvancedUrl()
 {
+
+
 }
 
 void DLMainWindow::addDirectUrl()
@@ -105,4 +107,18 @@ void DLMainWindow::addDirectUrl()
    fbx()->download()->requestAdd(mDirectUrlEdit->text());
     mDirectUrlEdit->clear();
 
+}
+
+void DLMainWindow::showConfigDialog()
+{
+
+    mView->setAutoUpdate(false);
+
+    DLConfigDialog dialog(fbx());
+    connect(fbx()->download(),SIGNAL(configReceived(DownloadConfiguration)),
+            &dialog,SLOT(setConfiguration(DownloadConfiguration)));
+
+    fbx()->download()->requestConfig();
+    dialog.exec();
+    mView->setAutoUpdate(true);
 }
