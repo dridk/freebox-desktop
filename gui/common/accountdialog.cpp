@@ -6,10 +6,8 @@ AccountDialog::AccountDialog(QWidget *parent) :
 
     QHBoxLayout * mainLayout = new QHBoxLayout;
     mTableView = new QTableView;
-    mModel = new QStandardItemModel;
+    mModel = new AccountModel;
 
-    mModel->setColumnCount(2);
-    mModel->setHorizontalHeaderLabels(QStringList()<<"Nom"<<"Server");
     mTableView->setModel(mModel);
     mTableView->horizontalHeader()->setStretchLastSection(true);
     mTableView->setAlternatingRowColors(true);
@@ -47,60 +45,11 @@ AccountDialog::AccountDialog(QWidget *parent) :
     load();
 }
 
-void AccountDialog::load()
-{
-    mModel->clear();
-    QSettings settings;
-    settings.beginGroup("accounts");
-
-    foreach (QString key, settings.childGroups())
-    {
-
-        settings.beginGroup(key);
-        QFont font;
-        font.setBold(settings.value("default").toBool());
-        QStandardItem * nameItem = new QStandardItem;
-        nameItem->setText(key);
-        nameItem->setFont(font);
-
-        QStandardItem * hostItem = new QStandardItem;
-        hostItem->setText(settings.value("hostname").toString());
-        hostItem->setFont(font);
-
-        QList<QStandardItem*> items;
-        items.append(nameItem);
-        items.append(hostItem);
-        mModel->appendRow(items);
-
-
-        settings.endGroup();
-
-
-    }
-
-
-    settings.endGroup();
-
-
-
-}
 
 void AccountDialog::add()
 {
-    QSettings settings;
-    settings.beginGroup("accounts");
-    settings.remove("test");
-    settings.beginGroup("test");
+    mModel->addAccount("home2","mafreebox.free.fr");
 
-    settings.setValue("hostname", "mafreebox.free.fr");
-    settings.setValue("port", "80");
-    settings.setValue("icon", "icon");
-    settings.setValue("default", true);
-
-
-    settings.endGroup();
-    settings.endGroup();
-    load();
 }
 
 void AccountDialog::edit()
@@ -109,6 +58,7 @@ void AccountDialog::edit()
 
 void AccountDialog::remove()
 {
+    mModel->removeAccount(mTableView->currentIndex().row());
 }
 
 void AccountDialog::exportKey()
@@ -117,6 +67,8 @@ void AccountDialog::exportKey()
 
 void AccountDialog::setDefault()
 {
+    mModel->setDefaultAccount(mTableView->currentIndex().row());
 }
+
 
 

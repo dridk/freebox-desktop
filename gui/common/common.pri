@@ -11,7 +11,8 @@ SOURCES += \
     gui/common/aboutdialog.cpp \
     gui/common/tools.cpp \
     gui/common/launcherwidget.cpp \
-    gui/common/accountdialog.cpp
+    gui/common/accountdialog.cpp \
+    gui/common/accountmodel.cpp
 
 HEADERS += \
     gui/common/authorizemessagebox.h \
@@ -19,7 +20,8 @@ HEADERS += \
     gui/common/aboutdialog.h \
     gui/common/tools.h \
     gui/common/launcherwidget.h \
-    gui/common/accountdialog.h
+    gui/common/accountdialog.h \
+    gui/common/accountmodel.h
 
 
 

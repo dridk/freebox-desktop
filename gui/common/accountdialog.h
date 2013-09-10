@@ -3,6 +3,7 @@
 
 #include <QDialog>
 #include <QtWidgets>
+#include "accountmodel.h"
 class AccountDialog : public QDialog
 {
     Q_OBJECT
@@ -21,7 +22,7 @@ public slots:
 
 private:
     QTableView * mTableView;
-    QStandardItemModel * mModel;
+    AccountModel * mModel;
     QPushButton * mAddButton;
     QPushButton * mEditButton;
     QPushButton * mRemoveButton;
