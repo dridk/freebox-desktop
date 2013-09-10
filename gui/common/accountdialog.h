@@ -12,9 +12,16 @@ public:
 signals:
     
 public slots:
+    void load();
+    void add();
+    void edit();
+    void remove();
+    void exportKey();
+    void setDefault();
 
 private:
-    QTableWidget * mTableWidget;
+    QTableView * mTableView;
+    QStandardItemModel * mModel;
     QPushButton * mAddButton;
     QPushButton * mEditButton;
     QPushButton * mRemoveButton;
