@@ -11,6 +11,16 @@ public:
     explicit AccountDialog(QWidget *parent = 0);
     ~AccountDialog();
 
+    QString name() const;
+    QString hostName() const;
+    int port() const;
+    QIcon icon() const;
+    void setEditMode(bool enable);
+
+    void setData(const QString& name);
+
+protected slots:
+    void validate();
 
 private:
     QLineEdit * mNameEdit;

@@ -14,13 +14,23 @@ public:
     int columnCount(const QModelIndex &parent) const;
     QVariant data(const QModelIndex &index, int role) const;
 
+    QString nameOf(int row) const;
+
     bool addAccount(const QString& name,
                     const QString& hostname,
                     int port = 80,
                     const QIcon& icon = QIcon());
 
-    bool removeAccount(int row);
-    void setDefaultAccount(int row);
+    bool updateAccount(const QString& name,
+                    const QString& hostname,
+                    int port = 80,
+                    const QIcon& icon = QIcon());
+
+    bool removeAccount(const QString& name);
+
+    void setDefaultAccount(const QString& name);
+
+    void setApplicationToken(const QString& name, const QString& token);
 
 private:
 
