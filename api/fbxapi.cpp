@@ -10,7 +10,7 @@
 FbxAPI::FbxAPI(QObject *parent) :
     QNetworkAccessManager(parent)
 {
-    mHostName = "mafreebox.freebox.fr";
+    mHostName = "istdasklar.hd.free.fr";
     mPort = 80;
 
     mApiInfo.version = "1.0";

@@ -8,6 +8,7 @@ class DLFeedConfigWidget : public QWidget
     Q_OBJECT
 public:
     explicit DLFeedConfigWidget(QWidget *parent = 0);
+    ~DLFeedConfigWidget();
     void setFetchInterval(int interval);
     void setMaxItems(int max);
     

@@ -21,6 +21,12 @@ DLFeedConfigWidget::DLFeedConfigWidget(QWidget *parent) :
     setLayout(mainLayout);
 }
 
+DLFeedConfigWidget::~DLFeedConfigWidget()
+{
+    delete mFetchIntervalBox;
+    delete mMaxItemsBox;
+}
+
 void DLFeedConfigWidget::setFetchInterval(int interval)
 {
     mFetchIntervalBox->setValue(interval);

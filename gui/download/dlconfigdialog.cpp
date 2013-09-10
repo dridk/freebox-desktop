@@ -30,9 +30,9 @@ DLConfigDialog::~DLConfigDialog()
 {
     delete mTabWidget;
     delete mButtonBox;
-    delete mFeedWidget;
-    delete mBtWidget;
-    delete mGeneralWidget;
+//    delete mFeedWidget;
+//    delete mBtWidget;
+//    delete mGeneralWidget;
 }
 
 void DLConfigDialog::setConfiguration(const DownloadConfiguration &configuration)
