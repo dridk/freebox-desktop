@@ -12,6 +12,8 @@ AbstractMainWindow::AbstractMainWindow(QWidget *parent) :
     QMenu * fileMenu  = new QMenu("Fichier",this);
     QAction * authAction = fileMenu->addAction(QIcon(":email_authentication.png"),"Authoriser l'application");
     QAction * loginAction = fileMenu->addAction(QIcon(":server_connect.png"),"Connexion");
+    fileMenu->addAction(QIcon(""),"Comptes...", this,SLOT(showAccountDialog()));
+
     menuBar()->addMenu(fileMenu);
 
 
@@ -87,6 +89,13 @@ void AbstractMainWindow::showAboutDialog()
 {
     AboutDialog dialog;
     dialog.exec();
+}
+
+void AbstractMainWindow::showAccountDialog()
+{
+    AccountDialog dialog(this);
+    dialog.exec();
+
 }
 
 void AbstractMainWindow::openGithub()
