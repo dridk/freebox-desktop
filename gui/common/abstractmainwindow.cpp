@@ -93,7 +93,7 @@ void AbstractMainWindow::showAboutDialog()
 
 void AbstractMainWindow::showAccountDialog()
 {
-    AccountDialog dialog(this);
+    AccountListDialog dialog(this);
     dialog.exec();
 
 }

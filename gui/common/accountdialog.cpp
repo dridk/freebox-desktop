@@ -1,74 +1,36 @@
 #include "accountdialog.h"
-#include <QSettings>
+#include <QFormLayout>
+
 AccountDialog::AccountDialog(QWidget *parent) :
     QDialog(parent)
 {
-
-    QHBoxLayout * mainLayout = new QHBoxLayout;
-    mTableView = new QTableView;
-    mModel = new AccountModel;
-
-    mTableView->setModel(mModel);
-    mTableView->horizontalHeader()->setStretchLastSection(true);
-    mTableView->setAlternatingRowColors(true);
-    mTableView->setSelectionBehavior(QAbstractItemView::SelectRows);
-    mTableView->verticalHeader()->hide();
+    QFormLayout * layout = new QFormLayout;
+    mNameEdit = new QLineEdit;
+    mHostNameEdit = new QLineEdit;
+    mIconButton  = new IconButton;
+    mPortSpinBox = new QSpinBox;
+    mButtonBox = new QDialogButtonBox(QDialogButtonBox::Save|
+                                      QDialogButtonBox::Cancel);
 
 
-    mAddButton = new QPushButton("Nouveau");
-    mEditButton = new QPushButton("Editer");
-    mRemoveButton = new QPushButton("Supprimer");
-    mSetDefaultButton = new QPushButton("Par defaut");
-    mExportButton = new QPushButton("Exporter la clef");
-    mCancelButton = new QPushButton("Annuler");
-    QVBoxLayout * buttonLayout = new QVBoxLayout;
-    buttonLayout->addWidget(mAddButton);
-    buttonLayout->addWidget(mEditButton);
-    buttonLayout->addWidget(mRemoveButton);
-    buttonLayout->addWidget(mSetDefaultButton);
-    buttonLayout->addWidget(mExportButton);
-    buttonLayout->addStretch();
-    buttonLayout->addWidget(mCancelButton);
+    layout->addRow("Icône :", mIconButton);
+    layout->addRow("Nom :", mNameEdit);
+    layout->addRow("Serveur :", mHostNameEdit);
+    layout->addRow("Port :", mPortSpinBox);
 
-    mainLayout->addWidget(mTableView);
-    mainLayout->addLayout(buttonLayout);
+    layout->setAlignment(Qt::AlignCenter|Qt::AlignRight);
 
+    QVBoxLayout * mainLayout = new QVBoxLayout;
+    mainLayout->addLayout(layout);
+    mainLayout->addWidget(mButtonBox);
     setLayout(mainLayout);
 
-
-    connect(mAddButton,SIGNAL(clicked()),this,SLOT(add()));
-    connect(mEditButton,SIGNAL(clicked()),this,SLOT(edit()));
-    connect(mRemoveButton,SIGNAL(clicked()),this,SLOT(remove()));
-    connect(mExportButton,SIGNAL(clicked()),this,SLOT(exportKey()));
-    connect(mSetDefaultButton,SIGNAL(clicked()),this,SLOT(setDefault()));
-
-    load();
 }
 
-
-void AccountDialog::add()
+AccountDialog::~AccountDialog()
 {
-    mModel->addAccount("home2","mafreebox.free.fr");
+    delete mNameEdit;
+    delete mHostNameEdit;
+    delete mPortSpinBox;
 
 }
-
-void AccountDialog::edit()
-{
-}
-
-void AccountDialog::remove()
-{
-    mModel->removeAccount(mTableView->currentIndex().row());
-}
-
-void AccountDialog::exportKey()
-{
-}
-
-void AccountDialog::setDefault()
-{
-    mModel->setDefaultAccount(mTableView->currentIndex().row());
-}
-
-
-

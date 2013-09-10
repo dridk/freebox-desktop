@@ -3,32 +3,25 @@
 
 #include <QDialog>
 #include <QtWidgets>
-#include "accountmodel.h"
+#include "iconbutton.h"
 class AccountDialog : public QDialog
 {
     Q_OBJECT
 public:
     explicit AccountDialog(QWidget *parent = 0);
-    
-signals:
-    
-public slots:
-    void load();
-    void add();
-    void edit();
-    void remove();
-    void exportKey();
-    void setDefault();
+    ~AccountDialog();
+
 
 private:
-    QTableView * mTableView;
-    AccountModel * mModel;
-    QPushButton * mAddButton;
-    QPushButton * mEditButton;
-    QPushButton * mRemoveButton;
-    QPushButton * mSetDefaultButton;
-    QPushButton * mExportButton;
-    QPushButton * mCancelButton;
+    QLineEdit * mNameEdit;
+    QLineEdit * mHostNameEdit;
+    QSpinBox  * mPortSpinBox;
+    QDialogButtonBox * mButtonBox;
+    IconButton * mIconButton;
+
+
+
+
     
 };
 
