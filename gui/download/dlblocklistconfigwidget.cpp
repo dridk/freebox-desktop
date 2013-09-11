@@ -32,7 +32,6 @@ DLBlocklistConfigWidget::~DLBlocklistConfigWidget()
 {
     delete mNoteLabel;
     delete mTextEdit;
-    delete mNoteLabel;
 }
 
 void DLBlocklistConfigWidget::setConfig(const DlBlockListConfig &cfg)
