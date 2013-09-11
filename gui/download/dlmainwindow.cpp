@@ -143,5 +143,9 @@ void DLMainWindow::showConfigDialog()
 void DLMainWindow::setStats(const DownloadStats &stats)
 {
     qDebug()<<"stats";
-//    mStatusTimer->start(1000);
+
+
+    statusBar()->showMessage(QString::number(stats.rxRate));
+
+    mStatusTimer->start(1000);
 }
