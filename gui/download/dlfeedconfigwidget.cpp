@@ -27,12 +27,9 @@ DLFeedConfigWidget::~DLFeedConfigWidget()
     delete mMaxItemsBox;
 }
 
-void DLFeedConfigWidget::setFetchInterval(int interval)
-{
-    mFetchIntervalBox->setValue(interval);
-}
 
-void DLFeedConfigWidget::setMaxItems(int max)
+void DLFeedConfigWidget::setConfig(const DlFeedConfig &cfg)
 {
-    mMaxItemsBox->setValue(max);
+    mFetchIntervalBox->setValue(cfg.fetchInterval);
+    mMaxItemsBox->setValue(cfg.maxItems);
 }

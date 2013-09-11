@@ -302,7 +302,7 @@ void Download::requestConfigFinished()
                 .toObject().value("slow")
                 .toObject().value("rx_rate").toDouble();
 
-        cfg.throttling.slow.rxRate = item.toObject().value("throttling")
+        cfg.throttling.slow.txRate = item.toObject().value("throttling")
                 .toObject().value("slow")
                 .toObject().value("tx_rate").toDouble();
 

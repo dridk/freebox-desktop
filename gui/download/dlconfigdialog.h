@@ -7,6 +7,8 @@
 #include "dlfeedconfigwidget.h"
 #include "dlbtconfigwidget.h"
 #include "dlgeneralconfigwidget.h"
+#include "dlblocklistconfigwidget.h"
+#include "dlthrottlingconfigwidget.h"
 class DLConfigDialog : public QDialog
 {
     Q_OBJECT
@@ -28,6 +30,8 @@ private:
     DLFeedConfigWidget * mFeedWidget;
     DLBtConfigWidget * mBtWidget;
     DLGeneralConfigWidget * mGeneralWidget;
+    DLBlocklistConfigWidget * mBlocklistWidget;
+    DLThrottlingConfigWidget * mThrottlingWidget;
     FbxAPI * mFbx;
 
     

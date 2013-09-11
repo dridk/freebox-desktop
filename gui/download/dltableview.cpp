@@ -157,7 +157,8 @@ void DLTableView::setStatusFilter(const QString &status)
 
 void DLTableView::setAutoUpdate(bool enable)
 {
-    if (enable)
+
+    if (enable && mFbx->logged())
         mModel->start();
     else
         mModel->stop();

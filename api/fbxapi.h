@@ -32,6 +32,7 @@ public:
     explicit FbxAPI(QObject *parent = 0);
     ~FbxAPI();
 
+    bool logged(){return mLogged;}
     //set
     void setHostName(const QString& host, int port = 80) ;
     void setApplicationToken(const QString& token);
@@ -103,7 +104,7 @@ private:
     QString mErrorString;
     QString mErrorCode;
     QStringList mPermissions;
-
+    bool mLogged;
     int mPort;
     int mRequestLoginAttempt;
 

@@ -10,14 +10,14 @@
 FbxAPI::FbxAPI(QObject *parent) :
     QNetworkAccessManager(parent)
 {
-    mHostName = "istdasklar.hd.free.fr";
+    mHostName = "mafreebox.free.fr";
     mPort = 80;
 
     mApiInfo.version = "1.0";
     mApiInfo.baseUrl = "/api/";
     mRequestLoginAttempt = 0;
     mApiInfo.deviceName = QHostInfo::localHostName();
-
+    mLogged = false;
 
     // == alloc module
     mFileSystem = new FileSystem(this);
@@ -286,7 +286,7 @@ void FbxAPI::requestSessionFinished()
         mRequestLoginAttempt = 0;
         mSessionToken = doc.object().value("result").toObject().value("session_token").toString();
         mPermissions = doc.object().value("result").toObject().value("permissions").toObject().keys();
-
+        mLogged = true;
         emit sessionReceived();
         emit loginSuccess();
     }

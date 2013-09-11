@@ -17,7 +17,10 @@ HEADERS += \
     gui/download/dlconfigdialog.h \
     gui/download/dlfeedconfigwidget.h \
     gui/download/dlbtconfigwidget.h \
-    gui/download/dlgeneralconfigwidget.h
+    gui/download/dlgeneralconfigwidget.h \
+    gui/download/dlblocklistconfigwidget.h \
+    gui/download/dlscheduletablewidget.h \
+    gui/download/dlthrottlingconfigwidget.h
 
 
 SOURCES += \
@@ -32,7 +35,10 @@ SOURCES += \
     gui/download/dlconfigdialog.cpp \
     gui/download/dlfeedconfigwidget.cpp \
     gui/download/dlbtconfigwidget.cpp \
-    gui/download/dlgeneralconfigwidget.cpp
+    gui/download/dlgeneralconfigwidget.cpp \
+    gui/download/dlblocklistconfigwidget.cpp \
+    gui/download/dlscheduletablewidget.cpp \
+    gui/download/dlthrottlingconfigwidget.cpp
 
 
 

@@ -11,6 +11,8 @@ DLConfigDialog::DLConfigDialog(FbxAPI *fbx, QWidget *parent) :
     mFeedWidget = new DLFeedConfigWidget;
     mBtWidget   = new DLBtConfigWidget;
     mGeneralWidget= new DLGeneralConfigWidget(mFbx);
+    mBlocklistWidget = new DLBlocklistConfigWidget;
+    mThrottlingWidget = new DLThrottlingConfigWidget;
 
     QVBoxLayout * mainLayout = new QVBoxLayout;
     mainLayout->addWidget(mTabWidget);
@@ -18,9 +20,11 @@ DLConfigDialog::DLConfigDialog(FbxAPI *fbx, QWidget *parent) :
 
     setLayout(mainLayout);
 
+    addTab(mThrottlingWidget);
     addTab(mGeneralWidget);
     addTab(mBtWidget);
     addTab(mFeedWidget);
+    addTab(mBlocklistWidget);
 
 
 
@@ -30,20 +34,19 @@ DLConfigDialog::~DLConfigDialog()
 {
     delete mTabWidget;
     delete mButtonBox;
-//    delete mFeedWidget;
-//    delete mBtWidget;
-//    delete mGeneralWidget;
+    //    delete mFeedWidget;
+    //    delete mBtWidget;
+    //    delete mGeneralWidget;
 }
 
 void DLConfigDialog::setConfiguration(const DownloadConfiguration &configuration)
 {
 
-    mFeedWidget->setFetchInterval(configuration.feed.fetchInterval);
-    mFeedWidget->setMaxItems(configuration.feed.maxItems);
-
+    mFeedWidget->setConfig(configuration.feed);
     mBtWidget->setConfig(configuration.bt);
     mGeneralWidget->setConfig(configuration);
-
+    mBlocklistWidget->setConfig(configuration.blocklist);
+    mThrottlingWidget->setConfig(configuration.throttling);
 
 
 

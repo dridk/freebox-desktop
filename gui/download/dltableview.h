@@ -50,6 +50,7 @@ private:
     QSortFilterProxyModel * mFilterModel;
     FbxAPI * mFbx;
     QStringList mDropUrls;
+
 };
 
 #endif // DLTABLEVIEW_H

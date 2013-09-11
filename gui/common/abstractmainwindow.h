@@ -6,7 +6,7 @@
 #include "fbxapi.h"
 #include "authorizemessagebox.h"
 #include "aboutdialog.h"
-#include "accountlistdialog.h"
+//#include "accountlistdialog.h"
 class AbstractMainWindow : public QMainWindow
 {
     Q_OBJECT
