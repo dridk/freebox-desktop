@@ -279,7 +279,7 @@ void Download::requestConfigFinished()
         cfg.news.nthreads = item.toObject().value("news").toObject().value("nthreads").toDouble();
         cfg.news.autoRepair = item.toObject().value("news").toObject().value("auto_repair").toBool();
         cfg.news.ssl = item.toObject().value("news").toObject().value("ssl").toBool();
-        cfg.news.autoExtract = item.toObject().value("news").toObject().value("ssl").toBool();
+        cfg.news.autoExtract = item.toObject().value("news").toObject().value("auto_extract").toBool();
         cfg.news.lazyPar2 = item.toObject().value("news").toObject().value("lazy_par2").toBool();
         cfg.news.server = item.toObject().value("news").toObject().value("server").toString();
 

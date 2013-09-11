@@ -13,6 +13,7 @@ DLConfigDialog::DLConfigDialog(FbxAPI *fbx, QWidget *parent) :
     mGeneralWidget= new DLGeneralConfigWidget(mFbx);
     mBlocklistWidget = new DLBlocklistConfigWidget;
     mThrottlingWidget = new DLThrottlingConfigWidget;
+    mNewGroupWidget = new DLNewsGroupConfigWidget;
 
     QVBoxLayout * mainLayout = new QVBoxLayout;
     mainLayout->addWidget(mTabWidget);
@@ -22,10 +23,13 @@ DLConfigDialog::DLConfigDialog(FbxAPI *fbx, QWidget *parent) :
 
     addTab(mThrottlingWidget);
     addTab(mGeneralWidget);
+    addTab(mNewGroupWidget);
     addTab(mBtWidget);
     addTab(mFeedWidget);
     addTab(mBlocklistWidget);
 
+
+    connect(mButtonBox,SIGNAL(rejected()),this,SLOT(reject()));
 
 
 }
@@ -47,6 +51,7 @@ void DLConfigDialog::setConfiguration(const DownloadConfiguration &configuration
     mGeneralWidget->setConfig(configuration);
     mBlocklistWidget->setConfig(configuration.blocklist);
     mThrottlingWidget->setConfig(configuration.throttling);
+    mNewGroupWidget->setConfig(configuration.news);
 
 
 

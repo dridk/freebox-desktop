@@ -9,6 +9,7 @@
 #include "dlgeneralconfigwidget.h"
 #include "dlblocklistconfigwidget.h"
 #include "dlthrottlingconfigwidget.h"
+#include "dlnewsgroupconfigwidget.h"
 class DLConfigDialog : public QDialog
 {
     Q_OBJECT
@@ -32,6 +33,7 @@ private:
     DLGeneralConfigWidget * mGeneralWidget;
     DLBlocklistConfigWidget * mBlocklistWidget;
     DLThrottlingConfigWidget * mThrottlingWidget;
+    DLNewsGroupConfigWidget * mNewGroupWidget;
     FbxAPI * mFbx;
 
     
