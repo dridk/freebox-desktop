@@ -14,7 +14,8 @@ SOURCES += \
 #    gui/common/accountlistdialog.cpp \
     gui/common/accountmodel.cpp \
     gui/common/accountdialog.cpp \
-    gui/common/iconbutton.cpp
+    gui/common/iconbutton.cpp \
+    gui/common/qcustomplot.cpp
 
 HEADERS += \
     gui/common/authorizemessagebox.h \
@@ -25,7 +26,8 @@ HEADERS += \
 #    gui/common/accountlistdialog.h \
     gui/common/accountmodel.h \
     gui/common/accountdialog.h \
-    gui/common/iconbutton.h
+    gui/common/iconbutton.h \
+    gui/common/qcustomplot.h
 
 
 

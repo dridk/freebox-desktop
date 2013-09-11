@@ -8,6 +8,8 @@
 #include "dldelegate.h"
 #include "dladddialog.h"
 #include "dlconfigdialog.h"
+#include "dlplotwidget.h"
+#include <QTimer>s
 class DLMainWindow : public AbstractMainWindow
 {
     Q_OBJECT
@@ -23,11 +25,15 @@ public slots:
     void addDirectUrl();
     void showConfigDialog();
 
+protected slots:
+    void setStats(const DownloadStats& stats);
 private:
     DLTableView * mView;
     DLCategoryWidget * mCategoryWidget;
     DLDetailWidget * mDetailWidget;
     QLineEdit * mDirectUrlEdit;
+    DLPlotWidget * mPlotWidget;
+    QTimer * mStatusTimer;
 
     
 };

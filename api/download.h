@@ -9,6 +9,7 @@
 class FbxAPI;
 class Download;
 class DownloadTask;
+class DlThrottlingConfig;
 class DownloadStats;
 class DlRate;
 class DlNewsConfig;
@@ -40,26 +41,6 @@ public:
     QString archivePassword;
 };
 
-class DownloadStats{
-public:
-    int nbTasks;
-    int nbTasksStopped;
-    int nbTasksChecking;
-    int nbTasksQueued;
-    int nbTasksExtracting;
-    int nbTasksDone;
-    int nbTasksRepairing;
-    int nbTasksSeeding;
-    int nbTasksDownloading;
-    int nbTasksError;
-    int nbTasksStopping;
-    int nbTasksActive;
-    int nbRss;
-    int nbRssItemsUnread;
-    int rxRate;
-    int txRate;
-    // pas encore fait le throtting...
-};
 class DlRate {
 public:
     int txRate;
@@ -160,6 +141,29 @@ public:
     DlBlockListConfig blocklist;
 };
 
+class DownloadStats{
+public:
+    int nbTasks;
+    int nbTasksStopped;
+    int nbTasksChecking;
+    int nbTasksQueued;
+    int nbTasksExtracting;
+    int nbTasksDone;
+    int nbTasksRepairing;
+    int nbTasksSeeding;
+    int nbTasksDownloading;
+    int nbTasksError;
+    int nbTasksStopping;
+    int nbTasksActive;
+    int nbRss;
+    int nbRssItemsUnread;
+    int rxRate;
+    int txRate;
+    DlThrottlingConfig::Mode throttlingMode;
+    bool throttlingIsScheduled;
+    DlRate throttlingRate;
+
+};
 
 class Download : public QObject
 {

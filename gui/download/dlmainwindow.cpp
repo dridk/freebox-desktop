@@ -8,12 +8,19 @@ DLMainWindow::DLMainWindow(QWidget *parent) :
     mCategoryWidget = new DLCategoryWidget;
     mDetailWidget = new DLDetailWidget;
     mDirectUrlEdit =  new QLineEdit;
-
-
+    mPlotWidget  = new DLPlotWidget;
+    mStatusTimer = new QTimer;
 
     QDockWidget * mLeftDock = new QDockWidget;
     mLeftDock->setWidget(mCategoryWidget);
     addDockWidget(Qt::LeftDockWidgetArea, mLeftDock);
+
+    QDockWidget * plotDock = new QDockWidget;
+    plotDock->setWidget(mPlotWidget);
+    addDockWidget(Qt::LeftDockWidgetArea, plotDock);
+
+
+
 
 
     QSplitter * splitter = new QSplitter(Qt::Vertical);
@@ -74,6 +81,16 @@ DLMainWindow::DLMainWindow(QWidget *parent) :
     addToolBar(toolBar);
     addToolBar(addBar);
 
+    //======== Define Timer to update Status ( plot and statusBar)
+        mStatusTimer->setInterval(1000);
+        mStatusTimer->setSingleShot(true);
+
+    connect(fbx()->download(),SIGNAL(statsReceived(DownloadStats)),
+            this,SLOT(setStats(DownloadStats)));
+
+    connect(fbx(),SIGNAL(loginSuccess()),mStatusTimer,SLOT(start()));
+    connect(mStatusTimer,SIGNAL(timeout()),fbx()->download(),SLOT(requestStats()));
+
     connect(mCategoryWidget,SIGNAL(statusClicked(QString)), mView, SLOT(setStatusFilter(QString)));
     connect(mDirectUrlEdit,SIGNAL(returnPressed()),this,SLOT(addDirectUrl()));
 
@@ -104,7 +121,7 @@ void DLMainWindow::addAdvancedUrl()
 
 void DLMainWindow::addDirectUrl()
 {
-   fbx()->download()->requestAdd(mDirectUrlEdit->text());
+    fbx()->download()->requestAdd(mDirectUrlEdit->text());
     mDirectUrlEdit->clear();
 
 }
@@ -121,4 +138,10 @@ void DLMainWindow::showConfigDialog()
     fbx()->download()->requestConfig();
     dialog.exec();
     mView->setAutoUpdate(true);
+}
+
+void DLMainWindow::setStats(const DownloadStats &stats)
+{
+    qDebug()<<"stats";
+//    mStatusTimer->start(1000);
 }
