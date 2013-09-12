@@ -20,14 +20,21 @@ DLCategoryWidget::DLCategoryWidget(QWidget *parent) :
     torrentRootItem->setFlags(Qt::ItemIsEnabled);
     torrentRootItem->setFont(0,font);
 
+    QTreeWidgetItem * rssRootItem = new QTreeWidgetItem;
+    rssRootItem->setText(0,"Flux RSS");
+    rssRootItem->setFlags(Qt::ItemIsEnabled);
+    rssRootItem->setFont(0,font);
+
     QTreeWidgetItem * allItem = new QTreeWidgetItem;
     QTreeWidgetItem * downloadingItem = new QTreeWidgetItem;
     QTreeWidgetItem * seedingItem = new QTreeWidgetItem;
     QTreeWidgetItem * doneItem = new QTreeWidgetItem;
+    QTreeWidgetItem * rssItem = new QTreeWidgetItem;
 
     allItem->setText(0,"Tous");
     allItem->setIcon(0,QIcon(":drive-harddisk.png"));
     allItem->setData(0,Qt::UserRole,"");
+
     downloadingItem->setText(0,"En Cours");
     downloadingItem->setIcon(0, QIcon(":downloading"));
     downloadingItem->setData(0,Qt::UserRole,"downloading");
@@ -40,15 +47,23 @@ DLCategoryWidget::DLCategoryWidget(QWidget *parent) :
     doneItem->setIcon(0, QIcon(":done"));
     doneItem->setData(0,Qt::UserRole,"done");
 
+    rssItem->setText(0,"RSS");
+    rssItem->setIcon(0, QIcon(":rss"));
+    rssItem->setData(0,Qt::UserRole,"rss");
+
     mCateogryView->addTopLevelItem(torrentRootItem);
+    mCateogryView->addTopLevelItem(rssRootItem);
 
     torrentRootItem->addChild(allItem);
     torrentRootItem->addChild(downloadingItem);
     torrentRootItem->addChild(seedingItem);
     torrentRootItem->addChild(doneItem);
+    rssRootItem->addChild(rssItem);
+
     mCateogryView->expandAll();
     mCateogryView->setRootIsDecorated(false);
     torrentRootItem->setSizeHint(0, QSize(0,30));
+    rssRootItem->setSizeHint(0, QSize(0,30));
 
    mCateogryView->header()->hide();
 

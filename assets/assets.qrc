@@ -43,7 +43,7 @@
         <file>rss_add.png</file>
         <file>rss_go.png</file>
         <file>rss_valid.png</file>
-        <file>rss.png</file>
+        <file alias="rss">rss.png</file>
         <file>server_connect.png</file>
         <file>setting_tools.png</file>
         <file>share.png</file>
