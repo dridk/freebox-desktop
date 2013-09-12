@@ -165,6 +165,50 @@ public:
 
 };
 
+class DownloadFeed {
+public:
+    enum Status {
+        ReadyStatus,
+        FetchingStatus,
+        ErrorStatus
+    };
+
+    int id;
+    Status status;
+    QString url;
+    QString title;
+    QString desc;
+    QString imageUrl;
+    int nbRead;
+    int nbUnread;
+    bool autoDownload;
+    QDateTime fetchTs;
+    QDateTime pubTs;
+    QString error;
+
+};
+
+
+class DownloadFeedItem {
+public:
+    int id;
+    int feedId;
+    QString title;
+    QString desc;
+    QString author;
+    QString link;
+    bool isRead;
+    bool isDownloaded;
+    QDateTime fetchTs;
+    QDateTime pubTs;
+    QString enclosureUrl;
+    QString enclosureType;
+    int enclosureLength;
+
+};
+
+
+
 class Download : public QObject
 {
     Q_OBJECT
@@ -188,9 +232,18 @@ public slots:
                         const QString& username = QString(),
                         const QString& password = QString(),
                         const QString archivePassword = QString());
-
     void requestConfig();
-
+    void requestFeedList();
+    void requestFeed(int id);
+    void requestAddFeed(const QString& url);
+    void requestDeleteFeed(int id);
+    void requestUpdateFeed(int id, bool autoDownload);
+    void requestRefreshFeed(int id);
+    void requestRefreshAllFeed();
+    void requestFeedItemList(int feedId);
+    void requestUpdateFeedItem(int id, int feedId, bool isRead);
+    void requestDownloadFeedItem(int id, int feedId);
+    void requestMarkAllFeedRead(int feedId);
 
 signals:
     void listReceived(const QList<DownloadTask>& list);
@@ -202,7 +255,17 @@ signals:
     void statsReceived(const DownloadStats& stat);
     void addFinished();
     void configReceived(const DownloadConfiguration& configuration);
-
+    void feedListReceived(const QList<DownloadFeed>& list);
+    void feedReceived(const DownloadFeed& feed);
+    void addFeedFinished();
+    void deleteFeedFinished();
+    void updateFeedFinished();
+    void refreshFeedFinished();
+    void refreshAllFeedFinished();
+    void feedItemListReceived(const QList<DownloadFeedItem>& list);
+    void updateFeedItemFinished();
+    void downloadFeedItemFinished();
+    void markAllFeedReadFinished();
 
 
 protected slots:
@@ -216,6 +279,17 @@ protected slots:
     void requestAddFinished();
     void requestAddListFinished();
     void requestConfigFinished();
+    void requestFeedListFinished();
+    void requestFeedFinished();
+    void requestAddFeedFinished();
+    void requestDeleteFeedFinished();
+    void requestUpdateFeedFinished();
+    void requestRefreshFeedFinished();
+    void requestRefreshAllFeedFinished();
+    void requestFeedItemListFinished();
+    void requestUpdateFeedItemFinished();
+    void requestDownloadFeedItemFinished();
+    void requestMarkAllFeedReadFinished();
 
 
 

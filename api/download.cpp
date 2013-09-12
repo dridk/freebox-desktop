@@ -150,6 +150,127 @@ void Download::requestConfig()
     connect(reply,SIGNAL(error(QNetworkReply::NetworkError)),fbx(),SLOT(errorReceived(QNetworkReply::NetworkError)));
 }
 
+void Download::requestFeedList()
+{
+    QNetworkReply * reply = fbx()->get(fbx()->myCreateRequest(QString("downloads/feeds/")));
+    connect(reply,SIGNAL(finished()),this,SLOT(requestFeedListFinished()));
+    connect(reply,SIGNAL(error(QNetworkReply::NetworkError)),fbx(),SLOT(errorReceived(QNetworkReply::NetworkError)));
+}
+
+void Download::requestFeed(int id)
+{
+    QNetworkReply * reply = fbx()->get(fbx()->myCreateRequest(QString("downloads/feeds/%1").arg(id)));
+    connect(reply,SIGNAL(finished()),this,SLOT(requestFeedFinished()));
+    connect(reply,SIGNAL(error(QNetworkReply::NetworkError)),fbx(),SLOT(errorReceived(QNetworkReply::NetworkError)));
+}
+
+void Download::requestAddFeed(const QString &url)
+{
+    QJsonObject json;
+    json.insert("url", url);
+    QJsonDocument doc(json);
+
+    QNetworkRequest request =fbx()->myCreateRequest(QString("downloads/feeds/"));
+
+    QNetworkReply * reply = fbx()->post(request, doc.toJson());
+    connect(reply,SIGNAL(finished()),this,SLOT(requestAddFinished()));
+    connect(reply,SIGNAL(error(QNetworkReply::NetworkError)),fbx(),SLOT(errorReceived(QNetworkReply::NetworkError)));
+}
+
+void Download::requestDeleteFeed(int id)
+{
+    QNetworkRequest request =fbx()->myCreateRequest(QString("downloads/feeds/%1").arg(id));
+
+    QNetworkReply * reply = fbx()->deleteResource(request);
+    connect(reply,SIGNAL(finished()),this,SLOT(requestDeleteFeedFinished()));
+    connect(reply,SIGNAL(error(QNetworkReply::NetworkError)),fbx(),SLOT(errorReceived(QNetworkReply::NetworkError)));
+
+}
+
+void Download::requestUpdateFeed(int id, bool autoDownload)
+{
+
+    QJsonObject json;
+    json.insert("auto_download", autoDownload);
+    QJsonDocument doc(json);
+
+    QNetworkRequest request =fbx()->myCreateRequest(QString("downloads/feeds/%1").arg(id));
+
+    QNetworkReply * reply = fbx()->put(request,doc.toJson());
+    connect(reply,SIGNAL(finished()),this,SLOT(requestUpdateFeedItemFinished()));
+    connect(reply,SIGNAL(error(QNetworkReply::NetworkError)),fbx(),SLOT(errorReceived(QNetworkReply::NetworkError)));
+
+}
+
+void Download::requestRefreshFeed(int id)
+{
+    QNetworkRequest request =fbx()->myCreateRequest(QString("downloads/feeds/%1/fetch").arg(id));
+
+    QNetworkReply * reply = fbx()->post(request, QByteArray());
+    connect(reply,SIGNAL(finished()),this,SLOT(requestRefreshFeedFinished()));
+    connect(reply,SIGNAL(error(QNetworkReply::NetworkError)),fbx(),SLOT(errorReceived(QNetworkReply::NetworkError)));
+
+}
+
+void Download::requestRefreshAllFeed()
+{
+    QNetworkRequest request =fbx()->myCreateRequest(QString("downloads/feeds/fetch"));
+
+    QNetworkReply * reply = fbx()->post(request, QByteArray());
+    connect(reply,SIGNAL(finished()),this,SLOT(requestRefreshAllFeedFinished()));
+    connect(reply,SIGNAL(error(QNetworkReply::NetworkError)),fbx(),SLOT(errorReceived(QNetworkReply::NetworkError)));
+}
+
+void Download::requestFeedItemList(int feedId)
+{
+    QNetworkRequest request =fbx()->myCreateRequest(QString("downloads/feeds/%1/items/").arg(feedId));
+
+    QNetworkReply * reply = fbx()->get(request);
+    connect(reply,SIGNAL(finished()),this,SLOT(requestFeedItemListFinished()));
+    connect(reply,SIGNAL(error(QNetworkReply::NetworkError)),fbx(),SLOT(errorReceived(QNetworkReply::NetworkError)));
+
+}
+
+void Download::requestUpdateFeedItem(int id, int feedId, bool isRead)
+{
+    QJsonObject json;
+    json.insert("is_read", isRead);
+    QJsonDocument doc(json);
+
+    QNetworkRequest request =
+            fbx()->myCreateRequest(QString("downloads/feeds/%1/items/%2").arg(feedId).arg(id));
+
+    QNetworkReply * reply = fbx()->put(request,doc.toJson());
+    connect(reply,SIGNAL(finished()),this,SLOT(requestUpdateFeedItemFinished()));
+    connect(reply,SIGNAL(error(QNetworkReply::NetworkError)),fbx(),SLOT(errorReceived(QNetworkReply::NetworkError)));
+
+}
+
+void Download::requestDownloadFeedItem(int id, int feedId)
+{
+    QNetworkRequest request =
+            fbx()->myCreateRequest(QString("downloads/feeds/%1/items/%2").arg(feedId).arg(id));
+
+    QNetworkReply * reply = fbx()->post(request,QByteArray());
+    connect(reply,SIGNAL(finished()),this,SLOT(requestDownloadFeedItemFinished()));
+    connect(reply,SIGNAL(error(QNetworkReply::NetworkError)),fbx(),SLOT(errorReceived(QNetworkReply::NetworkError)));
+
+
+
+}
+
+void Download::requestMarkAllFeedRead(int feedId)
+{
+
+    QNetworkRequest request =
+            fbx()->myCreateRequest(QString("downloads/feeds/%1/items/mark_all_as_read").arg(feedId));
+
+    QNetworkReply * reply = fbx()->post(request,QByteArray());
+    connect(reply,SIGNAL(finished()),this,SLOT(requestMarkAllFeedReadFinished()));
+    connect(reply,SIGNAL(error(QNetworkReply::NetworkError)),fbx(),SLOT(errorReceived(QNetworkReply::NetworkError)));
+
+}
+
 
 //======================== SLOT FINISHED ==============================
 
@@ -361,4 +482,48 @@ void Download::requestConfigFinished()
         emit configReceived(cfg);
 
     }
+}
+
+void Download::requestFeedListFinished()
+{
+}
+
+void Download::requestFeedFinished()
+{
+}
+
+void Download::requestAddFeedFinished()
+{
+}
+
+void Download::requestDeleteFeedFinished()
+{
+}
+
+void Download::requestUpdateFeedFinished()
+{
+}
+
+void Download::requestRefreshFeedFinished()
+{
+}
+
+void Download::requestRefreshAllFeedFinished()
+{
+}
+
+void Download::requestFeedItemListFinished()
+{
+}
+
+void Download::requestUpdateFeedItemFinished()
+{
+}
+
+void Download::requestDownloadFeedItemFinished()
+{
+}
+
+void Download::requestMarkAllFeedReadFinished()
+{
 }
