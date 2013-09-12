@@ -235,6 +235,45 @@ void Download::requestLogFinished()
 
 void Download::requestStatsFinished()
 {
+    QNetworkReply * reply  = qobject_cast<QNetworkReply*>(sender());
+    QJsonDocument doc = QJsonDocument::fromJson(reply->readAll());
+    if(fbx()->parseResult(doc))
+    {
+        DownloadStats stats;
+        QJsonValue item = doc.object().value("result");
+
+        qDebug()<<"CONFIGURATION "<<doc.toJson();
+
+        DownloadStats cfg;
+
+        cfg.throttlingRate.rxRate = item.toObject().value("rx_rate").toDouble();
+        cfg.throttlingRate.txRate = item.toObject().value("tx_rate").toDouble();
+        cfg.nbTasksStopped = item.toObject().value("nb_tasks_stopped").toDouble();
+        cfg.nbTasksChecking = item.toObject().value("nb_tasks_checking").toDouble();
+        cfg.nbTasksQueued = item.toObject().value("nb_tasks_queued").toDouble();
+        cfg.nbTasksExtracting = item.toObject().value("nb_tasks_extracting").toDouble();
+        cfg.nbTasksDone = item.toObject().value("nb_tasks_done").toDouble();
+        cfg.nbTasksRepairing = item.toObject().value("nb_tasks_repairing").toDouble();
+        cfg.throttlingMode = DlThrottlingConfig::modeFromString(item.toObject().value("throttling_is_scheduled").toString());
+
+        cfg.nbTasksActive = item.toObject().value("nb_tasks_active").toDouble();
+        cfg.nbTasksDownloading = item.toObject().value("nb_tasks_downloading").toDouble();
+        cfg.nbTasks= item.toObject().value("nb_tasks").toDouble();
+        cfg.nbTasksError = item.toObject().value("nb_tasks_error").toDouble();
+        cfg.nbTasksStopping = item.toObject().value("nb_tasks_stopping").toDouble();
+        cfg.nbRssItemsUnread = item.toObject().value("nb_rss_items_unread").toDouble();
+        cfg.rxRate = item.toObject().value("rx_rate").toDouble();
+        cfg.txRate= item.toObject().value("tx_rate").toDouble();
+        cfg.nbRss= item.toObject().value("nb_rss").toDouble();
+
+
+
+
+        emit statsReceived(stats);
+
+    }
+
+
 }
 
 void Download::requestAddFinished()
@@ -308,11 +347,11 @@ void Download::requestConfigFinished()
 
 
         cfg.throttling.mode = DlThrottlingConfig::modeFromString(item.toObject().value("throttling")
-                .toObject().value("mode").toString());
+                                                                 .toObject().value("mode").toString());
 
 
         foreach(QJsonValue sc, item.toObject().value("throttling")
-                        .toObject().value("schedule").toArray())
+                .toObject().value("schedule").toArray())
         {
 
             cfg.throttling.schedule.append(DlThrottlingConfig::typeFromString(sc.toString()));
