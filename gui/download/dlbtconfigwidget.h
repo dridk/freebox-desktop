@@ -13,8 +13,10 @@ signals:
     
 public slots:
     void setConfig(const DlBtConfig& cfg);
+    const DlBtConfig& config() ;
 
 private:
+    DlBtConfig mCfg;
     QSpinBox * mMaxPeersSpinBox;
     QDoubleSpinBox * mStopRatioSpinBox;
     QComboBox * mCryptoSupportComboBox;

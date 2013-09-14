@@ -1,10 +1,9 @@
 #ifndef FBX_H
 #define FBX_H
 
-class Fbx
-{
-public:
-    Fbx();
-};
+#include "filesystem.h"
+#include "download.h"
+
+
 
 #endif // FBX_H

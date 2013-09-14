@@ -14,8 +14,9 @@ signals:
     
 public slots:
     void setConfig(const DlFeedConfig& cfg);
-
+    const DlFeedConfig& config();
 private:
+    DlFeedConfig mCfg;
     QSpinBox* mFetchIntervalBox;
     QSpinBox* mMaxItemsBox;
     

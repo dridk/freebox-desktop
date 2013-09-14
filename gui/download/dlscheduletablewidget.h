@@ -13,6 +13,7 @@ class DLScheduleTableWidget : public QWidget
 public:
     explicit DLScheduleTableWidget(QWidget *parent = 0);
     void setSchedule(const QList<DlThrottlingConfig::Type>& list);
+    const QList<DlThrottlingConfig::Type>& schendule() const;
     const QList<QColor>& typeColors(){return mTypeColors;}
     void setCurrentType(const DlThrottlingConfig::Type& type);
 

@@ -150,6 +150,75 @@ void Download::requestConfig()
     connect(reply,SIGNAL(error(QNetworkReply::NetworkError)),fbx(),SLOT(errorReceived(QNetworkReply::NetworkError)));
 }
 
+void Download::requestUpdateConfig(const DownloadConfiguration &cfg)
+{
+    QJsonObject data;
+    //-----------------------------------------------------------
+    //--------general Settings
+    data.insert("max_downloading_tasks", cfg.maxDownloadingTasks);
+    data.insert("download_dir", cfg.downloadDir);
+    data.insert("use_watch_dir", cfg.useWatchDir);
+    data.insert("watch_dir", cfg.watchDir);
+    //-----------------------------------------------------------
+    //--------throttling Settings
+    QJsonObject throttling;
+    QJsonObject normal;
+    normal.insert("rx_rate", cfg.throttling.normal.rxRate);
+    normal.insert("tx_rate", cfg.throttling.normal.txRate);
+    QJsonObject slow;
+    normal.insert("rx_rate", cfg.throttling.slow.rxRate);
+    normal.insert("tx_rate", cfg.throttling.slow.txRate);
+
+    throttling.insert("normal", normal);
+    throttling.insert("slow",slow );
+    throttling.insert("mode", DlThrottlingConfig::modeToString(cfg.throttling.mode));
+    QJsonArray schendule;
+    foreach (DlThrottlingConfig::Type type, cfg.throttling.schedule)
+        schendule.append(DlThrottlingConfig::typeToString(type));
+
+    throttling.insert("schedule", schendule);
+    data.insert("throttling", throttling);
+
+    //----------------------------------------------------------
+    //--------News Settings
+    QJsonObject news;
+    news.insert("server", cfg.news.server);
+    news.insert("port", cfg.news.port);
+    news.insert("ssl", cfg.news.ssl);
+    news.insert("nthreads", cfg.news.nthreads);
+    news.insert("user", cfg.news.user);
+    news.insert("lazy_par2", cfg.news.lazyPar2);
+    news.insert("auto_repair", cfg.news.autoRepair);
+    news.insert("auto_extract", cfg.news.autoExtract);
+    news.insert("erase_tmp", cfg.news.eraseTmp);
+    data.insert("news", news);
+
+    //----------------------------------------------------------
+    //--------Bt Settings
+    QJsonObject bt;
+    news.insert("max_peers", cfg.bt.maxPeers);
+    news.insert("stop_ratio", cfg.bt.stopRatio);
+    news.insert("crypto_support", cfg.bt.cryptoSupport);
+    data.insert("bt", bt);
+
+    //----------------------------------------------------------
+    //--------feed feed
+    QJsonObject feed;
+    news.insert("fetch_interval", cfg.feed.fetchInterval);
+    data.insert("feed", feed);
+    //----------------------------------------------------------
+    //--------CREATE REQUEST
+
+    QJsonDocument json;
+    json.setObject(data);
+    QNetworkRequest request =fbx()->myCreateRequest(QString("downloads/config/"));
+    QNetworkReply * reply = fbx()->put(request,json.toJson());
+    connect(reply,SIGNAL(finished()),this,SLOT(requestFeedListFinished()));
+    connect(reply,SIGNAL(error(QNetworkReply::NetworkError)),fbx(),SLOT(errorReceived(QNetworkReply::NetworkError)));
+
+
+}
+
 void Download::requestFeedList()
 {
     QNetworkReply * reply = fbx()->get(fbx()->myCreateRequest(QString("downloads/feeds/")));
@@ -482,6 +551,18 @@ void Download::requestConfigFinished()
         emit configReceived(cfg);
 
     }
+}
+
+void Download::requestUpdateConfigFinished()
+{
+    QNetworkReply * reply  = qobject_cast<QNetworkReply*>(sender());
+    QJsonDocument doc = QJsonDocument::fromJson(reply->readAll());
+    if(fbx()->parseResult(doc))
+    {
+        emit updateConfigFinished();
+
+    }
+
 }
 
 void Download::requestFeedListFinished()

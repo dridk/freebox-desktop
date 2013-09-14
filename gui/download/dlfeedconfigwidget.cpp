@@ -30,6 +30,16 @@ DLFeedConfigWidget::~DLFeedConfigWidget()
 
 void DLFeedConfigWidget::setConfig(const DlFeedConfig &cfg)
 {
+    mCfg = cfg;
     mFetchIntervalBox->setValue(cfg.fetchInterval);
     mMaxItemsBox->setValue(cfg.maxItems);
+}
+
+const DlFeedConfig &DLFeedConfigWidget::config()
+{
+
+    mCfg.fetchInterval = mFetchIntervalBox->value();
+    mCfg.maxItems = mMaxItemsBox->value();
+    return mCfg;
+
 }

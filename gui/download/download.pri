@@ -21,7 +21,8 @@ HEADERS += \
     gui/download/dlblocklistconfigwidget.h \
     gui/download/dlscheduletablewidget.h \
     gui/download/dlthrottlingconfigwidget.h \
-    gui/download/dlnewsgroupconfigwidget.h
+    gui/download/dlnewsgroupconfigwidget.h \
+    gui/download/dlrssmodel.h
 
 
 SOURCES += \
@@ -40,7 +41,8 @@ SOURCES += \
     gui/download/dlblocklistconfigwidget.cpp \
     gui/download/dlscheduletablewidget.cpp \
     gui/download/dlthrottlingconfigwidget.cpp \
-    gui/download/dlnewsgroupconfigwidget.cpp
+    gui/download/dlnewsgroupconfigwidget.cpp \
+    gui/download/dlrssmodel.cpp
 
 
 

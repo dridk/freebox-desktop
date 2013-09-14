@@ -113,10 +113,37 @@ DLThrottlingConfigWidget::DLThrottlingConfigWidget(QWidget *parent) :
     setWindowTitle("Limites de vitesse");
 }
 
+const DlThrottlingConfig &DLThrottlingConfigWidget::config()
+{
+    mCfg.normal.rxRate = mNormalDLSpinBox->value() / 1000;
+    mCfg.normal.txRate = mNormalULSpinBox->value() / 1000;
+    mCfg.slow.rxRate = mSlowULSpinBox->value() / 1000;
+    mCfg.slow.txRate = mSlowDLSpinBox->value() / 1000;
+    mCfg.schedule = mScheduleTableWidget->schendule();
+    DlThrottlingConfig::Mode mode;
+    if (mNormalButton->isChecked())
+        mode =  DlThrottlingConfig::NormalMode;
+
+    if (mSlowModeButton->isChecked())
+        mode =  DlThrottlingConfig::SlowMode;
+
+    if (mHibernateModeButton->isChecked())
+        mode =  DlThrottlingConfig::HibernateMode;
+
+    if (mScheduleModeButton->isChecked())
+        mode =  DlThrottlingConfig::ScheduleMode;
+
+    mCfg.mode = mode;
+
+
+
+    return mCfg;
+}
+
 void DLThrottlingConfigWidget::setConfig(const DlThrottlingConfig &cfg)
 {
 
-
+    mCfg = cfg;
     mNormalDLSpinBox->setValue(cfg.normal.rxRate/1000);
     mNormalULSpinBox->setValue(cfg.normal.txRate/1000);
 
@@ -138,16 +165,9 @@ void DLThrottlingConfigWidget::setConfig(const DlThrottlingConfig &cfg)
     case DlThrottlingConfig::ScheduleMode :
         mScheduleModeButton->setChecked(true); break;
 
-
-
-
     }
 
-
     mScheduleTableWidget->setSchedule(cfg.schedule);
-
-
-
 
 
 }

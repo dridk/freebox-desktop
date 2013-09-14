@@ -52,7 +52,7 @@ DLBtConfigWidget::~DLBtConfigWidget()
 
 void DLBtConfigWidget::setConfig(const DlBtConfig &cfg)
 {
-
+    mCfg = cfg;
     mMaxPeersSpinBox->setValue(cfg.maxPeers);
     mStopRatioSpinBox->setValue(double(cfg.stopRatio)/100);
     mCryptoSupportComboBox->setCurrentIndex(int(cfg.cryptoSupport));
@@ -60,8 +60,20 @@ void DLBtConfigWidget::setConfig(const DlBtConfig &cfg)
     mEnablePexCheckBox->setChecked(cfg.enablePex);
     mAnnounceTimeoutSpinBox->setValue(cfg.announceTimeout);
 
-    qDebug()<<cfg.enableDht;
-    qDebug()<<cfg.enablePex;
 
+
+}
+
+const DlBtConfig& DLBtConfigWidget::config()
+{
+
+    mCfg.maxPeers = mMaxPeersSpinBox->value();
+    mCfg.stopRatio = mStopRatioSpinBox->value();
+    mCfg.cryptoSupport = DlBtConfig::Type(mCryptoSupportComboBox->currentIndex());
+    mCfg.enableDht = mEnableDhtCheckBox->isChecked();
+    mCfg.enablePex = mEnablePexCheckBox->isChecked();
+    mCfg.announceTimeout = mAnnounceTimeoutSpinBox->value();
+
+    return mCfg;
 
 }

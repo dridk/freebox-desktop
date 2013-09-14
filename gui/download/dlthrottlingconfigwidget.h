@@ -9,16 +9,17 @@ class DLThrottlingConfigWidget : public QWidget
     Q_OBJECT
 public:
     explicit DLThrottlingConfigWidget(QWidget *parent = 0);
-signals:
-    
-public slots:
+
     void setConfig(const DlThrottlingConfig& cfg);
+    const DlThrottlingConfig& config();
+    
+
 
 protected slots:
     void setCurrentScheduleType(int id);
 
 private:
-
+    DlThrottlingConfig mCfg;
     QSpinBox* mNormalDLSpinBox;
     QSpinBox* mNormalULSpinBox;
     QSpinBox* mSlowDLSpinBox;

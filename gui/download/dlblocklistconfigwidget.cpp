@@ -36,7 +36,15 @@ DLBlocklistConfigWidget::~DLBlocklistConfigWidget()
 
 void DLBlocklistConfigWidget::setConfig(const DlBlockListConfig &cfg)
 {
+    mCfg = cfg;
     foreach (QString txt, cfg.sources)
     mTextEdit->appendPlainText(txt);
 
+}
+
+const DlBlockListConfig &DLBlocklistConfigWidget::config()
+{
+
+    mCfg.sources = mTextEdit->toPlainText().split("\n");
+    return mCfg;
 }

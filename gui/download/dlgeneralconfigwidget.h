@@ -14,12 +14,13 @@ signals:
     
 public slots:
     void setConfig(const DownloadConfiguration& cfg);
-
+    const DownloadConfiguration& config();
 protected slots:
     void getWatchDir();
     void getDownloadDir();
 
 private:
+    DownloadConfiguration mCfg;
     QSpinBox  * mMaxDownloadingTasksSpinBox;
     QLineEdit * mDownloadDirEdit;
     QCheckBox * mUseWatchDirCheckBox;

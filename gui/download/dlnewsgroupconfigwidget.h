@@ -10,9 +10,12 @@ public:
     explicit DLNewsGroupConfigWidget(QWidget *parent = 0);
     ~DLNewsGroupConfigWidget();
     void setConfig(const DlNewsConfig& cfg);
+    const DlNewsConfig& config();
+
 signals:
     
 private:
+    DlNewsConfig mCfg;
     QLineEdit* mServerEdit;
     QSpinBox*  mPortSpinBox;
     QCheckBox* mSslCheckBox;

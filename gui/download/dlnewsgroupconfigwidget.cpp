@@ -85,6 +85,7 @@ DLNewsGroupConfigWidget::~DLNewsGroupConfigWidget()
 
 void DLNewsGroupConfigWidget::setConfig(const DlNewsConfig &cfg)
 {
+    mCfg = cfg;
     mServerEdit->setText(cfg.server);
     mPortSpinBox->setValue(cfg.port);
     mSslCheckBox->setChecked(cfg.ssl);
@@ -95,4 +96,28 @@ void DLNewsGroupConfigWidget::setConfig(const DlNewsConfig &cfg)
     mAutoRepairCheckBox->setChecked(cfg.autoRepair);
     mAutoExtractCheckBox->setChecked(cfg.autoExtract);
     mEraseTmpCheckBox->setChecked(cfg.eraseTmp);
+}
+
+const DlNewsConfig &DLNewsGroupConfigWidget::config()
+{
+
+    mCfg.server = mServerEdit->text();
+    mCfg.port = mPortSpinBox->value();
+    mCfg.ssl = mSslCheckBox->isChecked();
+    mCfg.nthreads = mNThtreadsSpinBox->value();
+    mCfg.user = mUserEdit->text();
+    mCfg.password = mPasswordEdit->text();
+    mCfg.lazyPar2 = mLazyPar2CheckBox->isChecked();
+    mCfg.autoRepair = mAutoRepairCheckBox->isChecked();
+    mCfg.autoExtract = mAutoExtractCheckBox->isChecked();
+    mCfg.eraseTmp = mEraseTmpCheckBox->isChecked();
+
+    return mCfg;
+
+
+
+
+
+
+
 }

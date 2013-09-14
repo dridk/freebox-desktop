@@ -54,11 +54,23 @@ DLGeneralConfigWidget::~DLGeneralConfigWidget()
 
 void DLGeneralConfigWidget::setConfig(const DownloadConfiguration &cfg)
 {
+    mCfg = cfg;
     mMaxDownloadingTasksSpinBox->setValue(cfg.maxDownloadingTasks);
     mDownloadDirEdit->setText(Tools::pathFrom64(cfg.downloadDir));
     mUseWatchDirCheckBox->setChecked(cfg.useWatchDir);
     mWatchDirEdit->setText(Tools::pathFrom64(cfg.watchDir));
 
+}
+
+const DownloadConfiguration &DLGeneralConfigWidget::config()
+{
+
+    mCfg.maxDownloadingTasks = mMaxDownloadingTasksSpinBox->value();
+    mCfg.downloadDir = Tools::pathTo64(mDownloadDirEdit->text());
+    mCfg.useWatchDir = mUseWatchDirCheckBox->checkState() == Qt::Checked;
+    mCfg.watchDir = Tools::pathTo64(mWatchDirEdit->text());
+
+    return mCfg;
 }
 
 void DLGeneralConfigWidget::getWatchDir()

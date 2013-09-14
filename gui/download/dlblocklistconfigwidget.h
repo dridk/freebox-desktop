@@ -13,7 +13,9 @@ signals:
     
 public slots:
     void setConfig(const DlBlockListConfig& cfg);
+    const DlBlockListConfig& config();
 private:
+    DlBlockListConfig mCfg;
     QPlainTextEdit * mTextEdit;
     QLabel * mLabel;
     QLabel * mNoteLabel;

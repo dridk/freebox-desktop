@@ -26,6 +26,11 @@ void DLScheduleTableWidget::setSchedule(const QList<DlThrottlingConfig::Type> &l
     repaint();
 }
 
+const QList<DlThrottlingConfig::Type> &DLScheduleTableWidget::schendule() const
+{
+    return mTypes;
+}
+
 void DLScheduleTableWidget::setCurrentType(const DlThrottlingConfig::Type &type)
 {
     mCurrentType = type;

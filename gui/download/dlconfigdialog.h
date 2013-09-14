@@ -21,7 +21,6 @@ signals:
 public slots:
     void setConfiguration(const DownloadConfiguration& configuration);
 
-
 protected:
     void addTab(QWidget * widget);
 

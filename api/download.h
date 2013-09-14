@@ -72,10 +72,32 @@ public:
         return NormalMode;
     }
 
+    static QString modeToString(const Mode& mode)
+    {
+        if (mode == NormalMode)
+            return "normal";
+        if (mode == SlowMode)
+            return "slow";
+        if (mode == HibernateMode)
+            return "hibernate";
+        if (mode == ScheduleMode )
+            return "schendule";
+    }
+
+    static QString typeToString(const Type& mode)
+    {
+        if (mode == NormalType)
+            return "normal";
+        if (mode == SlowType)
+            return "slow";
+        if (mode == HibernateType)
+            return "hibernate";
+    }
     DlRate normal;
     DlRate slow;
     QList<Type> schedule;
     Mode mode;
+
 };
 
 class DlNewsConfig {
@@ -233,6 +255,7 @@ public slots:
                         const QString& password = QString(),
                         const QString archivePassword = QString());
     void requestConfig();
+    void requestUpdateConfig(const DownloadConfiguration& cfg);
     void requestFeedList();
     void requestFeed(int id);
     void requestAddFeed(const QString& url);
@@ -255,6 +278,7 @@ signals:
     void statsReceived(const DownloadStats& stat);
     void addFinished();
     void configReceived(const DownloadConfiguration& configuration);
+    void updateConfigFinished();
     void feedListReceived(const QList<DownloadFeed>& list);
     void feedReceived(const DownloadFeed& feed);
     void addFeedFinished();
@@ -279,6 +303,7 @@ protected slots:
     void requestAddFinished();
     void requestAddListFinished();
     void requestConfigFinished();
+    void requestUpdateConfigFinished();
     void requestFeedListFinished();
     void requestFeedFinished();
     void requestAddFeedFinished();
