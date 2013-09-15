@@ -12,21 +12,26 @@ int main(int argc, char *argv[])
     QCoreApplication::setApplicationName("Freebox Desktop");
     QCoreApplication::setApplicationVersion("beta");
 
+//    DLMainWindow  * downloadWindow ;
     LauncherWidget launcherWindow ;
-    DLMainWindow   downloadWindow ;
+
 
     if (QCoreApplication::arguments().count() > 1)
     {
-        QString path = QCoreApplication::arguments().value(1);
 
-        downloadWindow.addFile(path);
-        downloadWindow.show();
+//        QString path = QCoreApplication::arguments().value(1);
+//        downloadWindow->addFile(path);
+//        downloadWindow->show();
 
     }
 
-    else
+    else {
+//         LauncherWidget *  launcherWindow ;
+//        launcherWindow->show();
+
         launcherWindow.show();
 
+    }
 
 
 

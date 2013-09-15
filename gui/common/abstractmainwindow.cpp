@@ -48,9 +48,12 @@ AbstractMainWindow::~AbstractMainWindow()
 void AbstractMainWindow::login()
 {
 
-    qDebug()<<qApp->applicationName();
-    fbx()->setApplicationId("org.labsquare" + qApp->applicationName());
-    fbx()->requestLogin();
+    if (fbx()->applicationToken().isEmpty())
+        authorize();
+    else {
+        fbx()->setApplicationId("org.labsquare" + qApp->applicationName());
+        fbx()->requestLogin();
+    }
 }
 
 void AbstractMainWindow::authorize()
@@ -93,8 +96,8 @@ void AbstractMainWindow::showAboutDialog()
 
 void AbstractMainWindow::showAccountDialog()
 {
-//    AccountListDialog dialog(this);
-//    dialog.exec();
+    //    AccountListDialog dialog(this);
+    //    dialog.exec();
 
 }
 
