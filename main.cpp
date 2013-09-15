@@ -10,18 +10,19 @@ int main(int argc, char *argv[])
     QCoreApplication::setOrganizationName("labsquare");
     QCoreApplication::setOrganizationDomain("org.labsquare");
     QCoreApplication::setApplicationName("Freebox Desktop");
-    QCoreApplication::setApplicationVersion("beta");
+    QCoreApplication::setApplicationVersion("alpha test");
 
-//    DLMainWindow  * downloadWindow ;
     LauncherWidget launcherWindow ;
 
 
     if (QCoreApplication::arguments().count() > 1)
     {
 
-//        QString path = QCoreApplication::arguments().value(1);
-//        downloadWindow->addFile(path);
-//        downloadWindow->show();
+        QString path = QCoreApplication::arguments().value(1);
+        DLMainWindow downloadWindow ;
+
+        downloadWindow.addFile(path);
+        downloadWindow.show();
 
     }
 

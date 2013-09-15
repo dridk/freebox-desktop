@@ -37,17 +37,19 @@ AbstractMainWindow::AbstractMainWindow(QWidget *parent) :
     mStatusLabel->setPixmap(QPixmap(":low"));
     statusBar()->addPermanentWidget(mStatusLabel);
 
+    setAttribute(Qt::WA_DeleteOnClose);
 
 }
 
 AbstractMainWindow::~AbstractMainWindow()
 {
     delete mFbx;
+    delete mStatusLabel;
 }
 
 void AbstractMainWindow::login()
 {
-
+    fbx()->loadApplicationToken();
     if (fbx()->applicationToken().isEmpty())
         authorize();
     else {
