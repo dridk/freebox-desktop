@@ -37,20 +37,25 @@ AbstractMainWindow::AbstractMainWindow(QWidget *parent) :
     mStatusLabel->setPixmap(QPixmap(":low"));
     statusBar()->addPermanentWidget(mStatusLabel);
 
+    setAttribute(Qt::WA_DeleteOnClose);
 
 }
 
 AbstractMainWindow::~AbstractMainWindow()
 {
     delete mFbx;
+    delete mStatusLabel;
 }
 
 void AbstractMainWindow::login()
 {
-
-    qDebug()<<qApp->applicationName();
-    fbx()->setApplicationId("org.labsquare" + qApp->applicationName());
-    fbx()->requestLogin();
+    fbx()->loadApplicationToken();
+    if (fbx()->applicationToken().isEmpty())
+        authorize();
+    else {
+        fbx()->setApplicationId("org.labsquare" + qApp->applicationName());
+        fbx()->requestLogin();
+    }
 }
 
 void AbstractMainWindow::authorize()
@@ -93,8 +98,8 @@ void AbstractMainWindow::showAboutDialog()
 
 void AbstractMainWindow::showAccountDialog()
 {
-//    AccountListDialog dialog(this);
-//    dialog.exec();
+    //    AccountListDialog dialog(this);
+    //    dialog.exec();
 
 }
 

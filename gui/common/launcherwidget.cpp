@@ -8,28 +8,45 @@ LauncherWidget::LauncherWidget(QWidget *parent) :
     setMovement(QListView::Static);
     setFlow(QListView::LeftToRight);
 
-    addView(new FSMainWindow);
-    addView(new DLMainWindow);
-
 
     setWindowTitle("freebox-desktop");
     resize(480,300);
     setIconSize(QSize(80,80));
     setSpacing(10);
 
-    connect(this,SIGNAL(doubleClicked(QModelIndex)),
-            this,SLOT(launch(QModelIndex)));
+
+    QListWidgetItem * item1 = new QListWidgetItem;
+    item1->setText("Téléchargement");
+    item1->setIcon(QIcon(":main_dl.png"));
+    addItem(item1);
+
+    QListWidgetItem * item2 = new QListWidgetItem;
+    item2->setText("Explorateur de fichiers");
+    item2->setIcon(QIcon(":main_fs.png"));
+    addItem(item2);
+
+
+
+    connect(this,SIGNAL(doubleClicked(QModelIndex)), this,SLOT(launch(QModelIndex)));
 
 }
 
 void LauncherWidget::launch(const QModelIndex &index)
 {
-
-    if (index.row() < mViews.count()){
-
-        mViews.at(index.row())->show();
-
+    if (index.row() == 0)
+    {
+        FSMainWindow * win = new FSMainWindow;
+        win->show();
+        return;
     }
+
+    if (index.row() == 1)
+    {
+        DLMainWindow * win = new DLMainWindow;
+        win->show();
+        return;
+    }
+
 
 
 }
