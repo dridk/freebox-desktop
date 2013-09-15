@@ -259,6 +259,9 @@ public slots:
                     const QString& username = QString(),
                     const QString& password = QString(),
                     const QString archivePassword = QString());
+    void requestAddFile(const QString& path,
+                        const QString& destination = QString(),
+                        const QString& archivePassword = QString());
 
     void requestAddList(const QStringList& urls, const QString& destination=QString(),
                         bool recursive=false,
@@ -288,6 +291,7 @@ signals:
     void logReceived(const QString& result);
     void statsReceived(const DownloadStats& stat);
     void addFinished();
+    void addFileFinished();
     void configReceived(const DownloadConfiguration& configuration);
     void updateConfigFinished();
     void feedListReceived(const QList<DownloadFeed>& list);
@@ -312,6 +316,7 @@ protected slots:
     void requestLogFinished();
     void requestStatsFinished();
     void requestAddFinished();
+    void requestAddFileFinished();
     void requestAddListFinished();
     void requestConfigFinished();
     void requestUpdateConfigFinished();
@@ -333,6 +338,9 @@ protected:
     FbxAPI * fbx() {
         return qobject_cast<FbxAPI*>(parent());
     }
+
+private:
+    QMimeDatabase mMimeDatabase;
     
 };
 

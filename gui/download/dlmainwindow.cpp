@@ -1,5 +1,5 @@
 #include "dlmainwindow.h"
-
+#include <QFileDialog>
 DLMainWindow::DLMainWindow(QWidget *parent) :
     AbstractMainWindow(parent)
 {
@@ -94,6 +94,17 @@ void DLMainWindow::addUrl()
 
 void DLMainWindow::addFile()
 {
+//    DLAddFileDialog dialog;
+//    dialog.exec();
+
+    //test
+
+    QString fileName = QFileDialog::getOpenFileName(this, tr("Open File"),
+                                                    "",
+                                                    tr("Images (*.torrent *.nzb)"));
+
+    fbx()->download()->requestAddFile(fileName);
+
 }
 
 void DLMainWindow::addAdvancedUrl()
@@ -104,7 +115,7 @@ void DLMainWindow::addAdvancedUrl()
 
 void DLMainWindow::addDirectUrl()
 {
-   fbx()->download()->requestAdd(mDirectUrlEdit->text());
+    fbx()->download()->requestAdd(mDirectUrlEdit->text());
     mDirectUrlEdit->clear();
 
 }

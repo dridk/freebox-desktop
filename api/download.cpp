@@ -106,6 +106,54 @@ void Download::requestAdd(const QString &url, const QString &destination, const 
 
 }
 
+void Download::requestAddFile(const QString &path, const QString &destination, const QString &archivePassword)
+{
+    QHttpMultiPart *multiPart = new QHttpMultiPart(QHttpMultiPart::FormDataType);
+    QNetworkRequest request = fbx()->myCreateRequest(QString("downloads/add"));
+
+    QFile * file = new QFile(path);
+    if (!file->open(QIODevice::ReadOnly)){
+        qDebug()<<"cannot open file";
+        return;
+    }
+
+    QHttpPart filePart;
+    filePart.setHeader(QNetworkRequest::ContentTypeHeader,
+                       "application/x-bittorrent");
+
+    filePart.setHeader(QNetworkRequest::ContentDispositionHeader,
+                       QString("form-data; name=\"download_dir\"")
+                       .arg(destination));
+
+    filePart.setHeader(QNetworkRequest::ContentDispositionHeader,
+                       QString("form-data; name=\"archive_password\"")
+                       .arg(archivePassword));
+
+    filePart.setHeader(QNetworkRequest::ContentDispositionHeader,
+                       QString("form-data; name=\"download_file\";filename=\"%1\"")
+                       .arg(QFileInfo(path).fileName()));
+
+    filePart.setBodyDevice(file);
+    file->setParent(multiPart); // we cannot delete the file now, so delete it with the multiPart
+    multiPart->append(filePart);
+
+    request.setHeader(QNetworkRequest::ContentTypeHeader,"multipart/form-data; boundary=" + multiPart->boundary());
+
+    QNetworkReply *reply = fbx()->post(request, multiPart);
+    multiPart->setParent(reply);
+
+
+
+
+
+
+
+
+
+
+
+}
+
 void Download::requestAddList(const QStringList &urls, const QString &destination, bool recursive, const QString &username, const QString &password, const QString archivePassword)
 {
 
@@ -490,6 +538,10 @@ void Download::requestAddFinished()
         emit addFinished();
 
     }
+}
+
+void Download::requestAddFileFinished()
+{
 }
 
 void Download::requestAddListFinished()

@@ -8,6 +8,7 @@
 #include "dldelegate.h"
 #include "dladddialog.h"
 #include "dlconfigdialog.h"
+#include "dladdfiledialog.h"
 class DLMainWindow : public AbstractMainWindow
 {
     Q_OBJECT
