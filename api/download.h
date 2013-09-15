@@ -81,7 +81,7 @@ public:
         if (mode == HibernateMode)
             return "hibernate";
         if (mode == ScheduleMode )
-            return "schendule";
+            return "schedule";
     }
 
     static QString typeToString(const Type& mode)
@@ -128,6 +128,17 @@ public:
             return RequiredType;
         return UnsupportedType;
 
+    }
+
+    static QString typeToString(const Type& type){
+        if (type == AllowedType)
+            return "allowed";
+        if (type == UnsupportedType)
+                    return "unsupported";
+        if (type == PreferredType)
+            return "preferred";
+        if (type == RequiredType)
+            return "required";
     }
 
     int maxPeers;

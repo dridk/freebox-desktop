@@ -30,7 +30,7 @@ DLConfigDialog::DLConfigDialog(FbxAPI *fbx, QWidget *parent) :
 
 
     connect(mButtonBox,SIGNAL(rejected()),this,SLOT(reject()));
-
+    connect(mButtonBox,SIGNAL(clicked(QAbstractButton*)),this,SLOT(acceptClicked(QAbstractButton*)));
 
 }
 
@@ -62,5 +62,33 @@ void DLConfigDialog::addTab(QWidget *widget)
 {
 
     mTabWidget->addTab(widget, widget->windowIcon(), widget->windowTitle());
+}
+
+void DLConfigDialog::acceptClicked(QAbstractButton *button)
+{
+
+
+    if (mButtonBox->buttonRole(button) == QDialogButtonBox::Cancel){
+        emit reject();
+        return;
+    }
+
+    DownloadConfiguration cfg = mGeneralWidget->config();
+    cfg.throttling = mThrottlingWidget->config();
+    cfg.feed = mFeedWidget->config();
+    cfg.bt = mBtWidget->config();
+    cfg.blocklist = mBlocklistWidget->config();
+    cfg.news = mNewGroupWidget->config();
+
+
+    mFbx->download()->requestUpdateConfig(cfg);
+
+    qDebug()<<mButtonBox->buttonRole(button);
+    if (mButtonBox->buttonRole(button) == QDialogButtonBox::AcceptRole)
+    {
+        emit accept();
+        return;
+    }
+
 }
 

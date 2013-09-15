@@ -115,10 +115,10 @@ DLThrottlingConfigWidget::DLThrottlingConfigWidget(QWidget *parent) :
 
 const DlThrottlingConfig &DLThrottlingConfigWidget::config()
 {
-    mCfg.normal.rxRate = mNormalDLSpinBox->value() / 1000;
-    mCfg.normal.txRate = mNormalULSpinBox->value() / 1000;
-    mCfg.slow.rxRate = mSlowULSpinBox->value() / 1000;
-    mCfg.slow.txRate = mSlowDLSpinBox->value() / 1000;
+    mCfg.normal.rxRate = mNormalDLSpinBox->value() * 1000;
+    mCfg.normal.txRate = mNormalULSpinBox->value() * 1000;
+    mCfg.slow.rxRate = mSlowDLSpinBox->value() * 1000;
+    mCfg.slow.txRate = mSlowULSpinBox->value() * 1000;
     mCfg.schedule = mScheduleTableWidget->schendule();
     DlThrottlingConfig::Mode mode;
     if (mNormalButton->isChecked())
@@ -142,6 +142,7 @@ const DlThrottlingConfig &DLThrottlingConfigWidget::config()
 
 void DLThrottlingConfigWidget::setConfig(const DlThrottlingConfig &cfg)
 {
+    qDebug()<<"MODE  THOTTLING"<<cfg.mode;
 
     mCfg = cfg;
     mNormalDLSpinBox->setValue(cfg.normal.rxRate/1000);
@@ -153,6 +154,8 @@ void DLThrottlingConfigWidget::setConfig(const DlThrottlingConfig &cfg)
 
     switch (cfg.mode)
     {
+
+
     case DlThrottlingConfig::NormalMode :
         mNormalModeButton->setChecked(true); break;
 

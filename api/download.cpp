@@ -166,12 +166,14 @@ void Download::requestUpdateConfig(const DownloadConfiguration &cfg)
     normal.insert("rx_rate", cfg.throttling.normal.rxRate);
     normal.insert("tx_rate", cfg.throttling.normal.txRate);
     QJsonObject slow;
-    normal.insert("rx_rate", cfg.throttling.slow.rxRate);
-    normal.insert("tx_rate", cfg.throttling.slow.txRate);
+    slow.insert("rx_rate", cfg.throttling.slow.rxRate);
+    slow.insert("tx_rate", cfg.throttling.slow.txRate);
 
     throttling.insert("normal", normal);
     throttling.insert("slow",slow );
+
     throttling.insert("mode", DlThrottlingConfig::modeToString(cfg.throttling.mode));
+
     QJsonArray schendule;
     foreach (DlThrottlingConfig::Type type, cfg.throttling.schedule)
         schendule.append(DlThrottlingConfig::typeToString(type));
@@ -187,30 +189,43 @@ void Download::requestUpdateConfig(const DownloadConfiguration &cfg)
     news.insert("ssl", cfg.news.ssl);
     news.insert("nthreads", cfg.news.nthreads);
     news.insert("user", cfg.news.user);
+    news.insert("password", cfg.news.password);
     news.insert("lazy_par2", cfg.news.lazyPar2);
     news.insert("auto_repair", cfg.news.autoRepair);
     news.insert("auto_extract", cfg.news.autoExtract);
     news.insert("erase_tmp", cfg.news.eraseTmp);
     data.insert("news", news);
+    //----------------------------------------------------------
+    //--------BlockList Settings
+    QJsonObject blocklist;
+    blocklist.insert("sources", QJsonValue::fromVariant(cfg.blocklist.sources));
+    data.insert("blocklist",blocklist);
+
+
 
     //----------------------------------------------------------
     //--------Bt Settings
     QJsonObject bt;
-    news.insert("max_peers", cfg.bt.maxPeers);
-    news.insert("stop_ratio", cfg.bt.stopRatio);
-    news.insert("crypto_support", cfg.bt.cryptoSupport);
-    data.insert("bt", bt);
-
+    bt.insert("max_peers", cfg.bt.maxPeers);
+    bt.insert("stop_ratio", cfg.bt.stopRatio);
+    bt.insert("crypto_support", DlBtConfig::typeToString(cfg.bt.cryptoSupport));
+    bt.insert("enable_dht", cfg.bt.enableDht);
+    bt.insert("enable_pex", cfg.bt.enablePex);
+    bt.insert("announce_timeout", cfg.bt.announceTimeout);
     //----------------------------------------------------------
     //--------feed feed
     QJsonObject feed;
-    news.insert("fetch_interval", cfg.feed.fetchInterval);
+    feed.insert("fetch_interval", cfg.feed.fetchInterval);
+    feed.insert("max_items",  cfg.feed.maxItems);
     data.insert("feed", feed);
     //----------------------------------------------------------
     //--------CREATE REQUEST
 
     QJsonDocument json;
     json.setObject(data);
+
+    qDebug()<<json.toJson();
+
     QNetworkRequest request =fbx()->myCreateRequest(QString("downloads/config/"));
     QNetworkReply * reply = fbx()->put(request,json.toJson());
     connect(reply,SIGNAL(finished()),this,SLOT(requestFeedListFinished()));
@@ -503,6 +518,8 @@ void Download::requestConfigFinished()
         cfg.feed.fetchInterval = item.toObject().value("feed").toObject().value("fetch_interval").toDouble();
 
         cfg.news.user = item.toObject().value("news").toObject().value("user").toString();
+        //password is WRITE ONLY
+        //cfg.news.password = item.toObject().value("news").toObject().value("password").toString();
         cfg.news.eraseTmp = item.toObject().value("news").toObject().value("erase_tmp").toBool();
         cfg.news.port = item.toObject().value("news").toObject().value("port").toDouble();
         cfg.news.nthreads = item.toObject().value("news").toObject().value("nthreads").toDouble();
@@ -515,13 +532,15 @@ void Download::requestConfigFinished()
         cfg.bt.maxPeers  = item.toObject().value("bt").toObject().value("max_peers").toDouble();
         cfg.bt.stopRatio = item.toObject().value("bt").toObject().value("stop_ratio").toDouble();
         cfg.bt.cryptoSupport = DlBtConfig::typeFromString(item.toObject().value("bt").toObject().value("crypto_support").toString());
-        cfg.bt.announceTimeout = item.toObject().value("bt").toObject().value("stop_ratio").toDouble();
+        cfg.bt.announceTimeout = item.toObject().value("bt").toObject().value("announce_timeout").toDouble();
         cfg.bt.enableDht = item.toObject().value("bt").toObject().value("enable_dht").toBool();
         cfg.bt.enablePex = item.toObject().value("bt").toObject().value("enable_pex").toBool();
 
 
-        cfg.throttling.normal.rxRate = item.toObject().value("announce_timeout").toDouble();
 
+        cfg.throttling.normal.rxRate = item.toObject().value("throttling")
+                .toObject().value("normal")
+                .toObject().value("rx_rate").toDouble();
 
         cfg.throttling.normal.txRate = item.toObject().value("throttling")
                 .toObject().value("normal")
@@ -547,6 +566,12 @@ void Download::requestConfigFinished()
             cfg.throttling.schedule.append(DlThrottlingConfig::typeFromString(sc.toString()));
 
         }
+
+
+        cfg.blocklist.sources = item.toObject().value("blocklist")
+                .toObject().value("sources")
+                .toVariant().toStringList();
+
 
         emit configReceived(cfg);
 

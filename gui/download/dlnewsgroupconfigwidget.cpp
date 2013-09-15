@@ -17,6 +17,7 @@ DLNewsGroupConfigWidget::DLNewsGroupConfigWidget(QWidget *parent) :
 
     mPortSpinBox->setRange(0,65000);
     mNThtreadsSpinBox->setRange(1,30);
+    mPasswordEdit->setEchoMode(QLineEdit::Password);
 
     //---------first box ----------------------
     QGroupBox * serverBox = new QGroupBox;

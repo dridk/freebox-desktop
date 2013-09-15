@@ -68,7 +68,7 @@ const DlBtConfig& DLBtConfigWidget::config()
 {
 
     mCfg.maxPeers = mMaxPeersSpinBox->value();
-    mCfg.stopRatio = mStopRatioSpinBox->value();
+    mCfg.stopRatio = mStopRatioSpinBox->value()*100;
     mCfg.cryptoSupport = DlBtConfig::Type(mCryptoSupportComboBox->currentIndex());
     mCfg.enableDht = mEnableDhtCheckBox->isChecked();
     mCfg.enablePex = mEnablePexCheckBox->isChecked();

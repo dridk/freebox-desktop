@@ -21,9 +21,9 @@ signals:
 public slots:
     void setConfiguration(const DownloadConfiguration& configuration);
 
-protected:
+protected slots:
     void addTab(QWidget * widget);
-
+    void acceptClicked(QAbstractButton * button);
 private:
     QTabWidget* mTabWidget;
     QDialogButtonBox * mButtonBox;
