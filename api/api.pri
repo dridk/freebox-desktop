@@ -9,7 +9,8 @@ INCLUDEPATH += $$PWD
 HEADERS += \
     api/filesystem.h \
     api/download.h \
-    api/fbxapi.h
+    api/fbxapi.h \
+    api/fbx.h
 
 SOURCES += \
     api/filesystem.cpp \

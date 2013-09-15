@@ -12,6 +12,8 @@ AbstractMainWindow::AbstractMainWindow(QWidget *parent) :
     QMenu * fileMenu  = new QMenu("Fichier",this);
     QAction * authAction = fileMenu->addAction(QIcon(":email_authentication.png"),"Authoriser l'application");
     QAction * loginAction = fileMenu->addAction(QIcon(":server_connect.png"),"Connexion");
+    fileMenu->addAction(QIcon(""),"Comptes...", this,SLOT(showAccountDialog()));
+
     menuBar()->addMenu(fileMenu);
 
 
@@ -29,7 +31,11 @@ AbstractMainWindow::AbstractMainWindow(QWidget *parent) :
     connect(githubAction,SIGNAL(triggered()),this,SLOT(openGithub()));
     connect(aboutAction,SIGNAL(triggered()),this,SLOT(showAboutDialog()));
     connect(aboutQtAction,SIGNAL(triggered()),qApp, SLOT(aboutQt()));
+    connect(fbx(),SIGNAL(loginSuccess()),this,SLOT(loginSuccess()));
 
+    mStatusLabel = new QLabel;
+    mStatusLabel->setPixmap(QPixmap(":low"));
+    statusBar()->addPermanentWidget(mStatusLabel);
 
 
 }
@@ -50,7 +56,7 @@ void AbstractMainWindow::login()
 void AbstractMainWindow::authorize()
 {
     QString appId = qApp->organizationDomain() + qApp->applicationName();
-    fbx()->requestAuthorize(appId, qApp->applicationName(), qApp->applicationVersion(), QHostInfo::localDomainName());
+    fbx()->requestAuthorize(appId, qApp->applicationName(), qApp->applicationVersion(), QHostInfo::localHostName());
 }
 
 void AbstractMainWindow::showError()
@@ -85,9 +91,22 @@ void AbstractMainWindow::showAboutDialog()
     dialog.exec();
 }
 
+void AbstractMainWindow::showAccountDialog()
+{
+//    AccountListDialog dialog(this);
+//    dialog.exec();
+
+}
+
 void AbstractMainWindow::openGithub()
 {
 
     QDesktopServices::openUrl(QUrl("https://github.com/dridk/mafreebox/issues?state=open"));
 
+}
+
+void AbstractMainWindow::loginSuccess()
+{
+    mStatusLabel->setPixmap(QPixmap(":high"));
+    statusBar()->showMessage("Vous êtes connecté(e)s sur "+fbx()->hostName());
 }

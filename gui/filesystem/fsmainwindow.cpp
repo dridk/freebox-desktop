@@ -95,6 +95,9 @@ FSMainWindow::FSMainWindow(QWidget *parent) :
     login();
 
 
+    setWindowTitle("Explorateur de fichiers");
+    setWindowIcon(QIcon(":main_fs.png"));
+
 }
 
 FSMainWindow::~FSMainWindow()

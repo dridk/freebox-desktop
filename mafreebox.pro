@@ -16,6 +16,7 @@ TEMPLATE = app
 include(api/api.pri)
 include(gui/common/common.pri)
 include(gui/filesystem/filesystem.pri)
+include(gui/download/download.pri)
 
 SOURCES += main.cpp\
     mainapplication.cpp

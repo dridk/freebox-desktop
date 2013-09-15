@@ -10,15 +10,18 @@
 FbxAPI::FbxAPI(QObject *parent) :
     QNetworkAccessManager(parent)
 {
-    mHostName = "mafreebox.freebox.fr";
+    mHostName = "mafreebox.free.fr";
     mPort = 80;
 
     mApiInfo.version = "1.0";
     mApiInfo.baseUrl = "/api/";
     mRequestLoginAttempt = 0;
+    mApiInfo.deviceName = QHostInfo::localHostName();
+    mLogged = false;
 
     // == alloc module
     mFileSystem = new FileSystem(this);
+    mDownload = new Download(this);
 
 
 }
@@ -139,8 +142,6 @@ void FbxAPI::requestApiInfo()
 void FbxAPI::requestAuthorize(const QString &appId, const QString &appName, const QString &appVersion, const QString &deviceName)
 {
 
-
-
     QJsonObject json;
     json.insert("app_id", appId);
     json.insert("app_name",appName);
@@ -151,7 +152,6 @@ void FbxAPI::requestAuthorize(const QString &appId, const QString &appName, cons
     QNetworkReply * reply = post(request,QJsonDocument(json).toJson());
     connect(reply,SIGNAL(finished()),this,SLOT(requestAuthorizeFinished()));
     connect(reply,SIGNAL(error(QNetworkReply::NetworkError)),this,SLOT(errorReceived(QNetworkReply::NetworkError)));
-
 
 
 }
@@ -286,7 +286,7 @@ void FbxAPI::requestSessionFinished()
         mRequestLoginAttempt = 0;
         mSessionToken = doc.object().value("result").toObject().value("session_token").toString();
         mPermissions = doc.object().value("result").toObject().value("permissions").toObject().keys();
-
+        mLogged = true;
         emit sessionReceived();
         emit loginSuccess();
     }

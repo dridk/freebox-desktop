@@ -4,7 +4,9 @@
 #include <QObject>
 #include <QtNetwork>
 #include "filesystem.h"
+#include "download.h"
 class FileSystem;
+class Download;
 struct ApiInfo;
 struct ApiInfo
 {
@@ -30,6 +32,7 @@ public:
     explicit FbxAPI(QObject *parent = 0);
     ~FbxAPI();
 
+    bool logged(){return mLogged;}
     //set
     void setHostName(const QString& host, int port = 80) ;
     void setApplicationToken(const QString& token);
@@ -66,6 +69,7 @@ public:
 
     //get Module
     FileSystem * fileSystem() {return mFileSystem;}
+    Download * download() {return mDownload;}
 
 
 
@@ -100,12 +104,14 @@ private:
     QString mErrorString;
     QString mErrorCode;
     QStringList mPermissions;
-
+    bool mLogged;
     int mPort;
     int mRequestLoginAttempt;
 
     //Modules
    FileSystem * mFileSystem;
+   Download * mDownload;
+
     
 };
 
