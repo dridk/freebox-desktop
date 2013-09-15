@@ -76,10 +76,12 @@ DLMainWindow::DLMainWindow(QWidget *parent) :
 
     connect(mCategoryWidget,SIGNAL(statusClicked(QString)), mView, SLOT(setStatusFilter(QString)));
     connect(mDirectUrlEdit,SIGNAL(returnPressed()),this,SLOT(addDirectUrl()));
-
+    connect(fbx(),SIGNAL(loginSuccess()),this,SLOT(addPathFromArgs()));
 
     setWindowTitle("Téléchargement");
     setWindowIcon(QIcon(":main_dl.png"));
+
+    login();
 
 }
 
@@ -94,8 +96,8 @@ void DLMainWindow::addUrl()
 
 void DLMainWindow::addFile()
 {
-//    DLAddFileDialog dialog;
-//    dialog.exec();
+    //    DLAddFileDialog dialog;
+    //    dialog.exec();
 
     //test
 
@@ -105,6 +107,13 @@ void DLMainWindow::addFile()
 
     fbx()->download()->requestAddFile(fileName);
 
+}
+
+void DLMainWindow::addFile(const QString &path)
+{
+    QFileInfo info(path);
+    if (info.suffix() == "nzb" || info.suffix() == "torrent")
+        mPathFromArgs = path;
 }
 
 void DLMainWindow::addAdvancedUrl()
@@ -132,4 +141,9 @@ void DLMainWindow::showConfigDialog()
     fbx()->download()->requestConfig();
     dialog.exec();
     mView->setAutoUpdate(true);
+}
+
+void DLMainWindow::addPathFromArgs()
+{
+    fbx()->download()->requestAddFile(mPathFromArgs);
 }

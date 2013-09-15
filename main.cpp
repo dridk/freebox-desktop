@@ -1,4 +1,5 @@
 #include <QApplication>
+#include <QMessageBox>
 #include "fsmainwindow.h"
 #include "fstableview.h"
 #include "dlmainwindow.h"
@@ -11,9 +12,22 @@ int main(int argc, char *argv[])
     QCoreApplication::setApplicationName("Freebox Desktop");
     QCoreApplication::setApplicationVersion("beta");
 
+    LauncherWidget launcherWindow ;
+    DLMainWindow   downloadWindow ;
 
-    DLMainWindow w ;
-    w.show();
+    if (QCoreApplication::arguments().count() > 1)
+    {
+        QString path = QCoreApplication::arguments().value(1);
+
+        downloadWindow.addFile(path);
+        downloadWindow.show();
+
+    }
+
+    else
+        launcherWindow.show();
+
+
 
 
     

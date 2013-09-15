@@ -20,15 +20,20 @@ signals:
 public slots:
     void addUrl();
     void addFile();
+    void addFile(const QString& path);
     void addAdvancedUrl();
     void addDirectUrl();
     void showConfigDialog();
+
+protected slots:
+    void addPathFromArgs();
 
 private:
     DLTableView * mView;
     DLCategoryWidget * mCategoryWidget;
     DLDetailWidget * mDetailWidget;
     QLineEdit * mDirectUrlEdit;
+    QString mPathFromArgs;
 
     
 };

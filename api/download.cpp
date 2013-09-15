@@ -114,6 +114,7 @@ void Download::requestAddFile(const QString &path, const QString &destination, c
     QFile * file = new QFile(path);
     if (!file->open(QIODevice::ReadOnly)){
         qDebug()<<"cannot open file";
+        delete file;
         return;
     }
 
@@ -140,17 +141,10 @@ void Download::requestAddFile(const QString &path, const QString &destination, c
     request.setHeader(QNetworkRequest::ContentTypeHeader,"multipart/form-data; boundary=" + multiPart->boundary());
 
     QNetworkReply *reply = fbx()->post(request, multiPart);
+    connect(reply,SIGNAL(finished()),this,SLOT(requestAddFileFinished()));
+    connect(reply,SIGNAL(error(QNetworkReply::NetworkError)),fbx(),SLOT(errorReceived(QNetworkReply::NetworkError)));
+
     multiPart->setParent(reply);
-
-
-
-
-
-
-
-
-
-
 
 }
 
@@ -542,6 +536,12 @@ void Download::requestAddFinished()
 
 void Download::requestAddFileFinished()
 {
+    QNetworkReply * reply  = qobject_cast<QNetworkReply*>(sender());
+    QJsonDocument doc = QJsonDocument::fromJson(reply->readAll());
+    if(fbx()->parseResult(doc))
+    {
+        emit addFileFinished();
+    }
 }
 
 void Download::requestAddListFinished()
