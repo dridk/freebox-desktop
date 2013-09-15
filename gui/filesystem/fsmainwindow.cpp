@@ -46,6 +46,8 @@ FSMainWindow::FSMainWindow(QWidget *parent) :
     mTreeView->setMaximumWidth(400);
 
 
+
+
     //construction de la ToolBar
     mToolBar = addToolBar("tool");
     mMkdirAction   = mToolBar->addAction(QIcon(":folder.png"),"Nouveau dossier");
@@ -74,7 +76,8 @@ FSMainWindow::FSMainWindow(QWidget *parent) :
     mSplitter->addWidget(centerWidget);
     setCentralWidget(mSplitter);
 
-
+    mSplitter->setStretchFactor(0,1);
+    mSplitter->setStretchFactor(1,3);
     //connection
 
 

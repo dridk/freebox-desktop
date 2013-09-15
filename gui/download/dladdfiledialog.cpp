@@ -9,6 +9,9 @@ DLAddFileDialog::DLAddFileDialog(QWidget *parent) :
     mPassEdit = new QLineEdit;
     mBoxButton = new QDialogButtonBox(QDialogButtonBox::Ok);
 
+
+
+
     QVBoxLayout * mainLayout = new QVBoxLayout;
     layout->addRow("Fichier: ", mFileEdit);
     layout->addRow("Destination: ", mDestEdit);
