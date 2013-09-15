@@ -80,14 +80,17 @@ void Download::requestAdd(const QString &url, const QString &destination, const 
     QString encodedUrl =QUrl::toPercentEncoding(url);
     dataList.append("download_url="+encodedUrl);
 
+    if (!destination.isEmpty())
+        dataList.append(QString("download_dir=%1").arg(destination));
+
     if (!username.isEmpty())
-        dataList.append(QString("username=").arg(username));
+        dataList.append(QString("username=%1").arg(username));
 
     if (!password.isEmpty())
-        dataList.append(QString("password=").arg(password));
+        dataList.append(QString("password=%1").arg(password));
 
     if (!archivePassword.isEmpty())
-        dataList.append(QString("archive_password=").arg(archivePassword));
+        dataList.append(QString("archive_password=%1").arg(archivePassword));
 
 
     QByteArray data = dataList.join("&").toUtf8();
@@ -158,17 +161,21 @@ void Download::requestAddList(const QStringList &urls, const QString &destinatio
 
     dataList.append("download_url="+encodedUrl.join("%0A"));
 
+    if (!destination.isEmpty())
+        dataList.append(QString("download_dir=%1").arg(destination));
+
+
     if (recursive)
-        dataList.append(QString("recursive=").arg(recursive));
+        dataList.append(QString("recursive=%1").arg(recursive));
 
     if (!username.isEmpty())
-        dataList.append(QString("username=").arg(username));
+        dataList.append(QString("username=%1").arg(username));
 
     if (!password.isEmpty())
-        dataList.append(QString("password=").arg(password));
+        dataList.append(QString("password=%1").arg(password));
 
     if (!archivePassword.isEmpty())
-        dataList.append(QString("archive_password=").arg(archivePassword));
+        dataList.append(QString("archive_password=%1").arg(archivePassword));
 
     QByteArray data = dataList.join("&").toUtf8();
 
@@ -486,7 +493,6 @@ void Download::requestStatsFinished()
     QJsonDocument doc = QJsonDocument::fromJson(reply->readAll());
     if(fbx()->parseResult(doc))
     {
-        DownloadStats stats;
         QJsonValue item = doc.object().value("result");
 
         qDebug()<<"CONFIGURATION "<<doc.toJson();
@@ -513,10 +519,7 @@ void Download::requestStatsFinished()
         cfg.txRate= item.toObject().value("tx_rate").toDouble();
         cfg.nbRss= item.toObject().value("nb_rss").toDouble();
 
-
-
-
-        emit statsReceived(stats);
+        emit statsReceived(cfg);
 
     }
 

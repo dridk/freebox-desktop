@@ -18,11 +18,13 @@ DLModel::DLModel(FbxAPI *fbx, QObject *parent):
 
 int DLModel::rowCount(const QModelIndex &parent) const
 {
+    Q_UNUSED(parent)
     return mDatas.count();
 }
 
 int DLModel::columnCount(const QModelIndex &parent) const
 {
+    Q_UNUSED(parent)
     return 11;
 }
 

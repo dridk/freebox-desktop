@@ -95,6 +95,7 @@ void DLAddDialog::add()
 
 void DLAddDialog::urlChanged(const QString &text)
 {
+    Q_UNUSED(text)
 
 
 

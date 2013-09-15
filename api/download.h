@@ -58,6 +58,7 @@ public:
             return SlowType;
         if (string == "hibernate")
             return HibernateType;
+        return NormalType;
     }
 
     static Mode modeFromString(const QString& string){
@@ -82,6 +83,7 @@ public:
             return "hibernate";
         if (mode == ScheduleMode )
             return "schedule";
+        return "normal";
     }
 
     static QString typeToString(const Type& mode)
@@ -92,6 +94,7 @@ public:
             return "slow";
         if (mode == HibernateType)
             return "hibernate";
+        return "normal";
     }
     DlRate normal;
     DlRate slow;
@@ -139,6 +142,7 @@ public:
             return "preferred";
         if (type == RequiredType)
             return "required";
+        return "allowed";
     }
 
     int maxPeers;

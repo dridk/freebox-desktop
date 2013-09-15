@@ -9,6 +9,7 @@ AccountModel::AccountModel(QObject *parent) :
 
 int AccountModel::rowCount(const QModelIndex &parent) const
 {
+    Q_UNUSED(parent)
     QSettings settings;
     settings.beginGroup("accounts");
     return settings.childGroups().count();
@@ -18,6 +19,7 @@ int AccountModel::rowCount(const QModelIndex &parent) const
 
 int AccountModel::columnCount(const QModelIndex &parent) const
 {
+     Q_UNUSED(parent)
     return 2;
 }
 

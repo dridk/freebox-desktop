@@ -10,7 +10,7 @@ public:
     explicit DLAddFileDialog(QWidget *parent = 0);
     ~DLAddFileDialog();
 
-    const QString& fileName() const;
+     QString fileName() const;
 
 
 private:

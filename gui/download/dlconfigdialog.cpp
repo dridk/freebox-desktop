@@ -68,7 +68,7 @@ void DLConfigDialog::acceptClicked(QAbstractButton *button)
 {
 
 
-    if (mButtonBox->buttonRole(button) == QDialogButtonBox::Cancel){
+    if (mButtonBox->standardButton(button) == QDialogButtonBox::Cancel){
         emit reject();
         return;
     }
@@ -84,7 +84,7 @@ void DLConfigDialog::acceptClicked(QAbstractButton *button)
     mFbx->download()->requestUpdateConfig(cfg);
 
     qDebug()<<mButtonBox->buttonRole(button);
-    if (mButtonBox->buttonRole(button) == QDialogButtonBox::AcceptRole)
+    if (mButtonBox->standardButton(button) == QDialogButtonBox::Ok)
     {
         emit accept();
         return;

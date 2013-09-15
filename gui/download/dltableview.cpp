@@ -68,11 +68,13 @@ void DLTableView::dragMoveEvent(QDragMoveEvent * event)
 
 void DLTableView::dragLeaveEvent(QDragLeaveEvent *event)
 {
+    Q_UNUSED(event)
 
 }
 
 void DLTableView::dropEvent(QDropEvent *event)
 {
+    Q_UNUSED(event)
 
 
 

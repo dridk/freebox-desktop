@@ -31,7 +31,7 @@ DLAddFileDialog::~DLAddFileDialog()
     delete mPassEdit;
 }
 
-const QString &DLAddFileDialog::fileName() const
+ QString DLAddFileDialog::fileName() const
 {
     return mFileEdit->text();
 }
