@@ -37,8 +37,6 @@ public:
     void setHostName(const QString& host, int port = 80) ;
     void setApplicationToken(const QString& token);
     void setApplicationId(const QString& id);
-    bool saveApplicationToken();
-    bool loadApplicationToken();
     void setBaseUrl(const QString& base);
 
     //get
@@ -67,6 +65,8 @@ public:
     void requestLogin();
     void requestSession();
 
+    void logout();
+
     //get Module
     FileSystem * fileSystem() {return mFileSystem;}
     Download * download() {return mDownload;}
@@ -82,6 +82,7 @@ signals:
     void challengeChanged();
     void sessionReceived();
     void loginSuccess();
+    void logoutSuccess();
 
 private slots:
     void requestApiInfoFinished();

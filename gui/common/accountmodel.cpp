@@ -5,155 +5,172 @@
 AccountModel::AccountModel(QObject *parent) :
     QAbstractTableModel(parent)
 {
+    mSettings.beginGroup("accounts");
+    qDebug()<<mSettings.fileName();
 }
 
 int AccountModel::rowCount(const QModelIndex &parent) const
 {
     Q_UNUSED(parent)
-    QSettings settings;
-    settings.beginGroup("accounts");
-    return settings.childGroups().count();
-    settings.endGroup();
+    return mSettings.childGroups().count();
 
 }
 
 int AccountModel::columnCount(const QModelIndex &parent) const
 {
-     Q_UNUSED(parent)
+    Q_UNUSED(parent)
     return 2;
 }
 
 QVariant AccountModel::data(const QModelIndex &index, int role) const
 {
-
     if (!index.isValid())
         return QVariant();
-    QSettings settings;
-    settings.beginGroup("accounts");
 
     if (role == Qt::DisplayRole)
     {
 
-        QString key = settings.childGroups().at(index.row());
+        QString key = mSettings.childGroups().at(index.row());
         if (index.column() == 0)
             return key;
 
-        if (index.column() == 1)
-            return settings.value(key+"/hostname").toString();
+        if (index.column() == 1) {
+            QString host = mSettings.value(key+"/hostname").toString();
+            int ip       = mSettings.value(key+"/port").toInt();
+            return QString("%1:%2").arg(host).arg(ip);
 
+        }
 
-    }
-
-    if (role == Qt::FontRole)
-    {
-        QString key = settings.childGroups().at(index.row());
-        QFont font = QApplication::font();
-        if(settings.value(key+"/isDefault").toBool())
-            font.setBold(true);
-        else font.setBold(false);
-        return font;
     }
 
     if (role == Qt::DecorationRole && index.column() == 0)
     {
 
-        QString key = settings.childGroups().at(index.row());
-        return settings.value(key+"/icon");
+        QString key = mSettings.childGroups().at(index.row());
+        return mSettings.value(key+"/icon");
 
     }
 
-    settings.endGroup(); // end accounts
 
     return QVariant();
 }
 
-QString AccountModel::nameOf(int row) const
+QVariant AccountModel::headerData(int section, Qt::Orientation orientation, int role) const
 {
-    QSettings settings;
-    settings.beginGroup("accounts");
-    return settings.childGroups().at(row);
+    if (orientation == Qt::Horizontal && role == Qt::DisplayRole)
+    {
+        if (section == 0)
+            return "Nom";
+        if (section == 1)
+            return "Adresse";
+    }
+    return QVariant();
+}
+
+QString AccountModel::name(int row) const
+{
+    return mSettings.childGroups().value(row,QString());
 
 }
 
-bool AccountModel::addAccount(const QString &name, const QString &hostname, int port, const QIcon &icon)
+bool AccountModel::addAccount(const QString &name, const QString &hostname, int port,const QIcon &icon)
 {
-    QSettings settings;
-    settings.beginGroup("accounts");
-    if (settings.childGroups().contains(name))
-    {
-        qDebug()<<name<<" account already exist";
+
+    if (mSettings.childGroups().contains(name))
         return false;
-    }
 
-    qDebug()<<"add"<<icon.name();
-    beginResetModel();
-    settings.beginGroup(name);
-    settings.setValue("hostname", hostname);
-    settings.setValue("port", port);
-    settings.setValue("icon", icon);
-    settings.setValue("isDefault", false);
-    settings.endGroup(); // end keys
-    endResetModel();
+    mSettings.beginGroup(name);
+    mSettings.setValue("name", name);
+    mSettings.setValue("hostname", hostname);
+    mSettings.setValue("port", port);
+    mSettings.setValue("token", QString());
+    mSettings.setValue("icon", icon);
+    mSettings.setValue("isDefault",false);
+    mSettings.endGroup();
 
-    settings.endGroup(); //end accounts
+    emit layoutChanged();
     return true;
-
 }
 
 bool AccountModel::updateAccount(const QString &name, const QString &hostname, int port, const QIcon &icon)
 {
-    QSettings settings;
-    settings.beginGroup("accounts");
-    if (!settings.childGroups().contains(name))
-    {
-        qDebug()<<name<<" account cannot be updated";
+    if (!mSettings.childGroups().contains(name))
         return false;
-    }
 
-    beginResetModel();
-    settings.beginGroup(name);
-    settings.setValue("hostname", hostname);
-    settings.setValue("port", port);
-    settings.setValue("icon", icon);
-    settings.setValue("isDefault", false);
-    settings.endGroup(); // end keys
-    endResetModel();
+    mSettings.beginGroup(name);
+    mSettings.setValue("name", name);
+    mSettings.setValue("hostname", hostname);
+    mSettings.setValue("port", port);
+    mSettings.setValue("icon", icon);
+    mSettings.endGroup();
 
-    settings.endGroup(); //end accounts
+    qDebug()<<"updated";
+    emit layoutChanged();
     return true;
-}
 
+}
 bool AccountModel::removeAccount(const QString &name)
 {
-    beginResetModel();
-    QSettings settings;
-    settings.beginGroup("accounts");
-    settings.remove(name);
-    settings.endGroup();
-    endResetModel();
+
+    if (!mSettings.childGroups().contains(name))
+        return false;
+
+    mSettings.remove(name);
+    emit layoutChanged();
     return true;
 }
 
-void AccountModel::setDefaultAccount(const QString &name)
+bool AccountModel::removeAccount(int row)
 {
-    beginResetModel();
-    QSettings settings;
-    settings.beginGroup("accounts");
+    if (row >= mSettings.childGroups().count())
+        return false;
+    removeAccount(mSettings.childGroups().value(row));
+    return true;
+}
 
-    foreach (QString key, settings.childGroups())
-        settings.setValue(key+"/isDefault", (key == name));
+QString AccountModel::applicationToken(const QString &name) const
+{
+    if (!mSettings.childGroups().contains(name))
+        return QString();
 
-    settings.endGroup(); //end accounts
-    endResetModel();
+    return mSettings.value(QString("%1/token").arg(name)).toString();
 
+}
+
+QString AccountModel::hostName(const QString &name) const
+{
+    if (!mSettings.childGroups().contains(name))
+        return QString();
+
+    return mSettings.value(QString("%1/hostname").arg(name)).toString();
+
+}
+
+int AccountModel::port(const QString &name) const
+{
+    if (!mSettings.childGroups().contains(name))
+        return 80;
+
+    return mSettings.value(QString("%1/port").arg(name)).toInt();
 }
 
 void AccountModel::setApplicationToken(const QString &name, const QString &token)
 {
-    QSettings settings;
-    settings.beginGroup("accounts");
+    mSettings.beginGroup(name);
+    mSettings.setValue("token", token);
+    mSettings.endGroup();
+}
 
-    settings.setValue(name+"/token", token);
+void AccountModel::setHostName(const QString &name, const QString &host)
+{
+    mSettings.beginGroup(name);
+    mSettings.setValue("hostname", host);
+    mSettings.endGroup();
+}
 
-    settings.endGroup();
+void AccountModel::setPort(const QString &name, int port)
+{
+    mSettings.beginGroup(name);
+    mSettings.setValue("port", port);
+    mSettings.endGroup();
 }

@@ -25,7 +25,7 @@ void IconButton::showListWidget()
     listWidget->addItem(new QListWidgetItem(QIcon(":main_nt.png"),""));
     listWidget->addItem(new QListWidgetItem(QIcon(":main_hp.png"),""));
     listWidget->addItem(new QListWidgetItem(QIcon(":main_hp.png"),""));
-
+    listWidget->setIconSize(iconSize());
     dialog.setLayout(new QVBoxLayout);
     dialog.layout()->addWidget(listWidget);
 

@@ -12,7 +12,6 @@ FbxAPI::FbxAPI(QObject *parent) :
 {
     mHostName = "mafreebox.free.fr";
     mPort = 80;
-
     mApiInfo.version = "1.0";
     mApiInfo.baseUrl = "/api/";
     mRequestLoginAttempt = 0;
@@ -45,21 +44,6 @@ void FbxAPI::setApplicationToken(const QString &token)
 void FbxAPI::setApplicationId(const QString &id)
 {
     mApplicationId = id;
-    loadApplicationToken();
-}
-
-bool FbxAPI::saveApplicationToken()
-{
-    QSettings settings;
-    settings.setValue(mApplicationId, mApplicationToken.toUtf8());
-    return settings.contains(mApplicationId);
-}
-
-bool FbxAPI::loadApplicationToken()
-{
-    QSettings settings;
-    mApplicationToken = settings.value(mApplicationId).toByteArray();
-    return settings.contains(mApplicationId);
 }
 
 void FbxAPI::setBaseUrl(const QString &base)
@@ -196,6 +180,14 @@ void FbxAPI::requestSession()
 
 
 
+}
+
+void FbxAPI::logout()
+{
+    mApplicationToken.clear();
+    mSessionToken.clear();
+    mLogged = false;
+    emit logoutSuccess();
 }
 void FbxAPI::requestApiInfoFinished()
 {

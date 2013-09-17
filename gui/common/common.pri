@@ -11,7 +11,7 @@ SOURCES += \
     gui/common/aboutdialog.cpp \
     gui/common/tools.cpp \
     gui/common/launcherwidget.cpp \
-#    gui/common/accountlistdialog.cpp \
+    gui/common/accountlistdialog.cpp \
     gui/common/accountmodel.cpp \
     gui/common/accountdialog.cpp \
     gui/common/iconbutton.cpp
@@ -22,7 +22,7 @@ HEADERS += \
     gui/common/aboutdialog.h \
     gui/common/tools.h \
     gui/common/launcherwidget.h \
-#    gui/common/accountlistdialog.h \
+    gui/common/accountlistdialog.h \
     gui/common/accountmodel.h \
     gui/common/accountdialog.h \
     gui/common/iconbutton.h

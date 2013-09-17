@@ -326,7 +326,6 @@ void FileSystem::requestListFinished()
     qDebug()<<"list received";
     if (fbx()->parseResult(doc))
     {
-
         QJsonArray array = doc.object().value("result").toArray();
         QList<FileInfo> list;
         foreach (QJsonValue item, array)
@@ -352,8 +351,6 @@ void FileSystem::requestListFinished()
         emit listReceived(list);
 
     }
-
-
 
 
 }

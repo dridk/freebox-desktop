@@ -5,7 +5,9 @@
 AccountDialog::AccountDialog(QWidget *parent) :
     QDialog(parent)
 {
-    QFormLayout * layout = new QFormLayout;
+
+    QGroupBox * box = new QGroupBox;
+    QHBoxLayout * layout = new QHBoxLayout;
     mNameEdit = new QLineEdit;
     mHostNameEdit = new QLineEdit;
     mIconButton  = new IconButton;
@@ -13,16 +15,28 @@ AccountDialog::AccountDialog(QWidget *parent) :
     mButtonBox = new QDialogButtonBox(QDialogButtonBox::Save|
                                       QDialogButtonBox::Cancel);
 
+    box->setLayout(layout);
+    box->setTitle("Nouvelle Freebox");
 
-    layout->addRow("Icône :", mIconButton);
-    layout->addRow("Nom :", mNameEdit);
-    layout->addRow("Serveur :", mHostNameEdit);
-    layout->addRow("Port :", mPortSpinBox);
+    mNameEdit->setPlaceholderText("Nom de la freebox");
+    mNameEdit->setText("Maison");
+    mHostNameEdit->setPlaceholderText("hostname");
+    mHostNameEdit->setText("mafreebox.freebox.fr");
+    mPortSpinBox->setValue(80);
 
-    layout->setAlignment(Qt::AlignCenter|Qt::AlignRight);
+
+    QFormLayout * formLayout = new QFormLayout;
+    formLayout->addRow("Nom :", mNameEdit);
+    formLayout->addRow("Serveur :", mHostNameEdit);
+    formLayout->addRow("Port :", mPortSpinBox);
+    formLayout->setLabelAlignment(Qt::AlignTop);
+
+    layout->addWidget(mIconButton);
+    layout->addLayout(formLayout);
+    layout->setAlignment(Qt::AlignTop);
 
     QVBoxLayout * mainLayout = new QVBoxLayout;
-    mainLayout->addLayout(layout);
+    mainLayout->addWidget(box);
     mainLayout->addWidget(mButtonBox);
     setLayout(mainLayout);
 

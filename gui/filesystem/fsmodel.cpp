@@ -21,7 +21,9 @@ FSModel::FSModel(FbxAPI *fbx, QObject *parent) :
     connect(mFbx->fileSystem(),SIGNAL(uploadFinished(QString)),this,SLOT(refreshCurrentIndex()));
 
     connect(this,SIGNAL(itemChanged(QStandardItem*)),this,SLOT(itemToBeRenamed(QStandardItem*)));
-    connect(mFbx,SIGNAL(error(QString,QString)),this,SLOT(refreshCurrentIndex()));
+
+    // Je voulais faire un clear si erreur de connection
+    //connect(mFbx,SIGNAL(error(QString,QString)),this,SLOT(refreshCurrentIndex()));
 }
 
 bool FSModel::canFetchMore(const QModelIndex &parent) const

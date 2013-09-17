@@ -27,7 +27,6 @@ AbstractMainWindow::AbstractMainWindow(QWidget *parent) :
     connect(loginAction,SIGNAL(triggered()),this,SLOT(login()));
     connect(authAction,SIGNAL(triggered()),this,SLOT(authorize()));
     connect(fbx(),SIGNAL(error(QString,QString)), this,SLOT(showError()));
-    connect(fbx(),SIGNAL(authorizeReceived(QString,int)),this,SLOT(authorizeReceived(QString,int)));
     connect(githubAction,SIGNAL(triggered()),this,SLOT(openGithub()));
     connect(aboutAction,SIGNAL(triggered()),this,SLOT(showAboutDialog()));
     connect(aboutQtAction,SIGNAL(triggered()),qApp, SLOT(aboutQt()));
@@ -49,19 +48,20 @@ AbstractMainWindow::~AbstractMainWindow()
 
 void AbstractMainWindow::login()
 {
-    fbx()->loadApplicationToken();
-    if (fbx()->applicationToken().isEmpty())
-        authorize();
-    else {
-        fbx()->setApplicationId("org.labsquare" + qApp->applicationName());
-        fbx()->requestLogin();
-    }
+//    if (fbx()->applicationToken().isEmpty())
+//        authorize();
+//    else {
+//        fbx()->setApplicationId("org.labsquare" + qApp->applicationName());
+//        fbx()->requestLogin();
+//    }
 }
 
 void AbstractMainWindow::authorize()
 {
-    QString appId = qApp->organizationDomain() + qApp->applicationName();
-    fbx()->requestAuthorize(appId, qApp->applicationName(), qApp->applicationVersion(), QHostInfo::localHostName());
+//    QString appId = qApp->organizationDomain() + qApp->applicationName();
+//    fbx()->requestAuthorize(appId, qApp->applicationName(), qApp->applicationVersion(), QHostInfo::localHostName());
+
+
 }
 
 void AbstractMainWindow::showError()
@@ -78,7 +78,6 @@ void AbstractMainWindow::authorizeReceived(const QString &token, int trackId)
     if (box->exec() == QDialog::Accepted)
     {
         fbx()->setApplicationToken(token);
-        fbx()->saveApplicationToken();
         login();
     }
 
@@ -98,8 +97,8 @@ void AbstractMainWindow::showAboutDialog()
 
 void AbstractMainWindow::showAccountDialog()
 {
-    //    AccountListDialog dialog(this);
-    //    dialog.exec();
+        AccountListDialog dialog(fbx(),this);
+        dialog.exec();
 
 }
 
@@ -114,4 +113,5 @@ void AbstractMainWindow::loginSuccess()
 {
     mStatusLabel->setPixmap(QPixmap(":high"));
     statusBar()->showMessage("Vous êtes connecté(e)s sur "+fbx()->hostName());
+
 }
