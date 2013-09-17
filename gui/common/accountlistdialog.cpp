@@ -20,10 +20,12 @@ AccountListDialog::AccountListDialog(FbxAPI *fbx, QWidget *parent) :
     mAddButton = new QPushButton("Nouveau");
     mEditButton = new QPushButton("Editer");
     mRemoveButton = new QPushButton("Supprimer");
-    mLoginButton = new QPushButton("Se connecter");
-    mAuthLogin = new QPushButton("Auhoriser");
+    mLoginButton = new QPushButton(QIcon(":server_connect.png"),"Se connecter");
+    mAuthLogin = new QPushButton(QIcon(":email_authentication.png"),"Auhoriser");
     mCancelButton = new QPushButton("Annuler");
     QVBoxLayout * buttonLayout = new QVBoxLayout;
+
+
 
 
     buttonLayout->addWidget(mAddButton);
@@ -32,7 +34,7 @@ AccountListDialog::AccountListDialog(FbxAPI *fbx, QWidget *parent) :
     buttonLayout->addStretch();
     buttonLayout->addWidget(mLoginButton);
     buttonLayout->addWidget(mAuthLogin);
-    buttonLayout->addWidget(mCancelButton);
+//    buttonLayout->addWidget(mCancelButton);
 
     mainLayout->addWidget(mTableView);
     mainLayout->addLayout(buttonLayout);

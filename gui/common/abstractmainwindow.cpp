@@ -3,16 +3,26 @@
 #include <QDesktopServices>
 #include <QtWidgets>
 #include <QHostInfo>
+#include <QSettings>
 AbstractMainWindow::AbstractMainWindow(QWidget *parent) :
     QMainWindow(parent)
 {
     mFbx = new FbxAPI;
 
     //construction du window Menu
-    QMenu * fileMenu  = new QMenu("Fichier",this);
-    QAction * authAction = fileMenu->addAction(QIcon(":email_authentication.png"),"Authoriser l'application");
-    QAction * loginAction = fileMenu->addAction(QIcon(":server_connect.png"),"Connexion");
-    fileMenu->addAction(QIcon(""),"Comptes...", this,SLOT(showAccountDialog()));
+    QMenu * fileMenu  = new QMenu("Freebox",this);
+
+    fileMenu->addAction(QIcon(""),"Gestion des freebox...", this,SLOT(showAccountDialog()));
+    fileMenu->addSeparator();
+
+    QSettings settings;
+    settings.beginGroup("accounts");
+    foreach (QString name, settings.childGroups() )
+        fileMenu->addAction(name);
+
+    settings.endGroup();
+
+
 
     menuBar()->addMenu(fileMenu);
 
@@ -24,8 +34,6 @@ AbstractMainWindow::AbstractMainWindow(QWidget *parent) :
 
     menuBar()->addMenu(helpMenu);
 
-    connect(loginAction,SIGNAL(triggered()),this,SLOT(login()));
-    connect(authAction,SIGNAL(triggered()),this,SLOT(authorize()));
     connect(fbx(),SIGNAL(error(QString,QString)), this,SLOT(showError()));
     connect(githubAction,SIGNAL(triggered()),this,SLOT(openGithub()));
     connect(aboutAction,SIGNAL(triggered()),this,SLOT(showAboutDialog()));
@@ -48,18 +56,18 @@ AbstractMainWindow::~AbstractMainWindow()
 
 void AbstractMainWindow::login()
 {
-//    if (fbx()->applicationToken().isEmpty())
-//        authorize();
-//    else {
-//        fbx()->setApplicationId("org.labsquare" + qApp->applicationName());
-//        fbx()->requestLogin();
-//    }
+    //    if (fbx()->applicationToken().isEmpty())
+    //        authorize();
+    //    else {
+    //        fbx()->setApplicationId("org.labsquare" + qApp->applicationName());
+    //        fbx()->requestLogin();
+    //    }
 }
 
 void AbstractMainWindow::authorize()
 {
-//    QString appId = qApp->organizationDomain() + qApp->applicationName();
-//    fbx()->requestAuthorize(appId, qApp->applicationName(), qApp->applicationVersion(), QHostInfo::localHostName());
+    //    QString appId = qApp->organizationDomain() + qApp->applicationName();
+    //    fbx()->requestAuthorize(appId, qApp->applicationName(), qApp->applicationVersion(), QHostInfo::localHostName());
 
 
 }
@@ -97,8 +105,8 @@ void AbstractMainWindow::showAboutDialog()
 
 void AbstractMainWindow::showAccountDialog()
 {
-        AccountListDialog dialog(fbx(),this);
-        dialog.exec();
+    AccountListDialog dialog(fbx(),this);
+    dialog.exec();
 
 }
 
