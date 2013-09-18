@@ -69,6 +69,7 @@ DLCategoryWidget::DLCategoryWidget(QWidget *parent) :
 
     connect(mCateogryView,SIGNAL(clicked(QModelIndex)),this,SLOT(itemClicked(QModelIndex)));
 
+    mCateogryView->setIconSize(QSize(32,32));
 
 //    QListWidgetItem * titleItem = new QListWidgetItem(QIcon(),"Téléchargements");
 //    titleItem->setFlags(Qt::NoItemFlags);

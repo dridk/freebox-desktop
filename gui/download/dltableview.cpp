@@ -15,8 +15,8 @@ DLTableView::DLTableView(FbxAPI *fbx, QWidget *parent) :
     setContextMenuPolicy(Qt::DefaultContextMenu);
     setModel(mFilterModel);
     setItemDelegate(mDelegate);
-    verticalHeader()->setDefaultSectionSize(20);
-    setColumnWidth(2, 300);
+    verticalHeader()->setDefaultSectionSize(30);
+    setColumnWidth(2, 250);
     setColumnWidth(4, 200);
     hideColumn(10);
 

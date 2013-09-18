@@ -25,7 +25,7 @@ public slots:
     void stop() {mTimer->stop();}
 protected slots:
     void setData(const QList<DownloadTask>& data);
-
+    void clear();
 protected:
     int hasId(const QList<DownloadTask>& list, int id);
 

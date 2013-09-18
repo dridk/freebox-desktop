@@ -11,6 +11,9 @@ DLModel::DLModel(FbxAPI *fbx, QObject *parent):
     mTimer->setInterval(1000);
     connect(mTimer,SIGNAL(timeout()),mFbx->download(),SLOT(requestList()));
 
+    connect(mFbx,SIGNAL(logoutSuccess()),mTimer,SLOT(stop()));
+    connect(mFbx,SIGNAL(logoutSuccess()),this,SLOT(clear()));
+
     //    mDatas.append(DownloadTask());
 
 
@@ -109,10 +112,7 @@ void DLModel::setData(const QList<DownloadTask> &data)
     //==== SI LA LISTE EST VIDE....
     if (data.isEmpty())
     {
-        qDebug()<<"clear";
-        beginRemoveRows(QModelIndex(),0,mDatas.count());
-        mDatas.clear();
-        endRemoveRows();
+        clear();
         return;
     }
 
@@ -145,7 +145,7 @@ void DLModel::setData(const QList<DownloadTask> &data)
     for (int i=0; i<data.count(); ++i)
     {
         if (hasId(mDatas, data[i].id) == -1)
-           addIds.append(i);
+            addIds.append(i);
     }
     foreach (int id, addIds)
     {
@@ -154,7 +154,14 @@ void DLModel::setData(const QList<DownloadTask> &data)
         endInsertRows();
     }
 
-   emit updated();
+    emit updated();
+}
+
+void DLModel::clear()
+{
+    beginRemoveRows(QModelIndex(),0,mDatas.count());
+    mDatas.clear();
+    endRemoveRows();
 }
 
 int DLModel::hasId(const QList<DownloadTask> &list,int id)
