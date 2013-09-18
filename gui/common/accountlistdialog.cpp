@@ -45,15 +45,15 @@ AccountListDialog::AccountListDialog(FbxAPI *fbx, QWidget *parent) :
     connect(mAddButton,SIGNAL(clicked()),this,SLOT(add()));
     connect(mEditButton,SIGNAL(clicked()),this,SLOT(edit()));
     connect(mRemoveButton,SIGNAL(clicked()),this,SLOT(remove()));
-    connect(mLoginButton,SIGNAL(clicked()),this,SLOT(loginClicked()));
-    connect(mAuthLogin,SIGNAL(clicked()),this,SLOT(authClicked()));
-    connect(mFbx,SIGNAL(authorizeReceived(QString,int)),this,SLOT(authReceived(QString,int)));
+    connect(mLoginButton,SIGNAL(clicked()),this,SLOT(onLoginClicked()));
+    connect(mAuthLogin,SIGNAL(clicked()),this,SLOT(onAuthClicked()));
 
 }
 
-
-
-
+AccountModel *AccountListDialog::model()
+{
+    return mModel;
+}
 void AccountListDialog::add()
 {
     AccountDialog dialog(this);
@@ -95,62 +95,22 @@ void AccountListDialog::remove()
     mModel->removeAccount(row);
 }
 
-void AccountListDialog::loginClicked()
+void AccountListDialog::onLoginClicked()
 {
     if (mTableView->currentIndex().isValid()) {
 
-        mFbx->logout();
         QString currentName = mModel->name(mTableView->currentIndex().row());
-        QString token       = mModel->applicationToken(currentName);
-        QString hostName    = mModel->hostName(currentName);
-        int port            = mModel->port(currentName);
-
-        mFbx->setApplicationToken(token);
-        qDebug()<<mFbx->applicationToken();
-        mFbx->setHostName(hostName, port);
-        mFbx->setApplicationId(qApp->organizationDomain() + qApp->applicationName());
-        mFbx->requestLogin();
-
+        emit loginClicked(currentName);
     }
-
-
-
-
-
 }
 
-void AccountListDialog::authClicked()
+void AccountListDialog::onAuthClicked()
 {
     if (mTableView->currentIndex().isValid())
     {
-        setEnabled(false);
-        QString appId = qApp->organizationDomain() + qApp->applicationName();
-        mFbx->requestAuthorize(appId, qApp->applicationName(), qApp->applicationVersion(), QHostInfo::localHostName());
-
-    }
-}
-
-void AccountListDialog::authReceived(const QString &token, int trackId)
-{
-
-    AuthorizeMessageBox * box = new AuthorizeMessageBox(mFbx, this);
-    box->setTrackId(trackId);
-
-    if (box->exec() == QDialog::Accepted)
-    {
         QString currentName = mModel->name(mTableView->currentIndex().row());
-        mModel->setApplicationToken(currentName, token);
-        mFbx  ->setApplicationToken(token);
+        emit authClicked(currentName);
     }
-
-    else
-    {
-        QMessageBox::warning(this,"Authorisation", "Authorisation refusé");
-    }
-
-
-    setEnabled(true);
-
 }
 
 

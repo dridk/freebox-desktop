@@ -67,6 +67,12 @@ QVariant AccountModel::headerData(int section, Qt::Orientation orientation, int 
     return QVariant();
 }
 
+QStringList AccountModel::names() const
+{
+    return mSettings.childGroups();
+
+}
+
 QString AccountModel::name(int row) const
 {
     return mSettings.childGroups().value(row,QString());

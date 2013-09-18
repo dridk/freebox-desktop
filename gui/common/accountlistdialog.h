@@ -12,18 +12,20 @@ class AccountListDialog : public QDialog
     Q_OBJECT
 public:
     explicit AccountListDialog(FbxAPI * fbx,QWidget *parent = 0);
+    AccountModel * model();
 
 signals:
-    
+    void loginClicked(const QString& name);
+    void authClicked(const QString& name);
+
 public slots:
     void add();
     void edit();
     void remove();
 
 protected slots:
-    void loginClicked();
-    void authClicked();
-    void authReceived(const QString& token ,int trackId);
+    void onLoginClicked();
+    void onAuthClicked();
 
 
 private:

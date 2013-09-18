@@ -10,21 +10,14 @@ AbstractMainWindow::AbstractMainWindow(QWidget *parent) :
     mFbx = new FbxAPI;
 
     //construction du window Menu
-    QMenu * fileMenu  = new QMenu("Freebox",this);
-
-    fileMenu->addAction(QIcon(""),"Gestion des freebox...", this,SLOT(showAccountDialog()));
-    fileMenu->addSeparator();
-
-    QSettings settings;
-    settings.beginGroup("accounts");
-    foreach (QString name, settings.childGroups() )
-        fileMenu->addAction(name);
-
-    settings.endGroup();
+    mFreeboxMenu    = new QMenu("Freebox",this);
+    mAccountsDialog = new AccountListDialog(mFbx,this);
+    mFreeboxMenu->addAction(QIcon(""),"Gestion des freebox...", this,SLOT(showAccountDialog()));
+    mFreeboxMenu->addSeparator();
+    loadAccountList();
 
 
-
-    menuBar()->addMenu(fileMenu);
+    menuBar()->addMenu(mFreeboxMenu);
 
 
     QMenu * helpMenu = new QMenu("Aide",this);
@@ -34,6 +27,10 @@ AbstractMainWindow::AbstractMainWindow(QWidget *parent) :
 
     menuBar()->addMenu(helpMenu);
 
+    connect(mAccountsDialog,SIGNAL(loginClicked(QString)),this,SLOT(login(QString)));
+    connect(mAccountsDialog,SIGNAL(authClicked(QString)),this,SLOT(authorize(QString)));
+
+    connect(fbx(),SIGNAL(authorizeReceived(QString,int)), this,SLOT(authorizeReceived(QString,int)));
     connect(fbx(),SIGNAL(error(QString,QString)), this,SLOT(showError()));
     connect(githubAction,SIGNAL(triggered()),this,SLOT(openGithub()));
     connect(aboutAction,SIGNAL(triggered()),this,SLOT(showAboutDialog()));
@@ -54,39 +51,42 @@ AbstractMainWindow::~AbstractMainWindow()
     delete mStatusLabel;
 }
 
-void AbstractMainWindow::login()
+void AbstractMainWindow::login(const QString &name)
 {
-    //    if (fbx()->applicationToken().isEmpty())
-    //        authorize();
-    //    else {
-    //        fbx()->setApplicationId("org.labsquare" + qApp->applicationName());
-    //        fbx()->requestLogin();
-    //    }
+    mFbx->logout();
+    mCurrentLoginName   = name;
+    QString token       = mAccountsDialog->model()->applicationToken(name);
+    QString hostname    = mAccountsDialog->model()->hostName(name);
+    int port            = mAccountsDialog->model()->port(name);
+
+    mFbx->setApplicationToken(token);
+    mFbx->setHostName(hostname, port);
+    mFbx->requestLogin();
 }
 
-void AbstractMainWindow::authorize()
+void AbstractMainWindow::authorize(const QString &name)
 {
-    //    QString appId = qApp->organizationDomain() + qApp->applicationName();
-    //    fbx()->requestAuthorize(appId, qApp->applicationName(), qApp->applicationVersion(), QHostInfo::localHostName());
-
-
+    mFbx->logout();
+    mCurrentLoginName   = name;
+    QString hostname    = mAccountsDialog->model()->hostName(name);
+    int port            = mAccountsDialog->model()->port(name);
+    mFbx->setHostName(hostname, port);
+    mFbx->requestAuthorize();
 }
 
-void AbstractMainWindow::showError()
-{
-    QMessageBox::critical(this,fbx()->errorCode(), fbx()->errorString());
-
-}
 
 void AbstractMainWindow::authorizeReceived(const QString &token, int trackId)
 {
+    setEnabled(false);
+    statusBar()->showMessage("En cours d'authorisation");
     AuthorizeMessageBox * box = new AuthorizeMessageBox(mFbx, this);
     box->setTrackId(trackId);
 
-    if (box->exec() == QDialog::Accepted)
-    {
-        fbx()->setApplicationToken(token);
-        login();
+    if (box->exec() == QDialog::Accepted){
+
+        mFbx  ->setApplicationToken(token);
+        mAccountsDialog->model()->setApplicationToken(mCurrentLoginName,token);
+        QMessageBox::information(this,"Authorisation", "Authorisation réussi");
     }
 
     else
@@ -94,19 +94,23 @@ void AbstractMainWindow::authorizeReceived(const QString &token, int trackId)
         QMessageBox::warning(this,"Authorisation", "Authorisation refusé");
     }
 
-
+    setEnabled(true);
 }
 
+void AbstractMainWindow::showError()
+{
+    QMessageBox::critical(this,fbx()->errorCode(), fbx()->errorString());
+
+}
 void AbstractMainWindow::showAboutDialog()
 {
-    AboutDialog dialog;
+    AboutDialog dialog(this);
     dialog.exec();
 }
 
 void AbstractMainWindow::showAccountDialog()
 {
-    AccountListDialog dialog(fbx(),this);
-    dialog.exec();
+    mAccountsDialog->exec();
 
 }
 
@@ -120,6 +124,38 @@ void AbstractMainWindow::openGithub()
 void AbstractMainWindow::loginSuccess()
 {
     mStatusLabel->setPixmap(QPixmap(":high"));
-    statusBar()->showMessage("Vous êtes connecté(e)s sur "+fbx()->hostName());
+    statusBar()->showMessage(QString("Vous êtes connecté(e)s sur %1 : %2")
+                             .arg(mCurrentLoginName)
+                             .arg(fbx()->hostName()));
+
+    mAccountsDialog->close();
+}
+
+void AbstractMainWindow::loadAccountList()
+{
+    QSettings settings;
+    settings.beginGroup("accounts");
+    foreach (QString name, settings.childGroups() ) {
+        QIcon icon =  settings.value("icon").value<QIcon>();
+        QAction * action = mFreeboxMenu->addAction(icon,name);
+        action->setData(name);
+        connect(action,SIGNAL(triggered()),this,SLOT(loginFromAction()));
+    }
+
+    settings.endGroup();
+
+}
+
+void AbstractMainWindow::loginFromAction()
+{
+
+    QAction * action = qobject_cast<QAction*>(sender());
+    if (action){
+        qDebug()<<"from";
+        login(action->data().toString());
+
+    }
+
+
 
 }

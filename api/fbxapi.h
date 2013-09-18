@@ -36,6 +36,8 @@ public:
     //set
     void setHostName(const QString& host, int port = 80) ;
     void setApplicationToken(const QString& token);
+    void setApplicationName(const QString& name);
+    void setApplicationVersion(const QString& version);
     void setApplicationId(const QString& id);
     void setBaseUrl(const QString& base);
 
@@ -44,6 +46,8 @@ public:
     int port() const;
     const QString& applicationToken() const;
     const QString& applicationId() const;
+    const QString& applicationName() const;
+    const QString& applicationVersion() const;
     const QString& sessionToken() const;
     const QString& baseUrl() const;
     const QString& challenge() const;
@@ -59,8 +63,7 @@ public:
 
     //request
     void requestApiInfo();
-    void requestAuthorize(const QString& appId, const QString& appName,
-                          const QString& appVersion, const QString& deviceName);
+    void requestAuthorize();
     void requestAuthorizeStatus(int trackId);
     void requestLogin();
     void requestSession();
@@ -99,7 +102,9 @@ private:
     ApiInfo mApiInfo;
     QString mApplicationToken;
     QString mSessionToken;
+    QString mApplicationName;
     QString mApplicationId;
+    QString mApplicationVersion;
     QString mChallenge;
     QString mHostName;
     QString mErrorString;

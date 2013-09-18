@@ -10,17 +10,21 @@
 FbxAPI::FbxAPI(QObject *parent) :
     QNetworkAccessManager(parent)
 {
-    mHostName = "mafreebox.free.fr";
-    mPort = 80;
+    mHostName           = "mafreebox.free.fr";
+    mPort               = 80;
+    mApplicationId      = qApp->organizationDomain() + qApp->applicationName();
+    mApplicationName    = qApp->applicationName();
+    mApplicationVersion = qApp->applicationVersion();
+
     mApiInfo.version = "1.0";
     mApiInfo.baseUrl = "/api/";
-    mRequestLoginAttempt = 0;
     mApiInfo.deviceName = QHostInfo::localHostName();
     mLogged = false;
+    mRequestLoginAttempt = 0;
 
     // == alloc module
     mFileSystem = new FileSystem(this);
-    mDownload = new Download(this);
+    mDownload   = new Download(this);
 
 
 }
@@ -41,9 +45,18 @@ void FbxAPI::setApplicationToken(const QString &token)
     mApplicationToken = token;
 }
 
+void FbxAPI::setApplicationName(const QString &name)
+{
+    mApplicationName = name;
+}
+
 void FbxAPI::setApplicationId(const QString &id)
 {
     mApplicationId = id;
+}
+void FbxAPI::setApplicationVersion(const QString &version)
+{
+    mApplicationVersion = version;
 }
 
 void FbxAPI::setBaseUrl(const QString &base)
@@ -65,6 +78,24 @@ const QString &FbxAPI::applicationToken() const
 {
     return mApplicationToken;
 }
+
+const QString &FbxAPI::applicationId() const
+{
+    return mApplicationId;
+}
+
+const QString &FbxAPI::applicationName() const
+{
+  return mApplicationName;
+}
+
+const QString &FbxAPI::applicationVersion() const
+{
+
+    return mApplicationVersion;
+}
+
+
 
 const QString &FbxAPI::sessionToken() const
 {
@@ -123,14 +154,14 @@ void FbxAPI::requestApiInfo()
 
 }
 
-void FbxAPI::requestAuthorize(const QString &appId, const QString &appName, const QString &appVersion, const QString &deviceName)
+void FbxAPI::requestAuthorize()
 {
 
     QJsonObject json;
-    json.insert("app_id", appId);
-    json.insert("app_name",appName);
-    json.insert("app_version",appVersion);
-    json.insert("device_name",deviceName);
+    json.insert("app_id", applicationId());
+    json.insert("app_name",applicationName());
+    json.insert("app_version",applicationVersion());
+    json.insert("device_name", QHostInfo::localHostName());
 
     QNetworkRequest request = myCreateRequest("login/authorize");
     QNetworkReply * reply = post(request,QJsonDocument(json).toJson());
@@ -397,6 +428,5 @@ void FbxAPI::errorReceived(QNetworkReply::NetworkError /*errCode*/)
     }
 
 }
-
 
 

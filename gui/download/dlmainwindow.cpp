@@ -81,7 +81,7 @@ DLMainWindow::DLMainWindow(QWidget *parent) :
     setWindowTitle("Téléchargement");
     setWindowIcon(QIcon(":main_dl.png"));
 
-    login();
+
 
 }
 

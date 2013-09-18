@@ -95,7 +95,6 @@ FSMainWindow::FSMainWindow(QWidget *parent) :
     setTaskCount(0);
     //    setAttribute(Qt::WA_DeleteOnClose,true);
 
-    login();
 
 
     setWindowTitle("Explorateur de fichiers");

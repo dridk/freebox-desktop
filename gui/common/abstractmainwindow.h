@@ -18,9 +18,12 @@ public:
     FbxAPI * fbx() {
         return mFbx;
     }
+
+
 public slots:
-    void login();
-    void authorize();
+    void login(const QString& name);
+    void authorize(const QString& name);
+
 
 protected slots:
     void showError();
@@ -29,11 +32,18 @@ protected slots:
     void showAccountDialog();
     void openGithub();
     void loginSuccess();
+    void loadAccountList();
+    void loginFromAction();
+
+
 
 
 private:
     FbxAPI * mFbx;
+    AccountListDialog* mAccountsDialog;
     QLabel * mStatusLabel;
+    QMenu * mFreeboxMenu;
+    QString mCurrentLoginName;
 };
 
 #endif // ABSTRACTMAINWINDOW_H
