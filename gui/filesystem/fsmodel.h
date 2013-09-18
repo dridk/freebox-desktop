@@ -46,6 +46,7 @@ public slots:
     void upload(const QString& filename, const QModelIndex& parent);
     void download(const QString& destination, const QModelIndex& index);
     void refresh(const QModelIndex& parent = QModelIndex());
+    void clear();
 
 protected slots:
     void refreshCurrentIndex();

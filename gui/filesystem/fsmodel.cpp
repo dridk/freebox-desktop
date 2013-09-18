@@ -19,6 +19,7 @@ FSModel::FSModel(FbxAPI *fbx, QObject *parent) :
     connect(mFbx->fileSystem(),SIGNAL(mkdirFinished()),this,SLOT(refreshCurrentIndex()));
     connect(mFbx->fileSystem(),SIGNAL(renameFinished()),this,SLOT(refreshCurrentIndex()));
     connect(mFbx->fileSystem(),SIGNAL(uploadFinished(QString)),this,SLOT(refreshCurrentIndex()));
+    connect(mFbx,SIGNAL(logoutSuccess()),this,SLOT(clear()));
 
     connect(this,SIGNAL(itemChanged(QStandardItem*)),this,SLOT(itemToBeRenamed(QStandardItem*)));
 
@@ -213,6 +214,14 @@ void FSModel::itemToBeRenamed(QStandardItem *item)
 void FSModel::refresh(const QModelIndex &parent)
 {
     fetchMore(parent);
+}
+
+void FSModel::clear()
+{
+    qDebug()<<"clear";
+    int c = invisibleRootItem()->rowCount();
+    invisibleRootItem()->removeRows(0,c);
+    emit layoutChanged();
 }
 QString FSModel::sizeHuman(double size)
 {

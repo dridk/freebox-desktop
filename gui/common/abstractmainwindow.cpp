@@ -133,16 +133,14 @@ void AbstractMainWindow::loginSuccess()
 
 void AbstractMainWindow::loadAccountList()
 {
-    QSettings settings;
-    settings.beginGroup("accounts");
-    foreach (QString name, settings.childGroups() ) {
-        QIcon icon =  settings.value("icon").value<QIcon>();
-        QAction * action = mFreeboxMenu->addAction(icon,name);
+
+    foreach (QString name, mAccountsDialog->model()->names()) {
+
+        QAction * action = mFreeboxMenu->addAction(name);
         action->setData(name);
         connect(action,SIGNAL(triggered()),this,SLOT(loginFromAction()));
     }
 
-    settings.endGroup();
 
 }
 
