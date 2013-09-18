@@ -23,7 +23,7 @@ DLTableView::DLTableView(FbxAPI *fbx, QWidget *parent) :
     mFilterModel->setFilterKeyColumn(10);
     setSelectionBehavior(QAbstractItemView::SelectRows);
     horizontalHeader()->setSectionResizeMode(QHeaderView::Interactive);
-
+    horizontalHeader()->setSectionsMovable(true); // ATTENTION QT5 ONLY
     horizontalHeader()->setSectionResizeMode(0,QHeaderView::ResizeToContents);
     horizontalHeader()->setSectionResizeMode(1,QHeaderView::ResizeToContents);
     horizontalHeader()->setSectionResizeMode(2,QHeaderView::Interactive);

@@ -11,7 +11,7 @@ DLModel::DLModel(FbxAPI *fbx, QObject *parent):
     mTimer->setInterval(1000);
     connect(mTimer,SIGNAL(timeout()),mFbx->download(),SLOT(requestList()));
 
-//    mDatas.append(DownloadTask());
+    //    mDatas.append(DownloadTask());
 
 
 }
@@ -99,34 +99,74 @@ QVariant DLModel::headerData(int section, Qt::Orientation orientation, int role)
 
 const DownloadTask &DLModel::downloadTask(int row)
 {
-    return mDatas[row];
+    return mDatas.at(row);
 }
 
 void DLModel::setData(const QList<DownloadTask> &data)
 {
+
+    // PAsnox, si tu vois ce code... bein, aide moi a faire un truc beau :D
+    //==== SI LA LISTE EST VIDE....
     if (data.isEmpty())
-        return;
-
-    if (data.count() != mDatas.count())
     {
-        beginResetModel();
-        mDatas = data;
-        endResetModel();
+        qDebug()<<"clear";
+        beginRemoveRows(QModelIndex(),0,mDatas.count());
+        mDatas.clear();
+        endRemoveRows();
+        return;
     }
 
-    else {
-        mDatas = data;
-        emit dataChanged(index(0,0), index(data.count()-1, columnCount()-1));
+    //================= SUPPRESSION LOCAL
+    QList<int> removeIds;
+    for (int i=0; i<mDatas.count(); ++i)
+    {
+        int remoteId =hasId(data, mDatas[i].id);
+        if (remoteId == -1)
+            removeIds.append(i);
+        else {
+            mDatas.replace(i ,data.value(remoteId));
+            emit dataChanged(index(i,0), index(i, columnCount()-1));
+        }
 
     }
 
+    foreach (int id, removeIds)
+    {
+        qDebug()<<"SUPPRIMER "<<id;
+        beginRemoveRows(QModelIndex(), id, id);
+        mDatas.removeAt(id);
+        endRemoveRows();
+    }
 
-    emit updated();
 
 
+    //================= AJOUT LOCAL
+    QList<int> addIds;
+    for (int i=0; i<data.count(); ++i)
+    {
+        if (hasId(mDatas, data[i].id) == -1)
+           addIds.append(i);
+    }
+    foreach (int id, addIds)
+    {
+        beginInsertRows(QModelIndex(), 0,0);
+        mDatas.prepend(data.value(id));
+        endInsertRows();
+    }
 
+   emit updated();
+}
 
+int DLModel::hasId(const QList<DownloadTask> &list,int id)
+{
+    int row=0;
+    foreach (DownloadTask task, list)
+    {
+        if (task.id == id)
+            return row;
 
+        row++;
+    }
 
-
+    return -1;
 }
