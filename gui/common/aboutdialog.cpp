@@ -1,5 +1,6 @@
 #include "aboutdialog.h"
 #include <QKeyEvent>
+#include <QMessageBox>
 AboutDialog::AboutDialog(QWidget *parent) :
     QDialog(parent)
 {
@@ -65,7 +66,7 @@ void AboutDialog::keyPressEvent(QKeyEvent * event)
     {
 
         mKonamiValid = 0;
-        qDebug()<<"GOODS";
+        QMessageBox::information(this,"konami", "Konami code activé");
     }
 
 }
