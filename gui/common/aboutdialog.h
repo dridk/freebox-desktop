@@ -11,9 +11,10 @@ class AboutDialog : public QDialog
 public:
     explicit AboutDialog(QWidget *parent = 0);
     
-signals:
-    
-public slots:
+
+    void keyPressEvent(QKeyEvent *);
+
+
 
 private:
    QTabWidget *mTabWidget;
@@ -21,6 +22,8 @@ private:
    QTextEdit * mContributorTextEdit;
    QTextEdit * mLicenceTextEdit;
    QWebView * mView;
+   QList<Qt::Key> mKonamiCodes;
+   int mKonamiValid;
     
 };
 
