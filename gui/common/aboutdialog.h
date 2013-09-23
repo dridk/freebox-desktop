@@ -3,6 +3,8 @@
 
 #include <QDialog>
 #include <QtWidgets>
+#include <QWebView>
+#include "aboutheader.h"
 class AboutDialog : public QDialog
 {
     Q_OBJECT
@@ -14,10 +16,11 @@ signals:
 public slots:
 
 private:
-    QLabel * mPixLabel;
-    QLabel * mTextLabel;
-    QPushButton * mCreditsButton;
-    QPushButton * mLicenceButton;
+   QTabWidget *mTabWidget;
+   AboutHeader * mAboutHeader;
+   QTextEdit * mContributorTextEdit;
+   QTextEdit * mLicenceTextEdit;
+   QWebView * mView;
     
 };
 

@@ -69,5 +69,8 @@
         <file>main_nt.png</file>
         <file>main_pc.png</file>
         <file>main_st.png</file>
+        <file>fbx_header.png</file>
+        <file>contributor.html</file>
+        <file>license.html</file>
     </qresource>
 </RCC>

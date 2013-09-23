@@ -81,6 +81,7 @@ DLMainWindow::DLMainWindow(QWidget *parent) :
     setWindowTitle("Téléchargement");
     setWindowIcon(QIcon(":main_dl.png"));
 
+    mLeftDock->setMaximumWidth(150);
 
 
 }

@@ -5,6 +5,7 @@
 #-------------------------------------------------
 
 QT       += core gui network
+QT +=  webkitwidgets
 
 greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 
@@ -27,4 +28,8 @@ HEADERS  += \
 RESOURCES += \
     assets/assets.qrc \
     assets/mime.qrc
+
+OTHER_FILES += \
+    assets/contributor.html \
+    assets/license.html
 

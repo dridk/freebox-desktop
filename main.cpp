@@ -35,8 +35,11 @@ int main(int argc, char *argv[])
 //    }
 
 
-    DLMainWindow m;
-    m.show();
+//    DLMainWindow m;
+//    m.show();
+
+    FSMainWindow f;
+    f.show();
 
     
     return a.exec();
