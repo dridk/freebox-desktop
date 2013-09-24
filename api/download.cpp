@@ -283,6 +283,26 @@ void Download::requestUpdateConfig(const DownloadConfiguration &cfg)
 
 }
 
+void Download::requestUpdateThrottling(const DlThrottlingConfig::Mode &mode)
+{
+
+    QNetworkRequest request = fbx()->myCreateRequest(QString("downloads/throttling"));
+
+    QJsonDocument json;
+    QJsonObject object;
+    object.insert("throttling",DlThrottlingConfig::modeToString(mode));
+    json.setObject(object);
+
+
+    QNetworkReply * reply = fbx()->put(request, json.toJson());
+
+    connect(reply,SIGNAL(finished()),this,SLOT(requestUpdateThrottlingFinished()));
+    connect(reply,SIGNAL(error(QNetworkReply::NetworkError)),fbx(),SLOT(errorReceived(QNetworkReply::NetworkError)));
+
+
+
+}
+
 void Download::requestFeedList()
 {
     QNetworkReply * reply = fbx()->get(fbx()->myCreateRequest(QString("downloads/feeds/")));
@@ -629,6 +649,17 @@ void Download::requestConfigFinished()
 
 
         emit configReceived(cfg);
+
+    }
+}
+
+void Download::requestUpdateThrottlingFinished()
+{
+    QNetworkReply * reply  = qobject_cast<QNetworkReply*>(sender());
+    QJsonDocument doc = QJsonDocument::fromJson(reply->readAll());
+    if(fbx()->parseResult(doc))
+    {
+        emit updateThrottlingFinished();
 
     }
 }

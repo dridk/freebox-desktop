@@ -30,7 +30,6 @@ DLTableView::DLTableView(FbxAPI *fbx, QWidget *parent) :
     horizontalHeader()->setSectionResizeMode(9,QHeaderView::Stretch);
     setAlternatingRowColors(true);
 
-   connect(fbx,SIGNAL(loginSuccess()),mModel,SLOT(start()));
 
     setAcceptDrops(true);
 

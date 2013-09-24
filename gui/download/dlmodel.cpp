@@ -9,10 +9,12 @@ DLModel::DLModel(FbxAPI *fbx, QObject *parent):
     connect(mFbx->download(),SIGNAL(listReceived(QList<DownloadTask>)),this,SLOT(setData(QList<DownloadTask>)));
 
     mTimer->setInterval(1000);
+
     connect(mTimer,SIGNAL(timeout()),mFbx->download(),SLOT(requestList()));
 
     connect(mFbx,SIGNAL(logoutSuccess()),mTimer,SLOT(stop()));
     connect(mFbx,SIGNAL(logoutSuccess()),this,SLOT(clear()));
+    connect(mFbx,SIGNAL(loginSuccess()),this,SLOT(start()));
 
     //    mDatas.append(DownloadTask());
 
@@ -107,6 +109,7 @@ const DownloadTask &DLModel::downloadTask(int row)
 
 void DLModel::setData(const QList<DownloadTask> &data)
 {
+    mTimer->stop(); // On stop le timer pour pas avoir un doublon lors des connexions lentes
 
     // PAsnox, si tu vois ce code... bein, aide moi a faire un truc beau :D
     //==== SI LA LISTE EST VIDE....
@@ -155,6 +158,7 @@ void DLModel::setData(const QList<DownloadTask> &data)
     }
 
     emit updated();
+    mTimer->start();
 }
 
 void DLModel::clear()

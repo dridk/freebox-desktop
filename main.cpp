@@ -38,7 +38,7 @@ int main(int argc, char *argv[])
 //    DLMainWindow m;
 //    m.show();
 
-    FSMainWindow f;
+    DLMainWindow f;
     f.show();
 
     

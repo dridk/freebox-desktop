@@ -274,6 +274,7 @@ public slots:
                         const QString archivePassword = QString());
     void requestConfig();
     void requestUpdateConfig(const DownloadConfiguration& cfg);
+    void requestUpdateThrottling(const DlThrottlingConfig::Mode& mode);
     void requestFeedList();
     void requestFeed(int id);
     void requestAddFeed(const QString& url);
@@ -297,6 +298,7 @@ signals:
     void addFinished();
     void addFileFinished();
     void configReceived(const DownloadConfiguration& configuration);
+    void updateThrottlingFinished();
     void updateConfigFinished();
     void feedListReceived(const QList<DownloadFeed>& list);
     void feedReceived(const DownloadFeed& feed);
@@ -323,6 +325,7 @@ protected slots:
     void requestAddFileFinished();
     void requestAddListFinished();
     void requestConfigFinished();
+    void requestUpdateThrottlingFinished();
     void requestUpdateConfigFinished();
     void requestFeedListFinished();
     void requestFeedFinished();

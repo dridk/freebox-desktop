@@ -24,6 +24,7 @@ DLCategoryWidget::DLCategoryWidget(QWidget *parent) :
     rssRootItem->setText(0,"Flux RSS");
     rssRootItem->setFlags(Qt::ItemIsEnabled);
     rssRootItem->setFont(0,font);
+    rssRootItem->setDisabled(true);
 
     QTreeWidgetItem * allItem = new QTreeWidgetItem;
     QTreeWidgetItem * downloadingItem = new QTreeWidgetItem;

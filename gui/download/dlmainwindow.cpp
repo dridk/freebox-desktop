@@ -49,30 +49,32 @@ DLMainWindow::DLMainWindow(QWidget *parent) :
     manageButton->setToolButtonStyle(Qt::ToolButtonTextBesideIcon);
 
     manageButton->setMenu(new QMenu);
-    manageButton->menu()->addAction(QIcon(":control_pause_blue.png"),"Tout susprendre");
-    manageButton->menu()->addAction(QIcon(":control_play_blue.png"),"Tout reprendre");
-    manageButton->menu()->addAction(QIcon(":bin_recycle.png"),"Supprimer les tâches terminées");
+    manageButton->menu()->addAction(QIcon(":control_pause_blue.png"),"Tout susprendre",
+                                    this,SLOT(suspendAll()));
+    manageButton->menu()->addAction(QIcon(":control_play_blue.png"),"Tout reprendre",
+                                    this,SLOT(revivalAll()));
+//    manageButton->menu()->addAction(QIcon(":bin_recycle.png"),"Supprimer les tâches terminées");
     manageButton->setPopupMode(QToolButton::InstantPopup);
-    toolBar->addWidget(manageButton);
+//    toolBar->addWidget(manageButton);
 
     QToolBar * addBar = new QToolBar("ajout direct");
     QToolButton * rssButton = new QToolButton;
     rssButton->setText("Flux RSS");
     rssButton->setIcon(QIcon(":rss_add.png"));
     rssButton->setToolButtonStyle(Qt::ToolButtonTextBesideIcon);
-
+    rssButton->setDisabled(true);
     rssButton->setMenu(new QMenu);
     rssButton->menu()->addAction(QIcon(":rss_add.png"),"Nouveau flux RSS");
     rssButton->menu()->addAction(QIcon(":rss_go.png"),"Mettre à jour les RSS");
     rssButton->setPopupMode(QToolButton::InstantPopup);
     toolBar->addWidget(rssButton);
-    addBar->addWidget(new QLabel("Ajout direct:"));
+//    addBar->addWidget(new QLabel("Ajout direct:"));
     addBar->addWidget(mDirectUrlEdit);
     addBar->addAction(QIcon(":add.png"),"+",this,SLOT(addDirectUrl()));
     addBar->setMovable(true);
 
-    addToolBar(toolBar);
-    addToolBar(addBar);
+    addToolBar(Qt::TopToolBarArea,toolBar);
+    addToolBar(Qt::TopToolBarArea,addBar);
 
     connect(mCategoryWidget,SIGNAL(statusClicked(QString)), mView, SLOT(setStatusFilter(QString)));
     connect(mDirectUrlEdit,SIGNAL(returnPressed()),this,SLOT(addDirectUrl()));
@@ -142,6 +144,19 @@ void DLMainWindow::showConfigDialog()
     fbx()->download()->requestConfig();
     dialog.exec();
     mView->setAutoUpdate(true);
+}
+
+void DLMainWindow::suspendAll()
+{
+
+
+}
+
+void DLMainWindow::revivalAll()
+{
+
+
+
 }
 
 void DLMainWindow::addPathFromArgs()

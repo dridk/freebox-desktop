@@ -24,6 +24,9 @@ public slots:
     void addAdvancedUrl();
     void addDirectUrl();
     void showConfigDialog();
+    void suspendAll();
+    void revivalAll();
+
 
 protected slots:
     void addPathFromArgs();
