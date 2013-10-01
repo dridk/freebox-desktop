@@ -53,9 +53,9 @@ DLMainWindow::DLMainWindow(QWidget *parent) :
                                     this,SLOT(suspendAll()));
     manageButton->menu()->addAction(QIcon(":control_play_blue.png"),"Tout reprendre",
                                     this,SLOT(revivalAll()));
-//    manageButton->menu()->addAction(QIcon(":bin_recycle.png"),"Supprimer les tâches terminées");
+    //    manageButton->menu()->addAction(QIcon(":bin_recycle.png"),"Supprimer les tâches terminées");
     manageButton->setPopupMode(QToolButton::InstantPopup);
-//    toolBar->addWidget(manageButton);
+    toolBar->addWidget(manageButton);
 
     QToolBar * addBar = new QToolBar("ajout direct");
     QToolButton * rssButton = new QToolButton;
@@ -68,7 +68,7 @@ DLMainWindow::DLMainWindow(QWidget *parent) :
     rssButton->menu()->addAction(QIcon(":rss_go.png"),"Mettre à jour les RSS");
     rssButton->setPopupMode(QToolButton::InstantPopup);
     toolBar->addWidget(rssButton);
-//    addBar->addWidget(new QLabel("Ajout direct:"));
+    //    addBar->addWidget(new QLabel("Ajout direct:"));
     addBar->addWidget(mDirectUrlEdit);
     addBar->addAction(QIcon(":add.png"),"+",this,SLOT(addDirectUrl()));
     addBar->setMovable(true);
@@ -149,11 +149,16 @@ void DLMainWindow::showConfigDialog()
 void DLMainWindow::suspendAll()
 {
 
+    mView->suspendAll();
+
+
 
 }
 
 void DLMainWindow::revivalAll()
 {
+
+    mView->revivalAll();
 
 
 

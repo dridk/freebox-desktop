@@ -1,5 +1,6 @@
 #include "dlmodel.h"
 #include <QIcon>
+#include "dlmodel.h"
 #include "tools.h" // pour le humanSize...A mettre dans une autre class
 DLModel::DLModel(FbxAPI *fbx, QObject *parent):
     QAbstractTableModel(parent)
@@ -109,7 +110,6 @@ const DownloadTask &DLModel::downloadTask(int row)
 
 void DLModel::setData(const QList<DownloadTask> &data)
 {
-    mTimer->stop(); // On stop le timer pour pas avoir un doublon lors des connexions lentes
 
     // PAsnox, si tu vois ce code... bein, aide moi a faire un truc beau :D
     //==== SI LA LISTE EST VIDE....
@@ -158,7 +158,6 @@ void DLModel::setData(const QList<DownloadTask> &data)
     }
 
     emit updated();
-    mTimer->start();
 }
 
 void DLModel::clear()
@@ -181,3 +180,5 @@ int DLModel::hasId(const QList<DownloadTask> &list,int id)
 
     return -1;
 }
+
+

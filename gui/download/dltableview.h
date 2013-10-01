@@ -25,6 +25,8 @@ public slots:
     void showPropertyDialog();
     void setStatusFilter(const QString& status);
     void setAutoUpdate(bool enable);
+    void suspendAll();
+    void revivalAll();
 
 
 

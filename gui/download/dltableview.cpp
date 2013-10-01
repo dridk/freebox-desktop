@@ -159,10 +159,41 @@ void DLTableView::setStatusFilter(const QString &status)
 void DLTableView::setAutoUpdate(bool enable)
 {
 
-    if (enable && mFbx->logged())
-        mModel->start();
-    else
-        mModel->stop();
+
+}
+
+void DLTableView::suspendAll()
+{
+    qDebug()<<"suspendAll();";
+    QList<DownloadTask> tasks;
+    for (int row=0; row<mFilterModel->sourceModel()->rowCount(); row++)
+    {
+        DLModel * dlModel = qobject_cast<DLModel*>(mFilterModel->sourceModel());
+        DownloadTask task = dlModel->downloadTask(row);
+        tasks.append(task);
+
+    }
+
+    foreach (DownloadTask task, tasks)
+        mFbx->download()->requestUpdate(task.id,task.ioPriority,"stopped");
+
+}
+
+void DLTableView::revivalAll()
+{
+    qDebug()<<"revivalALl();";
+    QList<DownloadTask> tasks;
+    for (int row=0; row<mFilterModel->sourceModel()->rowCount(); row++)
+    {
+        DLModel * dlModel = qobject_cast<DLModel*>(mFilterModel->sourceModel());
+        DownloadTask task = dlModel->downloadTask(row);
+        tasks.append(task);
+
+    }
+
+    foreach (DownloadTask task, tasks)
+        mFbx->download()->requestUpdate(task.id,task.ioPriority,"downloading");
+
 }
 
 void DLTableView::setPropertyDialog()
