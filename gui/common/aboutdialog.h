@@ -17,14 +17,16 @@ public:
 
 
 private:
-   QTabWidget *mTabWidget;
-   AboutHeader * mAboutHeader;
-   QTextEdit * mContributorTextEdit;
-   QTextEdit * mLicenceTextEdit;
-   QWebView * mView;
-   QList<Qt::Key> mKonamiCodes;
-   int mKonamiValid;
-    
+    QTabWidget *mTabWidget;
+    AboutHeader * mAboutHeader;
+    QTextBrowser * mContributorTextEdit;
+    QTextBrowser * mLicenceTextEdit;
+    QWebView * mView;
+    QList<Qt::Key> mKonamiCodes;
+    int mKonamiValid;
+
+
+
 };
 
 #endif // ABOUTDIALOG_H

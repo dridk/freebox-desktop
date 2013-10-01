@@ -7,8 +7,8 @@ AboutDialog::AboutDialog(QWidget *parent) :
 
     mTabWidget = new QTabWidget;
     mAboutHeader= new AboutHeader;
-    mContributorTextEdit = new QTextEdit;
-    mLicenceTextEdit = new QTextEdit;
+    mContributorTextEdit = new QTextBrowser;
+    mLicenceTextEdit = new QTextBrowser;
     mView = new QWebView;
     QVBoxLayout * layout = new QVBoxLayout;
     layout->setContentsMargins(0,0,0,0);
@@ -16,9 +16,12 @@ AboutDialog::AboutDialog(QWidget *parent) :
     mLicenceTextEdit->setReadOnly(true);
     mContributorTextEdit->setReadOnly(true);
 
+    mContributorTextEdit->setOpenExternalLinks(true);
+
     QFile file(":license.html");
     file.open(QIODevice::ReadOnly);
     mLicenceTextEdit->setText(file.readAll());
+
     file.close();
 
     QFile file2(":contributor.html");
@@ -32,6 +35,7 @@ AboutDialog::AboutDialog(QWidget *parent) :
 
     mTabWidget->addTab(mContributorTextEdit,"Contributeur");
     mTabWidget->addTab(mLicenceTextEdit,"Licence");
+
 
     setLayout(layout);
     setWindowTitle("A propos...");
@@ -49,6 +53,8 @@ AboutDialog::AboutDialog(QWidget *parent) :
 
     mTabWidget->setFocusPolicy(Qt::NoFocus);
     setFocus();
+
+    setFixedWidth(mAboutHeader->width());
 
 }
 

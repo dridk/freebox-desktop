@@ -72,5 +72,8 @@
         <file>fbx_header.png</file>
         <file>contributor.html</file>
         <file>license.html</file>
+        <file>twitter.png</file>
+        <file>google_plus.png</file>
+        <file>linkedin.png</file>
     </qresource>
 </RCC>
