@@ -35,14 +35,14 @@ void LauncherWidget::launch(const QModelIndex &index)
 {
     if (index.row() == 0)
     {
-        FSMainWindow * win = new FSMainWindow;
+        DLMainWindow * win = new DLMainWindow;
         win->show();
         return;
     }
 
     if (index.row() == 1)
     {
-        DLMainWindow * win = new DLMainWindow;
+        FSMainWindow * win = new FSMainWindow;
         win->show();
         return;
     }
