@@ -25,6 +25,7 @@ protected slots:
   void clearTasks();
  void removeSelectedTasks();
  void computeTasksCount();
+ void downloadClicked(const QModelIndex& index);
 
 signals:
     void countChanged(int count);

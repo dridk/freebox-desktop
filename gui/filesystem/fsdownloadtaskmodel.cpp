@@ -1,5 +1,6 @@
 #include "fsdownloadtaskmodel.h"
 #include <QMimeDatabase>
+#include "tools.h"
 FSDownloadTaskModel::FSDownloadTaskModel(FbxAPI *fbx, QObject *parent):
     FSAbstractTaskModel(parent)
 {
@@ -7,8 +8,8 @@ FSDownloadTaskModel::FSDownloadTaskModel(FbxAPI *fbx, QObject *parent):
     connect(mFbx->fileSystem(),SIGNAL(downloadStarted(QNetworkReply*)),
             this,SLOT(add(QNetworkReply*)));
 
-//    connect(mFbx->fileSystem(),SIGNAL(downloadEnded(QNetworkReply*)),
-//            this,SLOT(rem(QNetworkReply*)));
+    //    connect(mFbx->fileSystem(),SIGNAL(downloadEnded(QNetworkReply*)),
+    //            this,SLOT(rem(QNetworkReply*)));
 
 }
 
@@ -29,14 +30,18 @@ QVariant FSDownloadTaskModel::data(const QModelIndex &index, int role) const
     if (role == Qt::WhatsThisRole || role ==SubTitleRole)
         return mDatas.values().at(index.row()).subTitle;
 
-    if (role == ProgressRole || role ==Qt::UserRole)
+    if (role == ProgressRole )
         return mDatas.values().at(index.row()).progress;
 
     if (role == Qt::DecorationRole || role ==MimeIconRole)
         return mDatas.values().at(index.row()).mimeIconPath;
 
-//    if (role == Qt::StatusTipRole)
-//        return mDatas.values().at(index.row()).actionIconPath;
+    if (role == Qt::UserRole)
+        return mDatas.values().at(index.row()).destination;
+
+
+    //    if (role == Qt::StatusTipRole)
+    //        return mDatas.values().at(index.row()).actionIconPath;
 
     return QVariant();
 }
@@ -69,14 +74,14 @@ void FSDownloadTaskModel::add(QNetworkReply *reply)
     FSDownloadItem item;
     item.reply = reply;
     item.time.start();
-    //récupere le nom du fichier a partir de l'URL encodé en base64
-    QByteArray encodedName = reply->url().toString().split("/").last().toUtf8();
-    QString decodedName    = QString::fromUtf8(QByteArray::fromBase64(encodedName));
-    QMimeType mime = mMimeDb.mimeTypeForUrl(decodedName);
-    //récupere l'icone.
-    QString icon = mime.iconName().replace("-","_").replace("/","_");
-    item.mimeIconPath = QString(":mime/%1.png").arg(icon);
-    item.title = decodedName;
+
+    //recupere la destination
+    if (mFbx->fileSystem()->downloadFile(reply)) {
+        QFileInfo dirInfo(mFbx->fileSystem()->downloadFile(reply)->fileName());
+        QFileInfo fileInfo(Tools::pathFrom64(dirInfo.fileName()));
+        item.title = dirInfo.dir().absolutePath() + QDir::separator() + fileInfo.fileName();
+        item.mimeIconPath = Tools::fileIcon(item.title);
+    }
 
     mDatas.insert(reply, item);
     connect(reply,SIGNAL(downloadProgress(qint64,qint64)),this,SLOT(downloadProgress(qint64,qint64)));
@@ -104,7 +109,7 @@ void FSDownloadTaskModel::clearFinished()
         if (mDatas.contains(reply))
         {
             if (mDatas[reply].progress == 100)
-             rem(reply);
+                rem(reply);
         }
     }
 }
@@ -134,24 +139,24 @@ void FSDownloadTaskModel::downloadProgress(qint64 bytes, qint64 total)
 
         if (mDatas[reply].progress < 100)
         {
-        //calcul de la vitesse
-        int elapsed = mDatas[reply].time.elapsed();
-        mDatas[reply].time.restart();
-        int diff = bytes - mDatas[reply].bytes;
-        double speed = double(diff) / double(elapsed) ;
-        mDatas[reply].bytes    = bytes;
+            //calcul de la vitesse
+            int elapsed = mDatas[reply].time.elapsed();
+            mDatas[reply].time.restart();
+            int diff = bytes - mDatas[reply].bytes;
+            double speed = double(diff) / double(elapsed) ;
+            mDatas[reply].bytes    = bytes;
 
-        // calcul du temps restant
-        double remain = (int(total) - int(bytes)) / int(speed);
-        QTime remainTime = QTime(0,0,0);
-        remainTime = remainTime.addSecs(qRound(remain/1000));
+            // calcul du temps restant
+            double remain = (int(total) - int(bytes)) / int(speed);
+            QTime remainTime = QTime(0,0,0);
+            remainTime = remainTime.addSecs(qRound(remain/1000));
 
-        // definition du  subtitle
-        mDatas[reply].subTitle = QString("%1 sur %2 à :%3/sec - %4 restante")
-                .arg(FSModel::sizeHuman(bytes))
-                .arg(FSModel::sizeHuman(total))
-                .arg(FSModel::sizeHuman(speed))
-                .arg(remainTime.toString("hh:mm"));
+            // definition du  subtitle
+            mDatas[reply].subTitle = QString("%1 sur %2 à :%3/sec - %4 restante")
+                    .arg(FSModel::sizeHuman(bytes))
+                    .arg(FSModel::sizeHuman(total))
+                    .arg(FSModel::sizeHuman(speed))
+                    .arg(remainTime.toString("hh:mm"));
 
         }
 
@@ -160,7 +165,7 @@ void FSDownloadTaskModel::downloadProgress(qint64 bytes, qint64 total)
             mDatas[reply].subTitle = QString("%1 terminé à %2")
                     .arg(FSModel::sizeHuman(total))
                     .arg(QDateTime::currentDateTime().toString());
-             emit countChanged();
+            emit countChanged();
         }
 
         int row = mDatas.keys().indexOf(reply);

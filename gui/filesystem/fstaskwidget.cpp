@@ -7,13 +7,13 @@ FSTaskWidget::FSTaskWidget(FbxAPI *fbx, QWidget *parent) :
     QMainWindow(parent)
 {
     mFbx = fbx;
-//    mActionModel   =  new FSActionTaskModel(mFbx);
+    //    mActionModel   =  new FSActionTaskModel(mFbx);
     mDownloadModel = new FSDownloadTaskModel(mFbx);
     mUploadModel   = new FSUploadTaskModel(mFbx);
 
     mDownloadView  = new QListView;
     mUploadView    = new QListView;
-//    mActionView    = new QListView;
+    //    mActionView    = new QListView;
 
     mDelegate = new FSTaskDelegate;
     mTimer = new QTimer;
@@ -22,9 +22,9 @@ FSTaskWidget::FSTaskWidget(FbxAPI *fbx, QWidget *parent) :
 
     //    mTimer->setInterval(1000);
 
-//    mActionView->setAlternatingRowColors(true);
-//    mActionView->setItemDelegate(mDelegate);
-//    mActionView->setModel(mActionModel);
+    //    mActionView->setAlternatingRowColors(true);
+    //    mActionView->setItemDelegate(mDelegate);
+    //    mActionView->setModel(mActionModel);
 
     mDownloadView->setAlternatingRowColors(true);
     mDownloadView->setItemDelegate(mDelegate);
@@ -64,9 +64,11 @@ FSTaskWidget::FSTaskWidget(FbxAPI *fbx, QWidget *parent) :
     setWindowTitle("Gestionnaire de tâche");
     setCentralWidget(mTabWidget);
 
-//    setWindowFlags ( Qt::CustomizeWindowHint | Qt::WindowTitleHint);
+    //    setWindowFlags ( Qt::CustomizeWindowHint | Qt::WindowTitleHint);
 
 
+    connect(mDownloadView,SIGNAL(doubleClicked(QModelIndex)),
+            this,SLOT(downloadClicked(QModelIndex)));
 
 }
 
@@ -112,6 +114,13 @@ void FSTaskWidget::computeTasksCount()
     qDebug()<<"COMPUTE COUNT..."<<count;
 
     emit countChanged(count);
+}
+
+void FSTaskWidget::downloadClicked(const QModelIndex &index)
+{
+
+    QDesktopServices::openUrl(index.data().toString());
+
 }
 
 

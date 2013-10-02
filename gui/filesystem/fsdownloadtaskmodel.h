@@ -22,6 +22,7 @@ public:
     double bytes;
     QString mimeIconPath;
     QTime time;
+    QString destination;
 };
 
 class FSDownloadTaskModel : public FSAbstractTaskModel

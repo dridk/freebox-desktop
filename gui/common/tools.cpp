@@ -1,5 +1,5 @@
 #include "tools.h"
-
+#include <QMimeDatabase>
 Tools::Tools()
 {
 }
@@ -32,4 +32,13 @@ QString Tools::pathFrom64(const QString &base64)
 QString Tools::pathTo64(const QString &path)
 {
     return QString(path.toUtf8().toBase64());
+}
+
+QString Tools::fileIcon(const QString &filename)
+{
+    QMimeDatabase db;
+    QMimeType mime = db.mimeTypeForUrl(filename);
+    //récupere l'icone.
+    QString icon = mime.iconName().replace("-","_").replace("/","_");
+    return QString(":mime/%1.png").arg(icon);
 }

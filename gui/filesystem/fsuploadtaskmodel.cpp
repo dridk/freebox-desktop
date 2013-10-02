@@ -1,5 +1,6 @@
 #include "fsuploadtaskmodel.h"
 #include "fsmodel.h"
+#include "tools.h"
 FSUploadTaskModel::FSUploadTaskModel(FbxAPI *fbx, QObject *parent) :
     FSAbstractTaskModel(parent)
 {
@@ -20,6 +21,7 @@ void FSUploadTaskModel::add(QNetworkReply *reply)
     item.reply = reply;
     item.time.start();
     item.title = reply->objectName();
+    item.mimeIconPath = Tools::fileIcon(item.title);
 
     mDatas.insert(reply, item);
     connect(reply,SIGNAL(uploadProgress(qint64,qint64)),this,SLOT(uploadProgress(qint64,qint64)));

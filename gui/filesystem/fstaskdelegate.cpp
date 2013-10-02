@@ -32,7 +32,7 @@ void FSTaskDelegate::paint(QPainter *painter, const QStyleOptionViewItem &option
 
     QPixmap icon (mimeIconPath);
 
-    painter->drawPixmap(5, option.rect.center().y()-icon.height()/2, icon.scaled(32,32));
+    painter->drawPixmap(5, option.rect.center().y()-icon.height()/2, icon);
 
     QRect progressRect = option.rect;
     progressRect.setX(40);

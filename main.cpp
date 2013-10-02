@@ -12,7 +12,7 @@ int main(int argc, char *argv[])
     QCoreApplication::setApplicationName("Freebox Desktop");
     QCoreApplication::setApplicationVersion("alpha test");
 
-    LauncherWidget launcherWindow ;
+    FSMainWindow launcherWindow ;
     launcherWindow.show();
 
 //    if (QCoreApplication::arguments().count() > 1)
