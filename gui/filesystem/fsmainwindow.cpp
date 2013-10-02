@@ -3,6 +3,7 @@
 #include <QCoreApplication>
 #include <QFileSystemModel>
 #include <QFileDialog>
+#include "tools.h"
 #include "fstaskbutton.h"
 #include "authorizemessagebox.h"
 
@@ -180,14 +181,25 @@ void FSMainWindow::setRootIndex(const QModelIndex &index)
 
     if (sender()->metaObject()->className() == QString("FSTableView")){
 
-        if (!index.data(FSModel::IsDirRole).toBool())
-            return;
-        QModelIndex mid = mModel->index(index.row(),0,index.parent());
-        QModelIndex fid = mFolderModel->mapFromSource(mid);
+        if (index.data(FSModel::IsDirRole).toBool())
+        {
+            QModelIndex mid = mModel->index(index.row(),0,index.parent());
+            QModelIndex fid = mFolderModel->mapFromSource(mid);
 
-        mTableView->setRootIndex(mid);
-        mHeaderWidget->setCurrentIndex(mid);
-        mTreeView->setCurrentIndex(fid);
+            mTableView->setRootIndex(mid);
+            mHeaderWidget->setCurrentIndex(mid);
+            mTreeView->setCurrentIndex(fid);
+        }
+        else {
+            QFileDialog dialog;
+            dialog.setWindowTitle("Télécharger");
+            QString dirPath = dialog.getExistingDirectory(this);
+            if (!dirPath.isEmpty()) {
+                qDebug()<<dirPath;
+                mModel->download(dirPath,index);
+
+            }
+        }
     }
 
     if (sender()->metaObject()->className() == QString("FSPathToolBar"))
