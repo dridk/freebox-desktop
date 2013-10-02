@@ -41,7 +41,7 @@ AbstractMainWindow::AbstractMainWindow(QWidget *parent) :
     mStatusLabel->setPixmap(QPixmap(":low"));
     statusBar()->addPermanentWidget(mStatusLabel);
 
-    setAttribute(Qt::WA_DeleteOnClose);
+//    setAttribute(Qt::WA_DeleteOnClose);  // Crash ...
 
 }
 

@@ -109,7 +109,6 @@ FSMainWindow::~FSMainWindow()
     delete mTableView;
     delete mHeaderWidget;
     delete mSplitter;
-    delete mToolBar;
     delete mModel;
     delete mFolderModel;
     delete mTaskWidget;
