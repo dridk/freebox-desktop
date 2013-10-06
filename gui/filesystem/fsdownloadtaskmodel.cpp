@@ -79,7 +79,11 @@ void FSDownloadTaskModel::add(QNetworkReply *reply)
     if (mFbx->fileSystem()->downloadFile(reply)) {
         QFileInfo dirInfo(mFbx->fileSystem()->downloadFile(reply)->fileName());
         QFileInfo fileInfo(Tools::pathFrom64(dirInfo.fileName()));
-        item.title = dirInfo.dir().absolutePath() + QDir::separator() + fileInfo.fileName();
+
+        QString p =dirInfo.dir().absolutePath() + QDir::separator() + fileInfo.fileName();
+
+        item.title = QDir::fromNativeSeparators(p);
+        qDebug()<<"ADD: "<<item.title;
         item.mimeIconPath = Tools::fileIcon(item.title);
     }
 

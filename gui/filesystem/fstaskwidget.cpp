@@ -119,7 +119,8 @@ void FSTaskWidget::computeTasksCount()
 void FSTaskWidget::downloadClicked(const QModelIndex &index)
 {
 
-    QDesktopServices::openUrl(index.data().toString());
+
+    QDesktopServices::openUrl("file:///"+index.data().toString());
 
 }
 
