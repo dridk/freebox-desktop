@@ -12,29 +12,26 @@ int main(int argc, char *argv[])
     QCoreApplication::setApplicationName("Freebox Desktop");
     QCoreApplication::setApplicationVersion("alpha test");
 
-    FSMainWindow w ;
-    w.show();
 
 
 
-//    if (QCoreApplication::arguments().count() > 1)
-//    {
+    if (QCoreApplication::arguments().count() > 1)
+    {
 
-//        QString path = QCoreApplication::arguments().value(1);
-//        DLMainWindow downloadWindow ;
+        QString path = QCoreApplication::arguments().value(1);
+        DLMainWindow downloadWindow ;
+        downloadWindow.addFile(path);
+        downloadWindow.show();
+        return a.exec();
 
-//        downloadWindow.addFile(path);
-//        downloadWindow.show();
+    }
 
-//    }
+    else {
+        LauncherWidget w;
+        w.show();
+        return a.exec();
 
-//    else {
-////         LauncherWidget *  launcherWindow ;
-////        launcherWindow->show();
-
-//        launcherWindow.show();
-
-//    }
+    }
 
 
 //    DLMainWindow m;
@@ -44,5 +41,4 @@ int main(int argc, char *argv[])
 //    f.show();
 
     
-    return a.exec();
 }

@@ -11,7 +11,12 @@ greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 
 TARGET = freebox-desktop
 TEMPLATE = app
+ICON += appicon.png
 
+
+win32 {
+RC_FILE = myapp.rc
+}
 
 
 include(api/api.pri)
@@ -31,5 +36,6 @@ RESOURCES += \
 
 OTHER_FILES += \
     assets/contributor.html \
-    assets/license.html
+    assets/license.html \
+    myapp.rc
 
