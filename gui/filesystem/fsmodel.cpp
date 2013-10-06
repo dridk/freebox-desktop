@@ -20,6 +20,7 @@ FSModel::FSModel(FbxAPI *fbx, QObject *parent) :
     connect(mFbx->fileSystem(),SIGNAL(renameFinished()),this,SLOT(refreshCurrentIndex()));
     connect(mFbx->fileSystem(),SIGNAL(uploadFinished(QString)),this,SLOT(refreshCurrentIndex()));
     connect(mFbx,SIGNAL(logoutSuccess()),this,SLOT(clear()));
+    connect(mFbx->fileSystem(),SIGNAL(removeFinished()), this,SLOT(refreshCurrentIndex()));
 
     connect(this,SIGNAL(itemChanged(QStandardItem*)),this,SLOT(itemToBeRenamed(QStandardItem*)));
 
@@ -157,7 +158,6 @@ void FSModel::remove(const QModelIndexList &indexes)
     for (int i= indexes.count()-1; i>=0; i--)
     {
         paths.append(indexes[i].data(PathRole).toString());
-        removeRow(indexes[i].row(), indexes[i].parent());
 
     }
 
