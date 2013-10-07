@@ -4,14 +4,14 @@
 #
 #-------------------------------------------------
 
-QT       += core gui network
+QT += core gui network
 QT +=  webkitwidgets
 
 greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 
 TARGET = freebox-desktop
 TEMPLATE = app
-ICON += appicon.png
+ICON += myappico.png
 
 
 win32 {
