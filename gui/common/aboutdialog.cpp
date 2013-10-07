@@ -9,7 +9,6 @@ AboutDialog::AboutDialog(QWidget *parent) :
     mAboutHeader= new AboutHeader;
     mContributorTextEdit = new QTextBrowser;
     mLicenceTextEdit = new QTextBrowser;
-    mView = new QWebView;
     QVBoxLayout * layout = new QVBoxLayout;
     layout->setContentsMargins(0,0,0,0);
 

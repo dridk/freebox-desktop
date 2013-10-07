@@ -3,7 +3,6 @@
 
 #include <QDialog>
 #include <QtWidgets>
-#include <QWebView>
 #include "aboutheader.h"
 class AboutDialog : public QDialog
 {
@@ -21,7 +20,6 @@ private:
     AboutHeader * mAboutHeader;
     QTextBrowser * mContributorTextEdit;
     QTextBrowser * mLicenceTextEdit;
-    QWebView * mView;
     QList<Qt::Key> mKonamiCodes;
     int mKonamiValid;
 

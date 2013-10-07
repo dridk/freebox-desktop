@@ -4,10 +4,7 @@
 #
 #-------------------------------------------------
 
-QT += core gui network
-QT +=  webkitwidgets
-
-greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
+QT = core gui network widgets
 
 TARGET = freebox-desktop
 TEMPLATE = app
