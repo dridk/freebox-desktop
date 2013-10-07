@@ -10,7 +10,7 @@ int main(int argc, char *argv[])
     QCoreApplication::setOrganizationName("labsquare");
     QCoreApplication::setOrganizationDomain("org.labsquare");
     QCoreApplication::setApplicationName("Freebox Desktop");
-    QCoreApplication::setApplicationVersion("alpha test");
+    QCoreApplication::setApplicationVersion("beta 0.1");
 
 
 
