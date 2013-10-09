@@ -26,6 +26,7 @@ LauncherWidget::LauncherWidget(QWidget *parent) :
     addItem(item2);
 
 
+    setWindowIcon(QIcon(":myappico.icns"));
 
     connect(this,SIGNAL(doubleClicked(QModelIndex)), this,SLOT(launch(QModelIndex)));
 

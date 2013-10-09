@@ -222,9 +222,6 @@
         <file>mime/rpm.png</file>
         <file>mime/shellscript.png</file>
         <file>mime/sound.png</file>
-        <file>mime/source_c.png</file>
-        <file>mime/source_cpp.png</file>
-        <file>mime/source_h.png</file>
         <file>mime/source_java.png</file>
         <file>mime/source_p.png</file>
         <file>mime/source_php.png</file>
@@ -313,5 +310,6 @@
         <file>mime/x_office_spreadsheet.png</file>
         <file>mime/xml.png</file>
         <file>mime/zip.png</file>
+        <file>myappico.icns</file>
     </qresource>
 </RCC>

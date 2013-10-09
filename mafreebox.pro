@@ -8,12 +8,14 @@ QT = core gui network widgets
 
 TARGET = freebox-desktop
 TEMPLATE = app
-ICON += myappico.png
+ICON = myapp.icns
 
 
 win32 {
 RC_FILE = myapp.rc
 }
+
+
 
 
 include(api/api.pri)

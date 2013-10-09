@@ -1,5 +1,6 @@
 #include <QApplication>
 #include <QMessageBox>
+#include <QWindow>
 #include "fsmainwindow.h"
 #include "fstableview.h"
 #include "dlmainwindow.h"
