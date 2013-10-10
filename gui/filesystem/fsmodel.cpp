@@ -3,7 +3,7 @@
 #include <QStandardItem>
 #include <QMimeDatabase>
 #include <QResource>
-
+#include "tools.h"
 FSModel::FSModel(FbxAPI *fbx, QObject *parent) :
     QStandardItemModel(parent)
 {
@@ -20,7 +20,7 @@ FSModel::FSModel(FbxAPI *fbx, QObject *parent) :
     connect(mFbx->fileSystem(),SIGNAL(renameFinished()),this,SLOT(refreshCurrentIndex()));
     connect(mFbx->fileSystem(),SIGNAL(uploadFinished(QString)),this,SLOT(refreshCurrentIndex()));
     connect(mFbx,SIGNAL(logoutSuccess()),this,SLOT(clear()));
-    connect(mFbx->fileSystem(),SIGNAL(removeFinished()), this,SLOT(refreshCurrentIndex()));
+    //    connect(mFbx->fileSystem(),SIGNAL(removeFinished()), this,SLOT(refreshCurrentIndex()));
 
     connect(this,SIGNAL(itemChanged(QStandardItem*)),this,SLOT(itemToBeRenamed(QStandardItem*)));
 
@@ -130,11 +130,11 @@ void FSModel::dataReceived(const QList<FileInfo> &list)
 
     }
 
-//    QModelIndex begin  = indexFromItem(rootItem->child(0));
-//    QModelIndex end = indexFromItem(rootItem->child(rootItem->rowCount()));
+    //    QModelIndex begin  = indexFromItem(rootItem->child(0));
+    //    QModelIndex end = indexFromItem(rootItem->child(rootItem->rowCount()));
 
 
-//    emit dataChanged(begin,end);
+    //    emit dataChanged(begin,end);
 
 
 
@@ -153,14 +153,27 @@ void FSModel::mkdir(const QString &name, const QModelIndex &parent)
 
 void FSModel::remove(const QModelIndexList &indexes)
 {
-
+    if (indexes.isEmpty())
+        return;
+    //Il faut remettre les index dans l'ordre et supprimer depuis la fin..@pasnox
     QStringList paths;
-    for (int i= indexes.count()-1; i>=0; i--)
+    QList<int> rows;
+
+    QModelIndex parentIndex = indexes.first().parent();
+
+    foreach ( QModelIndex i, indexes)
+        rows.append(i.row());
+
+
+
+    for (int i=rows.size()-1; i>=0; i--)
     {
+        int row = rows[i];
+        qDebug()<<row;
         paths.append(indexes[i].data(PathRole).toString());
+        removeRow(row, parentIndex);
 
     }
-
     mFbx->fileSystem()->requestRemove(paths);
 }
 
