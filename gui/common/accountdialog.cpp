@@ -23,6 +23,7 @@ AccountDialog::AccountDialog(QWidget *parent) :
     mHostNameEdit->setPlaceholderText("hostname");
     mHostNameEdit->setText("mafreebox.freebox.fr");
     mPortSpinBox->setValue(80);
+    mPortSpinBox->setRange(0,10000);
 
 
     QFormLayout * formLayout = new QFormLayout;
