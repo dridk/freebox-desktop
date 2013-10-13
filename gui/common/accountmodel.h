@@ -19,7 +19,7 @@ public:
 
     bool addAccount(const QString& name,
                     const QString& hostname,
-                    int port = 80,
+                    int port = 80, //Je me connecte sur un port à 4 chiffres, comment faire ?
                     const QIcon& icon = QIcon());
 
     bool updateAccount(const QString& name,
