@@ -250,7 +250,7 @@ class DownloadApi : public QObject
 {
     Q_OBJECT
 public:
-    explicit DownloadApi(FbxAPI *parent);
+    explicit DownloadApi(FbxAPI *parent = 0);
 public slots:
     void requestList();
     void requestDownload(int id);
