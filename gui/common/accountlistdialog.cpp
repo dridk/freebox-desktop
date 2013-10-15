@@ -21,7 +21,7 @@ AccountListDialog::AccountListDialog(FbxAPI *fbx, QWidget *parent) :
     mEditButton = new QPushButton("Editer");
     mRemoveButton = new QPushButton("Supprimer");
     mLoginButton = new QPushButton(QIcon(":server_connect.png"),"Se connecter");
-    mAuthLogin = new QPushButton(QIcon(":email_authentication.png"),"Auhoriser");
+    mAuthLogin = new QPushButton(QIcon(":email_authentication.png"),"Autoriser");
     mCancelButton = new QPushButton("Annuler");
     QVBoxLayout * buttonLayout = new QVBoxLayout;
 

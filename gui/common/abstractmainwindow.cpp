@@ -86,7 +86,7 @@ void AbstractMainWindow::authorizeReceived(const QString &token, int trackId)
 
         mFbx  ->setApplicationToken(token);
         mAccountsDialog->model()->setApplicationToken(mCurrentLoginName,token);
-        QMessageBox::information(this,"Authorisation", "Authorisation réussi");
+        QMessageBox::information(this,"Authorisation", "Authorisation réussie");
     }
 
     else

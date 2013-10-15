@@ -139,7 +139,7 @@ QMenu* FSTableView::createItemMenu()
     menu->addSeparator();
     menu->addAction(QIcon(":folder_edit.png"),"Renommer",this,SLOT(rename()));
     menu->addSeparator();
-    menu->addAction(QIcon(":folder.png"),"Nouveau sous-dosser",this,SLOT(mkdir()));
+    menu->addAction(QIcon(":folder.png"),"Nouveau sous-dossier",this,SLOT(mkdir()));
     menu->addAction(QIcon(":folder_delete.png"),"Supprimer",this,SLOT(remove()));
     menu->addSeparator();
     menu->addAction(QIcon(":page_copy.png"),"Copier");
