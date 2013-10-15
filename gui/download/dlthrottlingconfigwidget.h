@@ -3,7 +3,7 @@
 
 #include <QtWidgets>
 #include "dlscheduletablewidget.h"
-#include "download.h" //DlThrottlingConfig
+#include "fbxapi.h"
 class DLThrottlingConfigWidget : public QWidget
 {
     Q_OBJECT

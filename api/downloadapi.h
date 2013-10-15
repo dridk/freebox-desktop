@@ -7,7 +7,7 @@
 #include "fbxapi.h"
 
 class FbxAPI;
-class Download;
+class DownloadApi;
 class DownloadTask;
 class DlThrottlingConfig;
 class DownloadStats;
@@ -246,11 +246,11 @@ public:
 
 
 
-class Download : public QObject
+class DownloadApi : public QObject
 {
     Q_OBJECT
 public:
-    explicit Download(FbxAPI *parent = 0);
+    explicit DownloadApi(FbxAPI *parent);
 public slots:
     void requestList();
     void requestDownload(int id);

@@ -1,11 +1,11 @@
-#include "download.h"
+#include "downloadapi.h"
 
-Download::Download(FbxAPI *parent) :
+DownloadApi::DownloadApi(FbxAPI *parent) :
     QObject(parent)
 {
 }
 
-void Download::requestList()
+void DownloadApi::requestList()
 {
     QNetworkReply * reply = fbx()->get(fbx()->myCreateRequest("downloads/"));
 
@@ -14,7 +14,7 @@ void Download::requestList()
 
 }
 
-void Download::requestDownload(int id)
+void DownloadApi::requestDownload(int id)
 {
     QNetworkReply * reply = fbx()->get(fbx()->myCreateRequest(QString("downloads/%1").arg(id)));
 
@@ -23,7 +23,7 @@ void Download::requestDownload(int id)
 
 }
 
-void Download::requestRemove(int id)
+void DownloadApi::requestRemove(int id)
 {
     QNetworkReply * reply = fbx()->deleteResource(fbx()->myCreateRequest(QString("downloads/%1").arg(id)));
 
@@ -32,7 +32,7 @@ void Download::requestRemove(int id)
 
 }
 
-void Download::requestErase(int id)
+void DownloadApi::requestErase(int id)
 {
     QNetworkReply * reply = fbx()->deleteResource(fbx()->myCreateRequest(QString("downloads/%1/erase").arg(id)));
 
@@ -41,7 +41,7 @@ void Download::requestErase(int id)
 
 }
 
-void Download::requestUpdate(int id,const QString &p, const QString &s)
+void DownloadApi::requestUpdate(int id,const QString &p, const QString &s)
 {
     QJsonObject json;
     json.insert("io_priority",p);
@@ -55,7 +55,7 @@ void Download::requestUpdate(int id,const QString &p, const QString &s)
 
 }
 
-void Download::requestLog(int id)
+void DownloadApi::requestLog(int id)
 {
     QNetworkReply * reply = fbx()->get(fbx()->myCreateRequest(QString("downloads/%1/log").arg(id)));
 
@@ -64,7 +64,7 @@ void Download::requestLog(int id)
 
 }
 
-void Download::requestStats()
+void DownloadApi::requestStats()
 {
     QNetworkReply * reply = fbx()->get(fbx()->myCreateRequest(QString("downloads/stats")));
 
@@ -73,7 +73,7 @@ void Download::requestStats()
 
 }
 
-void Download::requestAdd(const QString &url, const QString &destination, const QString &username, const QString &password, const QString archivePassword)
+void DownloadApi::requestAdd(const QString &url, const QString &destination, const QString &username, const QString &password, const QString archivePassword)
 {
 
     QStringList dataList;
@@ -109,7 +109,7 @@ void Download::requestAdd(const QString &url, const QString &destination, const 
 
 }
 
-void Download::requestAddFile(const QString &path, const QString &destination, const QString &archivePassword)
+void DownloadApi::requestAddFile(const QString &path, const QString &destination, const QString &archivePassword)
 {
     QHttpMultiPart *multiPart = new QHttpMultiPart(QHttpMultiPart::FormDataType);
     QNetworkRequest request = fbx()->myCreateRequest(QString("downloads/add"));
@@ -151,7 +151,7 @@ void Download::requestAddFile(const QString &path, const QString &destination, c
 
 }
 
-void Download::requestAddList(const QStringList &urls, const QString &destination, bool recursive, const QString &username, const QString &password, const QString archivePassword)
+void DownloadApi::requestAddList(const QStringList &urls, const QString &destination, bool recursive, const QString &username, const QString &password, const QString archivePassword)
 {
 
     QStringList dataList;
@@ -192,14 +192,14 @@ void Download::requestAddList(const QStringList &urls, const QString &destinatio
 
 }
 
-void Download::requestConfig()
+void DownloadApi::requestConfig()
 {
     QNetworkReply * reply = fbx()->get(fbx()->myCreateRequest(QString("downloads/config/")));
     connect(reply,SIGNAL(finished()),this,SLOT(requestConfigFinished()));
     connect(reply,SIGNAL(error(QNetworkReply::NetworkError)),fbx(),SLOT(errorReceived(QNetworkReply::NetworkError)));
 }
 
-void Download::requestUpdateConfig(const DownloadConfiguration &cfg)
+void DownloadApi::requestUpdateConfig(const DownloadConfiguration &cfg)
 {
     QJsonObject data;
     //-----------------------------------------------------------
@@ -283,7 +283,7 @@ void Download::requestUpdateConfig(const DownloadConfiguration &cfg)
 
 }
 
-void Download::requestUpdateThrottling(const DlThrottlingConfig::Mode &mode)
+void DownloadApi::requestUpdateThrottling(const DlThrottlingConfig::Mode &mode)
 {
 
     QNetworkRequest request = fbx()->myCreateRequest(QString("downloads/throttling"));
@@ -303,21 +303,21 @@ void Download::requestUpdateThrottling(const DlThrottlingConfig::Mode &mode)
 
 }
 
-void Download::requestFeedList()
+void DownloadApi::requestFeedList()
 {
     QNetworkReply * reply = fbx()->get(fbx()->myCreateRequest(QString("downloads/feeds/")));
     connect(reply,SIGNAL(finished()),this,SLOT(requestFeedListFinished()));
     connect(reply,SIGNAL(error(QNetworkReply::NetworkError)),fbx(),SLOT(errorReceived(QNetworkReply::NetworkError)));
 }
 
-void Download::requestFeed(int id)
+void DownloadApi::requestFeed(int id)
 {
     QNetworkReply * reply = fbx()->get(fbx()->myCreateRequest(QString("downloads/feeds/%1").arg(id)));
     connect(reply,SIGNAL(finished()),this,SLOT(requestFeedFinished()));
     connect(reply,SIGNAL(error(QNetworkReply::NetworkError)),fbx(),SLOT(errorReceived(QNetworkReply::NetworkError)));
 }
 
-void Download::requestAddFeed(const QString &url)
+void DownloadApi::requestAddFeed(const QString &url)
 {
     QJsonObject json;
     json.insert("url", url);
@@ -330,7 +330,7 @@ void Download::requestAddFeed(const QString &url)
     connect(reply,SIGNAL(error(QNetworkReply::NetworkError)),fbx(),SLOT(errorReceived(QNetworkReply::NetworkError)));
 }
 
-void Download::requestDeleteFeed(int id)
+void DownloadApi::requestDeleteFeed(int id)
 {
     QNetworkRequest request =fbx()->myCreateRequest(QString("downloads/feeds/%1").arg(id));
 
@@ -340,7 +340,7 @@ void Download::requestDeleteFeed(int id)
 
 }
 
-void Download::requestUpdateFeed(int id, bool autoDownload)
+void DownloadApi::requestUpdateFeed(int id, bool autoDownload)
 {
 
     QJsonObject json;
@@ -355,7 +355,7 @@ void Download::requestUpdateFeed(int id, bool autoDownload)
 
 }
 
-void Download::requestRefreshFeed(int id)
+void DownloadApi::requestRefreshFeed(int id)
 {
     QNetworkRequest request =fbx()->myCreateRequest(QString("downloads/feeds/%1/fetch").arg(id));
 
@@ -365,7 +365,7 @@ void Download::requestRefreshFeed(int id)
 
 }
 
-void Download::requestRefreshAllFeed()
+void DownloadApi::requestRefreshAllFeed()
 {
     QNetworkRequest request =fbx()->myCreateRequest(QString("downloads/feeds/fetch"));
 
@@ -374,7 +374,7 @@ void Download::requestRefreshAllFeed()
     connect(reply,SIGNAL(error(QNetworkReply::NetworkError)),fbx(),SLOT(errorReceived(QNetworkReply::NetworkError)));
 }
 
-void Download::requestFeedItemList(int feedId)
+void DownloadApi::requestFeedItemList(int feedId)
 {
     QNetworkRequest request =fbx()->myCreateRequest(QString("downloads/feeds/%1/items/").arg(feedId));
 
@@ -384,7 +384,7 @@ void Download::requestFeedItemList(int feedId)
 
 }
 
-void Download::requestUpdateFeedItem(int id, int feedId, bool isRead)
+void DownloadApi::requestUpdateFeedItem(int id, int feedId, bool isRead)
 {
     QJsonObject json;
     json.insert("is_read", isRead);
@@ -399,7 +399,7 @@ void Download::requestUpdateFeedItem(int id, int feedId, bool isRead)
 
 }
 
-void Download::requestDownloadFeedItem(int id, int feedId)
+void DownloadApi::requestDownloadFeedItem(int id, int feedId)
 {
     QNetworkRequest request =
             fbx()->myCreateRequest(QString("downloads/feeds/%1/items/%2").arg(feedId).arg(id));
@@ -412,7 +412,7 @@ void Download::requestDownloadFeedItem(int id, int feedId)
 
 }
 
-void Download::requestMarkAllFeedRead(int feedId)
+void DownloadApi::requestMarkAllFeedRead(int feedId)
 {
 
     QNetworkRequest request =
@@ -428,7 +428,7 @@ void Download::requestMarkAllFeedRead(int feedId)
 //======================== SLOT FINISHED ==============================
 
 
-void Download::requestListFinished()
+void DownloadApi::requestListFinished()
 {
     QNetworkReply * reply  = qobject_cast<QNetworkReply*>(sender());
     QJsonDocument doc = QJsonDocument::fromJson(reply->readAll());
@@ -473,11 +473,11 @@ void Download::requestListFinished()
 
 }
 
-void Download::requestDownloadFinished()
+void DownloadApi::requestDownloadFinished()
 {
 }
 
-void Download::requestRemoveFinished()
+void DownloadApi::requestRemoveFinished()
 {
     QNetworkReply * reply  = qobject_cast<QNetworkReply*>(sender());
     QJsonDocument doc = QJsonDocument::fromJson(reply->readAll());
@@ -488,7 +488,7 @@ void Download::requestRemoveFinished()
     }
 }
 
-void Download::requestEraseFinished()
+void DownloadApi::requestEraseFinished()
 {
     QNetworkReply * reply  = qobject_cast<QNetworkReply*>(sender());
     QJsonDocument doc = QJsonDocument::fromJson(reply->readAll());
@@ -499,15 +499,15 @@ void Download::requestEraseFinished()
     }
 }
 
-void Download::requestUpdateFinished()
+void DownloadApi::requestUpdateFinished()
 {
 }
 
-void Download::requestLogFinished()
+void DownloadApi::requestLogFinished()
 {
 }
 
-void Download::requestStatsFinished()
+void DownloadApi::requestStatsFinished()
 {
     QNetworkReply * reply  = qobject_cast<QNetworkReply*>(sender());
     QJsonDocument doc = QJsonDocument::fromJson(reply->readAll());
@@ -546,7 +546,7 @@ void Download::requestStatsFinished()
 
 }
 
-void Download::requestAddFinished()
+void DownloadApi::requestAddFinished()
 {
     QNetworkReply * reply  = qobject_cast<QNetworkReply*>(sender());
     QJsonDocument doc = QJsonDocument::fromJson(reply->readAll());
@@ -557,7 +557,7 @@ void Download::requestAddFinished()
     }
 }
 
-void Download::requestAddFileFinished()
+void DownloadApi::requestAddFileFinished()
 {
     QNetworkReply * reply  = qobject_cast<QNetworkReply*>(sender());
     QJsonDocument doc = QJsonDocument::fromJson(reply->readAll());
@@ -567,11 +567,11 @@ void Download::requestAddFileFinished()
     }
 }
 
-void Download::requestAddListFinished()
+void DownloadApi::requestAddListFinished()
 {
 }
 
-void Download::requestConfigFinished()
+void DownloadApi::requestConfigFinished()
 {
     QNetworkReply * reply  = qobject_cast<QNetworkReply*>(sender());
     QJsonDocument doc = QJsonDocument::fromJson(reply->readAll());
@@ -653,7 +653,7 @@ void Download::requestConfigFinished()
     }
 }
 
-void Download::requestUpdateThrottlingFinished()
+void DownloadApi::requestUpdateThrottlingFinished()
 {
     QNetworkReply * reply  = qobject_cast<QNetworkReply*>(sender());
     QJsonDocument doc = QJsonDocument::fromJson(reply->readAll());
@@ -664,7 +664,7 @@ void Download::requestUpdateThrottlingFinished()
     }
 }
 
-void Download::requestUpdateConfigFinished()
+void DownloadApi::requestUpdateConfigFinished()
 {
     QNetworkReply * reply  = qobject_cast<QNetworkReply*>(sender());
     QJsonDocument doc = QJsonDocument::fromJson(reply->readAll());
@@ -676,46 +676,46 @@ void Download::requestUpdateConfigFinished()
 
 }
 
-void Download::requestFeedListFinished()
+void DownloadApi::requestFeedListFinished()
 {
 }
 
-void Download::requestFeedFinished()
+void DownloadApi::requestFeedFinished()
 {
 }
 
-void Download::requestAddFeedFinished()
+void DownloadApi::requestAddFeedFinished()
 {
 }
 
-void Download::requestDeleteFeedFinished()
+void DownloadApi::requestDeleteFeedFinished()
 {
 }
 
-void Download::requestUpdateFeedFinished()
+void DownloadApi::requestUpdateFeedFinished()
 {
 }
 
-void Download::requestRefreshFeedFinished()
+void DownloadApi::requestRefreshFeedFinished()
 {
 }
 
-void Download::requestRefreshAllFeedFinished()
+void DownloadApi::requestRefreshAllFeedFinished()
 {
 }
 
-void Download::requestFeedItemListFinished()
+void DownloadApi::requestFeedItemListFinished()
 {
 }
 
-void Download::requestUpdateFeedItemFinished()
+void DownloadApi::requestUpdateFeedItemFinished()
 {
 }
 
-void Download::requestDownloadFeedItemFinished()
+void DownloadApi::requestDownloadFeedItemFinished()
 {
 }
 
-void Download::requestMarkAllFeedReadFinished()
+void DownloadApi::requestMarkAllFeedReadFinished()
 {
 }

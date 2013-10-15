@@ -6,7 +6,7 @@
 #include <QDate>
 #include <QList>
 #include <QMouseEvent>
-#include "download.h"
+#include "fbxapi.h"
 class DLScheduleTableWidget : public QWidget
 {
     Q_OBJECT

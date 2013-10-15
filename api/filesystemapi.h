@@ -7,7 +7,7 @@
 #include <QMimeDatabase>
 
 class FbxAPI;
-class FileSystem;
+class FileSystemApi;
 class FileTask;
 struct FileUpload;
 
@@ -71,7 +71,7 @@ public:
 };
 
 
-class FileSystem : public QObject
+class FileSystemApi : public QObject
 {
     Q_OBJECT
 public:
@@ -86,8 +86,8 @@ public:
 
     Q_ENUMS(ConflictMode)
 
-    explicit FileSystem(FbxAPI *parent = 0);
-    ~FileSystem();
+    explicit FileSystemApi(FbxAPI *parent);
+    ~FileSystemApi();
 
     QFile * downloadFile(QNetworkReply * reply);
     QFile * uploadFile(QNetworkReply * reply);

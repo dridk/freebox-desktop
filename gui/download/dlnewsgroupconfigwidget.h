@@ -2,7 +2,7 @@
 #define DLNEWSGROUPCONFIGWIDGET_H
 
 #include <QtWidgets>
-#include "download.h"
+#include "fbxapi.h"
 class DLNewsGroupConfigWidget : public QWidget
 {
     Q_OBJECT

@@ -1,12 +1,12 @@
-#include "filesystem.h"
+#include "filesystemapi.h"
 #include <QIcon>
-FileSystem::FileSystem(FbxAPI *parent) :
+FileSystemApi::FileSystemApi(FbxAPI *parent) :
     QObject(parent)
 {
 
 }
 
-FileSystem::~FileSystem()
+FileSystemApi::~FileSystemApi()
 {
     foreach ( QFile * file, mDownloads.values()){
         file->remove();
@@ -15,18 +15,18 @@ FileSystem::~FileSystem()
     mDownloads.clear();
 }
 
-QFile *FileSystem::downloadFile(QNetworkReply *reply)
+QFile *FileSystemApi::downloadFile(QNetworkReply *reply)
 {
     return mDownloads.value(reply,NULL);
 }
 
-QFile *FileSystem::uploadFile(QNetworkReply *reply)
+QFile *FileSystemApi::uploadFile(QNetworkReply *reply)
 {
     return mUploads.value(reply,NULL);
 
 }
 
-void FileSystem::requestList(const QString &path, bool onlyFolder, bool countSubFolder, bool removeHidden)
+void FileSystemApi::requestList(const QString &path, bool onlyFolder, bool countSubFolder, bool removeHidden)
 {
 
     QStringList param;
@@ -46,7 +46,7 @@ void FileSystem::requestList(const QString &path, bool onlyFolder, bool countSub
 
 }
 
-void FileSystem::requestInfo(const QString &path)
+void FileSystemApi::requestInfo(const QString &path)
 {
     QNetworkReply * reply =
             fbx()->get(fbx()->myCreateRequest(QString("fs/info/%1").arg(path)));
@@ -59,7 +59,7 @@ void FileSystem::requestInfo(const QString &path)
 
 }
 
-void FileSystem::requestMove(const QStringList &paths, const QString &dest, FileSystem::ConflictMode mode)
+void FileSystemApi::requestMove(const QStringList &paths, const QString &dest, FileSystemApi::ConflictMode mode)
 {
     QNetworkRequest request = fbx()->myCreateRequest(QString("fs/mv/"));
 
@@ -82,7 +82,7 @@ void FileSystem::requestMove(const QStringList &paths, const QString &dest, File
 
 }
 
-void FileSystem::requestCopy(const QStringList &paths, const QString &dest, FileSystem::ConflictMode mode)
+void FileSystemApi::requestCopy(const QStringList &paths, const QString &dest, FileSystemApi::ConflictMode mode)
 {
     QNetworkRequest request = fbx()->myCreateRequest(QString("fs/cp/"));
 
@@ -104,7 +104,7 @@ void FileSystem::requestCopy(const QStringList &paths, const QString &dest, File
 
 }
 
-void FileSystem::requestRemove(const QStringList &paths)
+void FileSystemApi::requestRemove(const QStringList &paths)
 {
     QNetworkRequest request = fbx()->myCreateRequest(QString("fs/rm/"));
     QJsonObject json;
@@ -115,7 +115,7 @@ void FileSystem::requestRemove(const QStringList &paths)
     connect(reply,SIGNAL(error(QNetworkReply::NetworkError)),fbx(),SLOT(errorReceived(QNetworkReply::NetworkError)));
 }
 
-void FileSystem::requestArchive(const QStringList &paths, const QString &dest)
+void FileSystemApi::requestArchive(const QStringList &paths, const QString &dest)
 {
     QNetworkRequest request = fbx()->myCreateRequest(QString("fs/archive/"));
 
@@ -130,7 +130,7 @@ void FileSystem::requestArchive(const QStringList &paths, const QString &dest)
 
 }
 
-void FileSystem::requestExtract(const QString &source, const QString &dest, const QString &password, bool deleteArchive, bool overwrite)
+void FileSystemApi::requestExtract(const QString &source, const QString &dest, const QString &password, bool deleteArchive, bool overwrite)
 {
     QNetworkRequest request = fbx()->myCreateRequest(QString("fs/extract/"));
 
@@ -149,7 +149,7 @@ void FileSystem::requestExtract(const QString &source, const QString &dest, cons
 
 }
 
-void FileSystem::requestMkdir(const QString &path, const QString &dirName)
+void FileSystemApi::requestMkdir(const QString &path, const QString &dirName)
 {
     QNetworkRequest request = fbx()->myCreateRequest(QString("fs/mkdir/"));
 
@@ -164,7 +164,7 @@ void FileSystem::requestMkdir(const QString &path, const QString &dirName)
 
 }
 
-void FileSystem::requestRename(const QString &source, const QString &newName)
+void FileSystemApi::requestRename(const QString &source, const QString &newName)
 {
     QNetworkRequest request = fbx()->myCreateRequest(QString("fs/rename/"));
 
@@ -179,7 +179,7 @@ void FileSystem::requestRename(const QString &source, const QString &newName)
 
 }
 
-void FileSystem::requestDownload(const QString &path, const QString &localPath)
+void FileSystemApi::requestDownload(const QString &path, const QString &localPath)
 {
     QNetworkRequest request = fbx()->myCreateRequest(QString("dl/%1").arg(path));
 
@@ -211,7 +211,7 @@ void FileSystem::requestDownload(const QString &path, const QString &localPath)
 
 }
 
-void FileSystem::requestUpload(const QString &file, const QString &destPath)
+void FileSystemApi::requestUpload(const QString &file, const QString &destPath)
 {
 
     //==== Upload has 2 step request
@@ -233,7 +233,7 @@ void FileSystem::requestUpload(const QString &file, const QString &destPath)
 
 }
 
-void FileSystem::requestUploadList()
+void FileSystemApi::requestUploadList()
 {
     QNetworkRequest request = fbx()->myCreateRequest(QString("upload/"));
 
@@ -243,7 +243,7 @@ void FileSystem::requestUploadList()
 
 }
 
-void FileSystem::requestUploadInfo(int id)
+void FileSystemApi::requestUploadInfo(int id)
 {
     QNetworkRequest request = fbx()->myCreateRequest(QString("upload/%1").arg(id));
 
@@ -253,7 +253,7 @@ void FileSystem::requestUploadInfo(int id)
 
 }
 
-void FileSystem::requestDeleteUpload(int id)
+void FileSystemApi::requestDeleteUpload(int id)
 {
     QNetworkRequest request = fbx()->myCreateRequest(QString("upload/%1").arg(id));
 
@@ -265,7 +265,7 @@ void FileSystem::requestDeleteUpload(int id)
 }
 
 
-void FileSystem::requestCleanUploads()
+void FileSystemApi::requestCleanUploads()
 {
     QNetworkRequest request = fbx()->myCreateRequest(QString("upload/clean"));
 
@@ -276,7 +276,7 @@ void FileSystem::requestCleanUploads()
 
 }
 
-void FileSystem::requestTaskList()
+void FileSystemApi::requestTaskList()
 {
     QNetworkRequest request = fbx()->myCreateRequest(QString("fs/tasks/"));
     QNetworkReply * reply = fbx()->get(request);
@@ -284,7 +284,7 @@ void FileSystem::requestTaskList()
     connect(reply,SIGNAL(error(QNetworkReply::NetworkError)),fbx(),SLOT(errorReceived(QNetworkReply::NetworkError)));
 }
 
-void FileSystem::requestTask(int id)
+void FileSystemApi::requestTask(int id)
 {
     QNetworkRequest request = fbx()->myCreateRequest(QString("fs/tasks/%1").arg(id));
     QNetworkReply * reply = fbx()->get(request);
@@ -292,7 +292,7 @@ void FileSystem::requestTask(int id)
     connect(reply,SIGNAL(error(QNetworkReply::NetworkError)),fbx(),SLOT(errorReceived(QNetworkReply::NetworkError)));
 }
 
-void FileSystem::requestDeleteTask(int id)
+void FileSystemApi::requestDeleteTask(int id)
 {
     QNetworkRequest request = fbx()->myCreateRequest(QString("fs/tasks/%1").arg(id));
     QNetworkReply * reply = fbx()->deleteResource(request);
@@ -303,7 +303,7 @@ void FileSystem::requestDeleteTask(int id)
 
 }
 
-void FileSystem::requestUpdateTask(int id, const QString &state)
+void FileSystemApi::requestUpdateTask(int id, const QString &state)
 {
     QNetworkRequest request = fbx()->myCreateRequest(QString("fs/tasks/%1").arg(id));
 
@@ -318,7 +318,7 @@ void FileSystem::requestUpdateTask(int id, const QString &state)
 
 }
 
-void FileSystem::requestListFinished()
+void FileSystemApi::requestListFinished()
 {
     QNetworkReply * reply  = qobject_cast<QNetworkReply*>(sender());
     QJsonDocument doc = QJsonDocument::fromJson(reply->readAll());
@@ -355,7 +355,7 @@ void FileSystem::requestListFinished()
 
 }
 
-void FileSystem::requestInfoFinished()
+void FileSystemApi::requestInfoFinished()
 {
     QNetworkReply * reply  = qobject_cast<QNetworkReply*>(sender());
     QJsonDocument doc = QJsonDocument::fromJson(reply->readAll());
@@ -382,7 +382,7 @@ void FileSystem::requestInfoFinished()
     }
 }
 
-void FileSystem::requestMoveFinished()
+void FileSystemApi::requestMoveFinished()
 {
     QNetworkReply * reply  = qobject_cast<QNetworkReply*>(sender());
     QJsonDocument doc = QJsonDocument::fromJson(reply->readAll());
@@ -390,7 +390,7 @@ void FileSystem::requestMoveFinished()
         emit moveFinished();
 }
 
-void FileSystem::requestCopyFinished()
+void FileSystemApi::requestCopyFinished()
 {
     QNetworkReply * reply  = qobject_cast<QNetworkReply*>(sender());
     QJsonDocument doc = QJsonDocument::fromJson(reply->readAll());
@@ -398,7 +398,7 @@ void FileSystem::requestCopyFinished()
         emit copyFinished();
 }
 
-void FileSystem::requestRemoveFinished()
+void FileSystemApi::requestRemoveFinished()
 {
     QNetworkReply * reply  = qobject_cast<QNetworkReply*>(sender());
     QJsonDocument doc = QJsonDocument::fromJson(reply->readAll());
@@ -406,7 +406,7 @@ void FileSystem::requestRemoveFinished()
         emit removeFinished();
 }
 
-void FileSystem::requestArchiveFinished()
+void FileSystemApi::requestArchiveFinished()
 {
     QNetworkReply * reply  = qobject_cast<QNetworkReply*>(sender());
     QJsonDocument doc = QJsonDocument::fromJson(reply->readAll());
@@ -414,7 +414,7 @@ void FileSystem::requestArchiveFinished()
         emit archiveFinished();
 }
 
-void FileSystem::requestExtractFinished()
+void FileSystemApi::requestExtractFinished()
 {
     QNetworkReply * reply  = qobject_cast<QNetworkReply*>(sender());
     QJsonDocument doc = QJsonDocument::fromJson(reply->readAll());
@@ -422,7 +422,7 @@ void FileSystem::requestExtractFinished()
         emit extractFinished();
 }
 
-void FileSystem::requestMkdirFinished()
+void FileSystemApi::requestMkdirFinished()
 {
     QNetworkReply * reply  = qobject_cast<QNetworkReply*>(sender());
     QJsonDocument doc = QJsonDocument::fromJson(reply->readAll());
@@ -430,7 +430,7 @@ void FileSystem::requestMkdirFinished()
         emit mkdirFinished();
 }
 
-void FileSystem::requestRenameFinished()
+void FileSystemApi::requestRenameFinished()
 {
     QNetworkReply * reply  = qobject_cast<QNetworkReply*>(sender());
     QJsonDocument doc = QJsonDocument::fromJson(reply->readAll());
@@ -441,7 +441,7 @@ void FileSystem::requestRenameFinished()
 
 }
 
-void FileSystem::requestDownloadFinished()
+void FileSystemApi::requestDownloadFinished()
 {
 
     QNetworkReply * reply  = qobject_cast<QNetworkReply*>(sender());
@@ -473,7 +473,7 @@ void FileSystem::requestDownloadFinished()
 
 }
 
-void FileSystem::requestDownloadReadyRead()
+void FileSystemApi::requestDownloadReadyRead()
 {
 
     QNetworkReply * reply  = qobject_cast<QNetworkReply*>(sender());
@@ -482,7 +482,7 @@ void FileSystem::requestDownloadReadyRead()
     }
 }
 
-void FileSystem::requestDownloadError()
+void FileSystemApi::requestDownloadError()
 {
     qDebug()<<"download Error";
     QNetworkReply * reply  = qobject_cast<QNetworkReply*>(sender());
@@ -494,7 +494,7 @@ void FileSystem::requestDownloadError()
     reply->deleteLater();
 }
 
-void FileSystem::requestUploadFinished()
+void FileSystemApi::requestUploadFinished()
 {
     QNetworkReply * reply  = qobject_cast<QNetworkReply*>(sender());
     QJsonDocument doc = QJsonDocument::fromJson(reply->readAll());
@@ -509,7 +509,7 @@ void FileSystem::requestUploadFinished()
 
 }
 
-void FileSystem::requestStartUpload()
+void FileSystemApi::requestStartUpload()
 {
     QNetworkReply * reply  = qobject_cast<QNetworkReply*>(sender());
     QJsonDocument doc = QJsonDocument::fromJson(reply->readAll());
@@ -558,7 +558,7 @@ void FileSystem::requestStartUpload()
 }
 
 
-void FileSystem::requestUploadListFinished()
+void FileSystemApi::requestUploadListFinished()
 {
     QNetworkReply * reply  = qobject_cast<QNetworkReply*>(sender());
     QJsonDocument doc = QJsonDocument::fromJson(reply->readAll());
@@ -591,7 +591,7 @@ void FileSystem::requestUploadListFinished()
 
 }
 
-void FileSystem::requestUploadInfoFinished()
+void FileSystemApi::requestUploadInfoFinished()
 {
 
     QNetworkReply * reply  = qobject_cast<QNetworkReply*>(sender());
@@ -621,7 +621,7 @@ void FileSystem::requestUploadInfoFinished()
 
 }
 
-void FileSystem::requestDeleteUploadFinished()
+void FileSystemApi::requestDeleteUploadFinished()
 {
 
     QNetworkReply * reply  = qobject_cast<QNetworkReply*>(sender());
@@ -634,7 +634,7 @@ void FileSystem::requestDeleteUploadFinished()
 
 
 }
-void FileSystem::requestCleanUploadsFinished()
+void FileSystemApi::requestCleanUploadsFinished()
 {
 
     QNetworkReply * reply  = qobject_cast<QNetworkReply*>(sender());
@@ -646,7 +646,7 @@ void FileSystem::requestCleanUploadsFinished()
     reply->deleteLater();
 }
 
-void FileSystem::requestTaskListFinished()
+void FileSystemApi::requestTaskListFinished()
 {
     QNetworkReply * reply  = qobject_cast<QNetworkReply*>(sender());
     QJsonDocument doc = QJsonDocument::fromJson(reply->readAll());
@@ -691,7 +691,7 @@ void FileSystem::requestTaskListFinished()
     reply->deleteLater();
 }
 
-void FileSystem::requestTaskFinished()
+void FileSystemApi::requestTaskFinished()
 {
 
     QNetworkReply * reply  = qobject_cast<QNetworkReply*>(sender());
@@ -726,7 +726,7 @@ void FileSystem::requestTaskFinished()
     reply->deleteLater();
 }
 
-void FileSystem::requestDeleteTaskFinished()
+void FileSystemApi::requestDeleteTaskFinished()
 {
     QNetworkReply * reply  = qobject_cast<QNetworkReply*>(sender());
     QJsonDocument doc = QJsonDocument::fromJson(reply->readAll());
@@ -737,7 +737,7 @@ void FileSystem::requestDeleteTaskFinished()
     reply->deleteLater();
 }
 
-void FileSystem::requestUpdateTaskFinished()
+void FileSystemApi::requestUpdateTaskFinished()
 {
     QNetworkReply * reply  = qobject_cast<QNetworkReply*>(sender());
     QJsonDocument doc = QJsonDocument::fromJson(reply->readAll());

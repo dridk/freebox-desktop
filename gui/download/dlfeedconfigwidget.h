@@ -2,7 +2,7 @@
 #define DLFEEDCONFIGWIDGET_H
 
 #include <QtWidgets>
-#include "download.h" // DlFeedConfig
+#include "fbxapi.h"
 class DLFeedConfigWidget : public QWidget
 {
     Q_OBJECT

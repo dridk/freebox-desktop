@@ -3,7 +3,6 @@
 
 #include <QtWidgets>
 #include "fbxapi.h"
-#include "download.h" //DLGeneralConfigWidget
 class DLGeneralConfigWidget : public QWidget
 {
     Q_OBJECT

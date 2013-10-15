@@ -7,13 +7,13 @@
 INCLUDEPATH += $$PWD
 
 HEADERS += \
-    api/filesystem.h \
-    api/download.h \
     api/fbxapi.h \
-    api/fbx.h
+    api/fbx.h \
+    api/filesystemapi.h \
+    api/downloadapi.h
 
 SOURCES += \
-    api/filesystem.cpp \
-    api/download.cpp \
-    api/fbxapi.cpp
+    api/fbxapi.cpp \
+    api/filesystemapi.cpp \
+    api/downloadapi.cpp
 

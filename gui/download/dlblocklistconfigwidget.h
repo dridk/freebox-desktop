@@ -2,7 +2,7 @@
 #define DLBLOCKLISTCONFIGWIDGET_H
 
 #include <QtWidgets>
-#include "download.h" // DlBlockListConfig
+#include "fbxapi.h"
 class DLBlocklistConfigWidget : public QWidget
 {
     Q_OBJECT

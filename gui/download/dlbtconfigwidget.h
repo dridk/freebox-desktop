@@ -2,7 +2,7 @@
 #define DLBTCONFIGWIDGET_H
 
 #include <QtWidgets>
-#include "download.h" // DlBtConfig
+#include "fbxapi.h"
 class DLBtConfigWidget : public QWidget
 {
     Q_OBJECT

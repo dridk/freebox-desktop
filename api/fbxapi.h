@@ -3,10 +3,10 @@
 
 #include <QObject>
 #include <QtNetwork>
-#include "filesystem.h"
-#include "download.h"
-class FileSystem;
-class Download;
+#include "filesystemapi.h"
+#include "downloadapi.h"
+class FileSystemApi;
+class DownloadApi;
 struct ApiInfo;
 struct ApiInfo
 {
@@ -71,8 +71,8 @@ public:
     void logout();
 
     //get Module
-    FileSystem * fileSystem() {return mFileSystem;}
-    Download * download() {return mDownload;}
+    FileSystemApi * fileSystem() {return mFileSystem;}
+    DownloadApi * download() {return mDownload;}
 
 
 
@@ -115,8 +115,8 @@ private:
     int mRequestLoginAttempt;
 
     //Modules
-   FileSystem * mFileSystem;
-   Download * mDownload;
+   FileSystemApi * mFileSystem;
+   DownloadApi * mDownload;
 
     
 };

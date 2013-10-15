@@ -23,8 +23,8 @@ FbxAPI::FbxAPI(QObject *parent) :
     mRequestLoginAttempt = 0;
 
     // == alloc module
-    mFileSystem = new FileSystem(this);
-    mDownload   = new Download(this);
+    mFileSystem = new FileSystemApi(this);
+    mDownload   = new DownloadApi(this);
 
 
 }
