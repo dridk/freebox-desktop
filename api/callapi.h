@@ -45,7 +45,7 @@ class CallApi : public QObject
 {
     Q_OBJECT
 public:
-    explicit CallApi(FbxAPI *parent = 0);
+    explicit CallApi(FbxAPI *parent);
     
 public slots:
     void requestList();

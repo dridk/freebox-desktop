@@ -5,8 +5,10 @@
 #include <QtNetwork>
 #include "filesystemapi.h"
 #include "downloadapi.h"
+#include "callapi.h"
 class FileSystemApi;
 class DownloadApi;
+class CallApi;
 struct ApiInfo;
 struct ApiInfo
 {
@@ -73,6 +75,7 @@ public:
     //get Module
     FileSystemApi * fileSystem() {return mFileSystem;}
     DownloadApi * download() {return mDownload;}
+    CallApi * call() {return mCall;}
 
 
 
@@ -117,6 +120,7 @@ private:
     //Modules
    FileSystemApi * mFileSystem;
    DownloadApi * mDownload;
+   CallApi * mCall;
 
     
 };

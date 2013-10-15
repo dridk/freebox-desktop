@@ -1,6 +1,7 @@
 #include "launcherwidget.h"
 #include "fsmainwindow.h"
 #include "dlmainwindow.h"
+#include "clmainwindow.h"
 LauncherWidget::LauncherWidget(QWidget *parent) :
     QListWidget(parent)
 {
@@ -25,6 +26,10 @@ LauncherWidget::LauncherWidget(QWidget *parent) :
     item2->setIcon(QIcon(":main_fs.png"));
     addItem(item2);
 
+    QListWidgetItem * item3 = new QListWidgetItem;
+    item3->setText("Journal d'appels");
+    item3->setIcon(QIcon(":main_fs.png"));
+    addItem(item3);
 
     setWindowIcon(QIcon(":myappico.icns"));
 
@@ -48,7 +53,12 @@ void LauncherWidget::launch(const QModelIndex &index)
         return;
     }
 
-
+    if (index.row() == 2)
+    {
+        CLMainWindow * win = new CLMainWindow;
+        win->show();
+        return;
+    }
 
 }
 
