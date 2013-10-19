@@ -11,11 +11,13 @@ HEADERS += \
     api/fbx.h \
     api/filesystemapi.h \
     api/downloadapi.h \
-    api/callapi.h
+    api/callapi.h \
+    api/contactapi.h
 
 SOURCES += \
     api/fbxapi.cpp \
     api/filesystemapi.cpp \
     api/downloadapi.cpp \
-    api/callapi.cpp
+    api/callapi.cpp \
+    api/contactapi.cpp
 

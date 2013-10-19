@@ -11,6 +11,7 @@ CLMainWindow::CLMainWindow(QWidget *parent) :
     mView->setItemDelegate(mDelegate);
     setCentralWidget(mView);
     mView->verticalHeader()->hide();
+    mView->horizontalHeader()->hide();
 
 
     mView->horizontalHeader()->setSectionResizeMode(0,QHeaderView::Stretch);

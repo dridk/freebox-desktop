@@ -67,6 +67,11 @@ void CallApi::requestListFinished()
             call.isNew = item.toObject().value("new").toBool();
             call.type = CallEntry::typeFromString(item.toObject().value("type").toString());
             call.datetime = QDateTime::fromTime_t(item.toObject().value("datetime").toDouble());
+
+            if (call.name.isEmpty())
+                call.name = "Appel masqué";
+
+
             list.append(call);
         }
 

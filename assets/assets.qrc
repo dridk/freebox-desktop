@@ -76,5 +76,8 @@
         <file>google_plus.png</file>
         <file>linkedin.png</file>
         <file>myappico.png</file>
+        <file>call_accepted.png</file>
+        <file>call_missed.png</file>
+        <file>call_outgoing.png</file>
     </qresource>
 </RCC>
