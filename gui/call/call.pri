@@ -7,11 +7,13 @@ INCLUDEPATH += $$PWD
 
 HEADERS += \
     gui/call/clmainwindow.h \
-    gui/call/clmodel.h
+    gui/call/clmodel.h \
+    gui/call/cldelegate.h
 
 SOURCES += \
     gui/call/clmainwindow.cpp \
-    gui/call/clmodel.cpp
+    gui/call/clmodel.cpp \
+    gui/call/cldelegate.cpp
 
 
 

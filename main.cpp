@@ -4,6 +4,7 @@
 #include "fsmainwindow.h"
 #include "fstableview.h"
 #include "dlmainwindow.h"
+#include "clmainwindow.h"
 #include "launcherwidget.h"
 int main(int argc, char *argv[])
 {
@@ -16,24 +17,29 @@ int main(int argc, char *argv[])
 
 
 
-    if (QCoreApplication::arguments().count() > 1)
-    {
+//    if (QCoreApplication::arguments().count() > 1)
+//    {
 
-        QString path = QCoreApplication::arguments().value(1);
-        DLMainWindow downloadWindow ;
-        downloadWindow.addFile(path);
-        downloadWindow.show();
-        return a.exec();
+//        QString path = QCoreApplication::arguments().value(1);
+//        DLMainWindow downloadWindow ;
+//        downloadWindow.addFile(path);
+//        downloadWindow.show();
+//        return a.exec();
 
-    }
+//    }
 
-    else {
-        LauncherWidget w;
-        w.show();
-        return a.exec();
+//    else {
+//        LauncherWidget w;
+//        w.show();
+//        return a.exec();
 
-    }
+//    }
 
+
+    CLMainWindow w;
+    w.show();
+
+    return a.exec();
 
 //    DLMainWindow m;
 //    m.show();

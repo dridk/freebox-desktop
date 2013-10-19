@@ -1,5 +1,5 @@
 #include "clmodel.h"
-
+#include <QIcon>
 CLModel::CLModel(FbxAPI *fbx, QObject *parent) :
     QAbstractTableModel(parent)
 {
@@ -35,10 +35,32 @@ QVariant CLModel::data(const QModelIndex &index, int role) const
 
     }
 
+    if (role == Qt::UserRole)
+    {
+        return mDatas[index.row()].duration;
+
+    }
+
+    if (role == Qt::DecorationRole)
+    {
+        switch (mDatas[index.row()].type)
+        {
+        qDebug()<<mDatas[index.row()].type;
+        case CallEntry::MissedType : return QIcon(":call_missed.png").pixmap(64,64); break;
+        case CallEntry::AcceptedType : return QIcon(":call_outgoing.png").pixmap(64,64); break;
+        case CallEntry::OutgoingType : return QIcon(":call_accepted.png").pixmap(64,64); break;
+
+        }
+
+
+    }
+
 
     return QVariant();
 
 }
+
+
 
 
 void CLModel::refresh()
