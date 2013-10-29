@@ -4,13 +4,14 @@
 #include <QAbstractListModel>
 #include "fbxapi.h"
 
-class CtModel : public QAbstractListModel
+class CTModel : public QAbstractListModel
 {
     Q_OBJECT
 public:
-    explicit CtModel(FbxAPI * fbx, QObject *parent = 0);
+    explicit CTModel(FbxAPI * fbx, QObject *parent = 0);
     int rowCount(const QModelIndex &parent) const;
     QVariant data(const QModelIndex &index, int role) const;
+    const ContactEntry& contactEntry(int row);
 
 protected slots:
     void load(const QList<ContactEntry>& list);

@@ -1,6 +1,6 @@
 #include "ctmodel.h"
 #include <QDebug>
-CtModel::CtModel(FbxAPI * fbx, QObject * parent) :
+CTModel::CTModel(FbxAPI * fbx, QObject * parent) :
     QAbstractListModel(parent)
 {
     mFbx = fbx;
@@ -9,24 +9,29 @@ CtModel::CtModel(FbxAPI * fbx, QObject * parent) :
             SIGNAL(listReceived(QList<ContactEntry>)),
             this,SLOT(load(QList<ContactEntry>)));
 }
-int CtModel::rowCount(const QModelIndex &parent) const
+int CTModel::rowCount(const QModelIndex &parent) const
 {
     return mContacts.count();
 
 
 }
 
-QVariant CtModel::data(const QModelIndex &index, int role) const
+QVariant CTModel::data(const QModelIndex &index, int role) const
 {
 
     if ( role == Qt::DisplayRole)
-        return "test";
+        return mContacts.at(index.row()).displayName;
 
     return QVariant();
 
 }
 
-void CtModel::load(const QList<ContactEntry> &list)
+const ContactEntry &CTModel::contactEntry(int row)
+{
+    return mContacts[row];
+}
+
+void CTModel::load(const QList<ContactEntry> &list)
 {
     qDebug()<<"load contact";
     beginResetModel();

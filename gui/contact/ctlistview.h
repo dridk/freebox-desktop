@@ -3,11 +3,11 @@
 
 #include <QListView>
 
-class CtListView : public QListView
+class CTListView : public QListView
 {
     Q_OBJECT
 public:
-    explicit CtListView(QWidget *parent = 0);
+    explicit CTListView(QWidget *parent = 0);
 
 signals:
 

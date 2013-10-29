@@ -1,6 +1,6 @@
 #include "ctlistview.h"
 
-CtListView::CtListView(QWidget *parent) :
+CTListView::CTListView(QWidget *parent) :
     QListView(parent)
 {
 

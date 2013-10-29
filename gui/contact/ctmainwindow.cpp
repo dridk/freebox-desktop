@@ -4,17 +4,23 @@ CTMainWindow::CTMainWindow(QWidget *parent) :
     AbstractMainWindow(parent)
 {
 
-    mListView = new CtListView;
-    mModel = new CtModel(fbx());
-
-
+    mListView = new CTListView;
+    mModel = new CTModel(fbx());
     mListView->setModel(mModel);
+    mDetailWidget = new CTDetailWidget;
 
+    QDockWidget * leftDock = new QDockWidget;
+    leftDock->setWidget(mListView);
 
+    addDockWidget(Qt::LeftDockWidgetArea, leftDock);
 
-    setCentralWidget(mListView);
+    setCentralWidget(mDetailWidget);
+
+//    centralWidget()->setStyleSheet("background-color:white");
 
     connect(fbx(),SIGNAL(loginSuccess()),
             fbx()->contact(), SLOT(requestList()));
+
+    resize(600, 400);
 
 }
