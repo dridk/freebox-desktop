@@ -5,6 +5,7 @@
 #include "fstableview.h"
 #include "dlmainwindow.h"
 #include "clmainwindow.h"
+#include "ctmainwindow.h"
 #include "launcherwidget.h"
 int main(int argc, char *argv[])
 {
@@ -36,7 +37,7 @@ int main(int argc, char *argv[])
 //    }
 
 
-    CLMainWindow w;
+    CTMainWindow w;
     w.show();
 
     return a.exec();

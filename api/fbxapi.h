@@ -6,9 +6,13 @@
 #include "filesystemapi.h"
 #include "downloadapi.h"
 #include "callapi.h"
+#include "contactapi.h"
+
 class FileSystemApi;
 class DownloadApi;
 class CallApi;
+class ContactApi;
+
 struct ApiInfo;
 struct ApiInfo
 {
@@ -76,7 +80,7 @@ public:
     FileSystemApi * fileSystem() {return mFileSystem;}
     DownloadApi * download() {return mDownload;}
     CallApi * call() {return mCall;}
-
+    ContactApi * contact() {return mContact;}
 
 
 signals:
@@ -121,6 +125,7 @@ private:
    FileSystemApi * mFileSystem;
    DownloadApi * mDownload;
    CallApi * mCall;
+   ContactApi * mContact;
 
     
 };

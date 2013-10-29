@@ -6,10 +6,14 @@
 INCLUDEPATH += $$PWD
 
 HEADERS += \
-    gui/contact/ctmainwindow.h
+    gui/contact/ctmainwindow.h \
+    gui/contact/ctmodel.h \
+    gui/contact/ctlistview.h
 
 SOURCES += \
-    gui/contact/ctmainwindow.cpp
+    gui/contact/ctmainwindow.cpp \
+    gui/contact/ctmodel.cpp \
+    gui/contact/ctlistview.cpp
 
 
 

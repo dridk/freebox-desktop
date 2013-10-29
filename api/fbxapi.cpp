@@ -26,6 +26,7 @@ FbxAPI::FbxAPI(QObject *parent) :
     mFileSystem = new FileSystemApi(this);
     mDownload   = new DownloadApi(this);
     mCall       = new CallApi(this);
+    mContact    = new ContactApi(this);
 
 
 }
