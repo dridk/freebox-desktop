@@ -23,6 +23,7 @@ include(gui/common/common.pri)
 include(gui/filesystem/filesystem.pri)
 include(gui/download/download.pri)
 include(gui/call/call.pri)
+include(gui/contact/contact.pri)
 
 SOURCES += main.cpp\
     mainapplication.cpp
