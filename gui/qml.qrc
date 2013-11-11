@@ -1,0 +1,6 @@
+<RCC>
+    <qresource prefix="/qml">
+        <file>contact/CTDetailView.qml</file>
+        <file>contact/CTDetailItem.qml</file>
+    </qresource>
+</RCC>

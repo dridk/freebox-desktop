@@ -9,13 +9,17 @@ HEADERS += \
     gui/contact/ctmainwindow.h \
     gui/contact/ctmodel.h \
     gui/contact/ctlistview.h \
-    gui/contact/ctdetailwidget.h
+    gui/contact/ctdetailview.h
 
 SOURCES += \
     gui/contact/ctmainwindow.cpp \
     gui/contact/ctmodel.cpp \
     gui/contact/ctlistview.cpp \
-    gui/contact/ctdetailwidget.cpp
+    gui/contact/ctdetailview.cpp
+
+OTHER_FILES += \
+    gui/contact/CTDetailView.qml \
+    gui/contact/CTDetailItem.qml
 
 
 

@@ -3,7 +3,7 @@
 #include "abstractmainwindow.h"
 #include "ctlistview.h"
 #include "ctmodel.h"
-#include "ctdetailwidget.h"
+#include "ctdetailview.h"
 
 class CTMainWindow : public AbstractMainWindow
 {
@@ -18,7 +18,7 @@ public slots:
 private:
 CTListView* mListView;
 CTModel* mModel;
-CTDetailWidget * mDetailWidget;
+CTDetailView * mDetailWidget;
     
 };
 

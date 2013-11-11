@@ -4,7 +4,7 @@
 #
 #-------------------------------------------------
 
-QT = core gui network widgets
+QT = core gui network widgets quick
 
 TARGET = freebox-desktop
 TEMPLATE = app
@@ -33,7 +33,8 @@ HEADERS  += \
 
 RESOURCES += \
     assets/assets.qrc \
-    assets/mime.qrc
+    assets/mime.qrc \
+    gui/qml.qrc
 
 OTHER_FILES += \
     assets/contributor.html \

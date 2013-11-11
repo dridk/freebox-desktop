@@ -79,5 +79,6 @@
         <file>call_accepted.png</file>
         <file>call_missed.png</file>
         <file>call_outgoing.png</file>
+        <file>unknown.jpg</file>
     </qresource>
 </RCC>

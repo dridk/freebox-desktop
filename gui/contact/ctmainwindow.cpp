@@ -7,20 +7,28 @@ CTMainWindow::CTMainWindow(QWidget *parent) :
     mListView = new CTListView;
     mModel = new CTModel(fbx());
     mListView->setModel(mModel);
-    mDetailWidget = new CTDetailWidget;
+    mDetailWidget = new CTDetailView;
 
     QDockWidget * leftDock = new QDockWidget;
     leftDock->setWidget(mListView);
 
     addDockWidget(Qt::LeftDockWidgetArea, leftDock);
 
-    setCentralWidget(mDetailWidget);
+    setCentralWidget(QWidget::createWindowContainer(mDetailWidget));
 
-//    centralWidget()->setStyleSheet("background-color:white");
+    QToolBar * toolbar = new QToolBar();
+    addToolBar(toolbar);
+
+    toolbar->addAction("Ajouter un contact");
+    toolbar->addAction("Importer des contacts");
+    toolbar->addAction("Exporter les contacts");
+
+
+
 
     connect(fbx(),SIGNAL(loginSuccess()),
             fbx()->contact(), SLOT(requestList()));
 
-    resize(600, 400);
+    resize(800, 400);
 
 }
