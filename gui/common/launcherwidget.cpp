@@ -26,10 +26,10 @@ LauncherWidget::LauncherWidget(QWidget *parent) :
     item2->setIcon(QIcon(":main_fs.png"));
     addItem(item2);
 
-    QListWidgetItem * item3 = new QListWidgetItem;
-    item3->setText("Journal d'appels");
-    item3->setIcon(QIcon(":main_fs.png"));
-    addItem(item3);
+//    QListWidgetItem * item3 = new QListWidgetItem;
+//    item3->setText("Journal d'appels");
+//    item3->setIcon(QIcon(":main_fs.png"));
+//    addItem(item3);
 
     setWindowIcon(QIcon(":myappico.icns"));
 

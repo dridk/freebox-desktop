@@ -112,7 +112,8 @@ ScrollView {
                     content: ColumnLayout {
                         Repeater {
                             model:2
-                            Text {
+                            TextField {
+                                width: 500
                                 text: "<a href='#'>http://www.labsquare.org</a>"
                                 font.pixelSize:16
                             }
