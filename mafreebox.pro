@@ -26,10 +26,12 @@ include(gui/call/call.pri)
 include(gui/contact/contact.pri)
 
 SOURCES += main.cpp\
-    mainapplication.cpp
+    mainapplication.cpp \
+    connectionapi.cpp
 
 HEADERS  += \
-    mainapplication.h
+    mainapplication.h \
+    connectionapi.h
 
 RESOURCES += \
     assets/assets.qrc \

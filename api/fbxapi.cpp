@@ -27,6 +27,7 @@ FbxAPI::FbxAPI(QObject *parent) :
     mDownload   = new DownloadApi(this);
     mCall       = new CallApi(this);
     mContact    = new ContactApi(this);
+    mConnection = new ConnectionApi(this);
 
 
 }
@@ -214,6 +215,8 @@ void FbxAPI::requestSession()
 
 
 }
+
+
 
 void FbxAPI::logout()
 {

@@ -8,7 +8,6 @@ INCLUDEPATH += $$PWD
 
 HEADERS += \
     api/fbxapi.h \
-    api/fbx.h \
     api/filesystemapi.h \
     api/downloadapi.h \
     api/callapi.h \
